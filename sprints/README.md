@@ -1,0 +1,18 @@
+# Sprints
+
+Each assessment task has three sprints of three weeks. Sprint 1 of Task 1 starts on Mon 12 Oct 2026. Each sprint has its own folder, for example `task1-sprint1/`, with three files:
+
+- `plan.md`: the sprint goal, the selected backlog items and the owner of each item
+- `standups.md`: one entry for each weekly stand-up
+- `review.md`: the notes from the Sprint Review (a 10-minute demonstration, as a video or in person) and the feedback from the tutor
+
+The stand-ups are assessed individually. Each member writes their own lines in this format:
+
+```markdown
+## Stand-up, <date>
+
+### <name>
+- Done since the last stand-up:
+- Next:
+- Blockers:
+```
