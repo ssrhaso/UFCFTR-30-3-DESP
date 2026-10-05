@@ -28,9 +28,9 @@ The GitHub for Atlassian app connects Jira to this repository. Jira shows each p
 2. Create a branch from the task (Development > Create a branch).
 3. Start each commit message with the Jira key of the figure, for example `SCRUM-12 Add the pools to the strategic model`.
 4. Open a pull request. Start the title with the Jira key, and put `Closes #<task number>` in the body. Set the task to In review.
-5. Another member reviews the pull request. Then merge it with a merge commit.
+5. At least 1 other member reviews and approves the pull request. Then merge it with a merge commit.
 
-When the pull request merges, GitHub closes the task, and the board moves it to Done. A GitHub check fails each pull request that has no `SCRUM` key. Move the Jira work items by hand at sprint planning and at the Sprint Review.
+When the pull request merges, GitHub closes the task, and the board moves it to Done. The GitHub checks run only when a pull request is merged into `main`. They flag each merge that has no `SCRUM` key, no `Closes #<task number>`, no approval from another member, or a model that fails the BPMN lint. GitHub cannot block a merge on this plan, so check these rules before you merge. Move the Jira work items by hand at sprint planning and at the Sprint Review.
 
 The Task 1 board has one tab for each figure. Figure 1 is the strategic BPMN model (SCRUM-12), Figure 2 is the operational BPMN models (SCRUM-13) and Figure 3 is the i* model (SCRUM-14). The tasks of each figure have numbers: 1.1, 1.2 and so on. To add a task, open the figure, create a sub-issue with the "Task" template, and start its title with the next number of that figure.
 
@@ -38,7 +38,7 @@ The Task 1 board has one tab for each figure. Figure 1 is the strategic BPMN mod
 
 A task is done when all these conditions are true:
 
-- The work is merged into `main` through a reviewed pull request.
+- The work is merged into `main` through a pull request that at least 1 other member approved.
 - Each model has its source file and a `.png` or `.svg` export in the correct `task1-bpmn/` folder.
 - Each operational model deploys and runs in Camunda 8.
 

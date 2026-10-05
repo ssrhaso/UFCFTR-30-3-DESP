@@ -1,13 +1,16 @@
 name: Jira key
 
+# Runs only when a pull request is merged into main.
 on:
   pull_request:
-    types: [opened, edited, reopened, synchronize]
+    types: [closed]
+    branches: [main]
 
 permissions: {}
 
 jobs:
   check:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Check for a Jira work item key

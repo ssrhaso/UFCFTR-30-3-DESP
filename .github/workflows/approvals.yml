@@ -1,0 +1,41 @@
+name: Approvals
+
+# The group rule: at least 1 other member approves a pull request before it is merged into main.
+# GitHub cannot block the merge on this plan, so this check flags each merge that broke the rule.
+# Runs only when a pull request is merged into main.
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  pull-requests: read
+
+env:
+  REQUIRED: 1
+
+jobs:
+  check:
+    name: At least 1 approval
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Count the approvals
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.pull_request.number }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: |
+          # The latest approve or request-changes review of each member counts. Comments do not.
+          approvers=$(gh api --paginate "repos/$REPO/pulls/$NUMBER/reviews" \
+            --jq '.[] | select(.state == "APPROVED" or .state == "CHANGES_REQUESTED") | "\(.user.login) \(.state)"' \
+            | awk -v author="$AUTHOR" '$1 != author { last[$1] = $2 } END { for (u in last) if (last[u] == "APPROVED") print u }' \
+            | sort)
+          count=$(grep -c . <<< "$approvers" || true)
+          echo "Approved by ($count):"
+          echo "$approvers"
+          if (( count < REQUIRED )); then
+            echo "::error title=Approvals::Pull request #$NUMBER was merged with $count approvals. The group rule needs at least $REQUIRED."
+            exit 1
+          fi
