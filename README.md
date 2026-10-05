@@ -9,7 +9,9 @@ This repository holds the group project for the Distributed and Enterprise Softw
 | Task 1 | 40% | BPMN modelling: a strategic BPMN model, an executable operational BPMN model (Camunda 8) and an i* socio-technical model, with a critical evaluation and an in-class demonstration | Last week of TB1 (week 18, w/c 14 Dec 2026) |
 | Task 2 | 60% | System development with Django, Django REST Framework, Docker and a relational database, with an in-class demonstration | Last week of TB2 (week 37, w/c 26 Apr 2027) |
 
-The team works in 3-week Scrum sprints, and the tutor acts as the customer. The operational BPMN models from Task 1 become microservices in the Task 2 system.
+The team works in Scrum sprints, and the tutor acts as the customer. The operational BPMN models from Task 1 become microservices in the Task 2 system.
+
+The backlog and the sprints are on the [DESD group board](https://github.com/users/ssrhaso/projects/2).
 
 ## Key dates
 
