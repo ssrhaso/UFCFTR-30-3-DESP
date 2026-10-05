@@ -1,0 +1,23 @@
+name: Jira key
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for a Jira work item key
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+          BRANCH: ${{ github.head_ref }}
+        run: |
+          if [[ "$TITLE" =~ SCRUM-[0-9]+ ]] || [[ "$BRANCH" =~ SCRUM-[0-9]+ ]]; then
+            echo "Jira key found."
+          else
+            echo "::error::Put the Jira work item key (for example SCRUM-12) in the pull request title or the branch name."
+            exit 1
+          fi

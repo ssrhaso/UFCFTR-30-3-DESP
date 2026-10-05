@@ -11,7 +11,36 @@ This repository holds the group project for the Distributed and Enterprise Softw
 
 The team works in Scrum sprints, and the tutor acts as the customer. The operational BPMN models from Task 1 become microservices in the Task 2 system.
 
-The backlog and the sprints are on the [DESD group board](https://github.com/users/ssrhaso/projects/2).
+## How we work
+
+The group tracks the work at two levels:
+
+| Level | Tool | Content |
+|---|---|---|
+| High | Jira, [DESD space](https://desdproject.atlassian.net/jira/software/projects/SCRUM/summary) (key `SCRUM`) | One work item for each deliverable, planned into the Jira sprints |
+| Low | GitHub Projects: [DESD Task 1: Figures](https://github.com/users/ssrhaso/projects/2) and [DESD Task 2: System](https://github.com/users/ssrhaso/projects/3) | One parent issue for each Jira work item, with one sub-issue (task) for each piece of work. Each task has one owner |
+
+The GitHub for Atlassian app connects Jira to this repository. Jira shows each pull request and commit that contains a `SCRUM` key on the work item with that key.
+
+### Steps for each task
+
+1. Assign the task to yourself, and set its status to In progress.
+2. Create a branch from the task (Development > Create a branch).
+3. Start each commit message with the Jira key of the figure, for example `SCRUM-12 Add the pools to the strategic model`.
+4. Open a pull request. Start the title with the Jira key, and put `Closes #<task number>` in the body. Set the task to In review.
+5. Another member reviews the pull request. Then merge it with a merge commit.
+
+When the pull request merges, GitHub closes the task, and the board moves it to Done. A GitHub check fails each pull request that has no `SCRUM` key. Move the Jira work items by hand at sprint planning and at the Sprint Review.
+
+To add a task, open the figure and create a sub-issue with the "Task" template.
+
+### Definition of done
+
+A task is done when all these conditions are true:
+
+- The work is merged into `main` through a reviewed pull request.
+- Each model has its source file and a `.png` or `.svg` export in the correct `task1-bpmn/` folder.
+- Each operational model deploys and runs in Camunda 8.
 
 ## Key dates
 
