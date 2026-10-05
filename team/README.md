@@ -2,10 +2,10 @@
 
 | Name | GitHub username | Role |
 |---|---|---|
-| | | |
-| | | |
-| | | |
-| | | |
+| Hasaan Ahmad | [ssrhaso](https://github.com/ssrhaso) | |
+| Ishaq Modassir Mushtaq | [ishaq231](https://github.com/ishaq231) | |
+| Royden Dias | [ValerianDias](https://github.com/ValerianDias) | |
+| Shamy | [shamykyzer](https://github.com/shamykyzer) | |
 
 ## Working arrangements
 
