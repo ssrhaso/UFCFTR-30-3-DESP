@@ -18,7 +18,7 @@ The group tracks the work at two levels:
 | Level | Tool | Content |
 |---|---|---|
 | High | Jira, [DESD space](https://desdproject.atlassian.net/jira/software/projects/SCRUM/summary) (key `SCRUM`) | One work item for each deliverable, planned into the Jira sprints |
-| Low | GitHub Projects: [DESD Task 1: Figures](https://github.com/users/ssrhaso/projects/2) and [DESD Task 2: System](https://github.com/users/ssrhaso/projects/3) | One parent issue for each Jira work item, with one sub-issue (task) for each piece of work. Each task has one owner |
+| Low | GitHub Projects: [DESD Task 1: Figures](https://github.com/orgs/UWE-DESP/projects/1) and [DESD Task 2: System](https://github.com/orgs/UWE-DESP/projects/2) | One parent issue for each Jira work item, with one sub-issue (task) for each piece of work. Each task has one owner |
 
 The GitHub for Atlassian app connects Jira to this repository. Jira shows each pull request and commit that contains a `SCRUM` key on the work item with that key.
 
