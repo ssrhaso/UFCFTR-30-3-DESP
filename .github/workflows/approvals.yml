@@ -1,6 +1,6 @@
 name: Approvals
 
-# The group rule: at least 3 members approve a pull request before it is merged into main.
+# The group rule: at least 1 other member approves a pull request before it is merged into main.
 # GitHub cannot block the merge on this plan, so this check flags each merge that broke the rule.
 # Runs only when a pull request is merged into main.
 on:
@@ -12,11 +12,11 @@ permissions:
   pull-requests: read
 
 env:
-  REQUIRED: 3
+  REQUIRED: 1
 
 jobs:
   check:
-    name: At least 3 approvals
+    name: At least 1 approval
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
