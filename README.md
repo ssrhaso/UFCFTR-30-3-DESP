@@ -32,7 +32,7 @@ The GitHub for Atlassian app connects Jira to this repository. Jira shows each p
 
 When the pull request merges, GitHub closes the task, and the board moves it to Done. A GitHub check fails each pull request that has no `SCRUM` key. Move the Jira work items by hand at sprint planning and at the Sprint Review.
 
-To add a task, open the figure and create a sub-issue with the "Task" template.
+The Task 1 board has one tab for each figure. Figure 1 is the strategic BPMN model (SCRUM-12), Figure 2 is the operational BPMN models (SCRUM-13) and Figure 3 is the i* model (SCRUM-14). The tasks of each figure have numbers: 1.1, 1.2 and so on. To add a task, open the figure, create a sub-issue with the "Task" template, and start its title with the next number of that figure.
 
 ### Definition of done
 
