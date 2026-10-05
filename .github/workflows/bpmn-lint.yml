@@ -1,0 +1,51 @@
+name: BPMN lint
+
+on:
+  pull_request:
+    paths:
+      - "task1-bpmn/**"
+      - ".bpmnlintrc"
+      - ".github/workflows/bpmn-lint.yml"
+  push:
+    branches: [main]
+    paths:
+      - "task1-bpmn/**"
+      - ".bpmnlintrc"
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint the models
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run bpmnlint on each model
+        run: |
+          mapfile -t models < <(find task1-bpmn -name '*.bpmn' | sort)
+          if [[ ${#models[@]} -eq 0 ]]; then
+            echo "There are no .bpmn files yet."
+            exit 0
+          fi
+          printf 'Linting %s\n' "${models[@]}"
+          # The rules are in .bpmnlintrc at the repository root.
+          npx --yes bpmnlint@11.14.0 "${models[@]}"
+
+      - name: Check the strategic model exports
+        run: |
+          # Each strategic model needs a .png or .svg export with the same name.
+          status=0
+          while IFS= read -r model; do
+            base="${model%.bpmn}"
+            if [[ ! -f "$base.png" && ! -f "$base.svg" ]]; then
+              echo "::error file=$model::Commit a .png or .svg export of this model as $(basename "$base").png."
+              status=1
+            fi
+          done < <(find task1-bpmn/strategic -name '*.bpmn')
+          exit $status
