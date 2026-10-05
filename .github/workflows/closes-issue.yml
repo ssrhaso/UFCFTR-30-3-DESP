@@ -1,0 +1,28 @@
+name: Closes issue
+
+# Each pull request must close its GitHub task, so that the board moves it to Done.
+# The Jira key in the title is checked by jira-key.yml.
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions: {}
+
+jobs:
+  check:
+    name: Body closes an issue
+    runs-on: ubuntu-latest
+    # Bot pull requests (for example Dependabot) have no task.
+    if: ${{ !endsWith(github.event.pull_request.user.login, '[bot]') }}
+    steps:
+      - name: Check for Closes #<task number>
+        env:
+          # Passed through env, never inline, so the text cannot run as shell code.
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          if grep -Eiq '\b(close[sd]?|fix(e[sd])?|resolve[sd]?) #[0-9]+' <<< "$BODY"; then
+            echo "The body closes an issue."
+          else
+            echo "::error title=PR body::Put \"Closes #<task number>\" in the body, for example \"Closes #31\"."
+            exit 1
+          fi
