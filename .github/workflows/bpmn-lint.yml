@@ -1,12 +1,9 @@
 name: BPMN lint
 
+# Runs only when a pull request that changes the models is merged into main.
 on:
   pull_request:
-    paths:
-      - "task1-bpmn/**"
-      - ".bpmnlintrc"
-      - ".github/workflows/bpmn-lint.yml"
-  push:
+    types: [closed]
     branches: [main]
     paths:
       - "task1-bpmn/**"
@@ -18,9 +15,13 @@ permissions:
 jobs:
   lint:
     name: Lint the models
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
+      # Lint main as it is after the merge.
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
 
       - uses: actions/setup-node@v4
         with:

@@ -2,9 +2,11 @@ name: Closes issue
 
 # Each pull request must close its GitHub task, so that the board moves it to Done.
 # The Jira key in the title is checked by jira-key.yml.
+# Runs only when a pull request is merged into main.
 on:
   pull_request:
-    types: [opened, edited, reopened, synchronize]
+    types: [closed]
+    branches: [main]
 
 permissions: {}
 
@@ -13,7 +15,7 @@ jobs:
     name: Body closes an issue
     runs-on: ubuntu-latest
     # Bot pull requests (for example Dependabot) have no task.
-    if: ${{ !endsWith(github.event.pull_request.user.login, '[bot]') }}
+    if: github.event.pull_request.merged == true && !endsWith(github.event.pull_request.user.login, '[bot]')
     steps:
       - name: Check for Closes #<task number>
         env:
