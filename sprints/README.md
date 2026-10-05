@@ -1,6 +1,8 @@
 # Sprints
 
-Each assessment task has three sprints of three weeks. Sprint 1 of Task 1 starts on Mon 12 Oct 2026. Each sprint has its own folder, for example `task1-sprint1/`, with three files:
+Each assessment task has three sprints. Sprint 1 of Task 1 starts on Mon 12 Oct 2026. Each sprint ends with a Sprint Review, which the group submits on Blackboard by 14:01 on the due date (see the key dates in the [README](../README.md)). The next sprint starts on the day after the review.
+
+Each sprint has its own folder, for example `task1-sprint1/`, with three files:
 
 - `plan.md`: the sprint goal, the selected backlog items and the owner of each item
 - `standups.md`: one entry for each weekly stand-up

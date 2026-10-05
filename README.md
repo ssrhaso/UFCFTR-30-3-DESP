@@ -17,6 +17,12 @@ The team works in 3-week Scrum sprints, and the tutor acts as the customer. The 
 |---|---|
 | Wed 7 Oct 2026, 23:59 | Group formation form closes |
 | Mon 12 Oct 2026 | Sprint 1 of Task 1 starts. Group membership becomes final. Each member must have Camunda 8 access |
+| Thu 29 Oct 2026, 14:01 | Task 1 Sprint 1 Review due on Blackboard |
+| Thu 19 Nov 2026, 14:01 | Task 1 Sprint 2 Review due on Blackboard |
+| Thu 10 Dec 2026, 14:01 | Task 1 Sprint 3 Review due on Blackboard |
+| Thu 4 Mar 2027, 14:01 | Task 2 Sprint 1 Review due on Blackboard |
+| Thu 25 Mar 2027, 14:01 | Task 2 Sprint 2 Review due on Blackboard |
+| Thu 13 May 2027, 14:01 (BST) | Task 2 Sprint 3 Review due on Blackboard |
 
 ## Repository layout
 
