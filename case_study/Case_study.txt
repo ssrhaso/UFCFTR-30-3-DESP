@@ -1,0 +1,21 @@
+Use Case 2: Customer Multi-Vendor Order, Checkout and Payment
+A customer browses or searches the marketplace and adds products from one or more
+producers to their basket.
+When the customer proceeds to checkout, the system checks that all selected products
+are still available in the requested quantities. If an item is unavailable or there is
+insufficient stock, the customer is informed and asked to amend the order.
+If the products are available, the system identifies the producers involved and determines
+the relevant delivery or collection arrangements. The customer reviews the order and
+confirms the purchase.
+The system then creates the overall marketplace order and separates it into the relevant
+producer-specific order elements.
+Payment is submitted to an external or simulated payment service. If payment is
+successful, the order is confirmed, the appropriate inventory quantities are updated and
+the relevant producers are notified.
+If payment is declined, the customer is informed and given the opportunity to retry. If the
+payment service is temporarily unavailable, the process should follow an appropriate
+exception or retry path rather than simply terminating.
+For multi-vendor orders, the system should calculate the amount attributable to each
+producer and calculate the marketplace's 5% commission.
+For assessment purposes, students should use a sandbox or simulated payment service
+rather than a live payment system.
