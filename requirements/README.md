@@ -2,7 +2,7 @@
 
 This folder holds the output of the requirements and business analysis work:
 
-- Notes on the assessment case study (when the brief is available)
+- Notes on the case study in [case_study/](../case_study/)
 - The stakeholders and their goals
 - The user stories, each with acceptance criteria
 - The business rules
