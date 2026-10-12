@@ -9,4 +9,6 @@ Task 1 runs over three sprints in TB1. It is due in the last week of TB1 (week 1
 | [istar/](istar/) | i* socio-technical model of the user goals and dependencies | The source file of the modelling tool, with a `.png` or `.svg` export |
 | [evaluation/](evaluation/) | Critical evaluation of the legal, ethical, social and professional implications of the processes in the models | `.md` |
 
+The case study and the use cases are in [case_study/](../case_study/). The first operational model is Use Case 2, the customer multi-vendor order, checkout and payment process (task 2.6).
+
 The Camunda Web Modeler stores the models in the module's Camunda organisation. After each change, download the model and commit it here. The repository then records the history of the models and the contribution of each member.
