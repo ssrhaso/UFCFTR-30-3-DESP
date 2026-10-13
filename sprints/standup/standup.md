@@ -9,31 +9,67 @@ The sprint goal and the high-level work items are in the Jira sprint. The tasks 
 
 The stand-ups are assessed individually. Each member writes their own lines in this format:
 
-```markdown
-## Stand-up, <date>
+# Standup | Sprint0 | 12 Oct 2026
 
-### <Hasaan>
-- Done since the last stand-up:
-- Next:
-- Blockers:
+## **Hasaan**
 
-### <Royden>
-- Done since the last stand-up:
-- Next:
-- Blockers:
+**Done since the last stand-up:**
+- Worked on scaffolding project database for Task 1 (Github Projects)
+- Setup group Github repository
+- attended 2 group meetings
 
-### <Shamy>
-- Done since the last stand-up:
-- Next:
-- Blockers:
+**Next:**
+- Finish off project database (Task 1)
+- Workflow assignment with other group members
+- Identify the key actors, external organisations and services with Royden
 
-### <Ishaq>
-- Done since the last stand-up:
-- Next:
-- Blockers:
+**Blockers:**
+- N/A
 
-```
+---
 
+## **Royden**
 
+**Done since the last stand-up:**
+- Setup Jira for group project management
+- documented standups
+- attended 2 group meetings
 
+**Next:**
+- Complete assigned tasks for sprint 1 
+- Update Jira for project management
+- Identify the key actors, external organisations and services with Hasaan
 
+**Blockers:**
+- N/A
+
+---
+
+## **Shamy**
+
+**Done since the last stand-up:**
+- attended 1 group meeting
+
+**Next:**
+- Complete assigned tasks for sprint 1
+- Identify the major processes, functions and responsibilities with Ishaq
+
+**Blockers:**
+- Waiting on Hasaan and Royden to finish identifying key actors and services before we can start.
+
+---
+
+## **Ishaq**
+
+**Done since the last stand-up:**
+- setup Camunda project group work on BPMN diagrams
+- Assisted in task planning for sprint 1
+
+**Next:**
+- Complete assigned tasks for sprint 1
+- Identify the major processes, functions and responsibilities with Shamy
+
+**Blockers:**
+- Waiting on Hasaan and Royden to finish identifying key actors and services before we can start.
+
+---
