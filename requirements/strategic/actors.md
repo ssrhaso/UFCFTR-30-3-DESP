@@ -1,7 +1,7 @@
 # 1.1 Key actors, external organisations and services
 
 **Authors:** Royden Dias, Hasaan Ahmad
-**Task:** [#79](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/79), Figure 1: strategic BPMN model (SCRUM-12)
+**Task:** [#79](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/79), Figure 1: strategic BPMN model
 **Status:** draft for review
 
 ## 1. Purpose and scope
