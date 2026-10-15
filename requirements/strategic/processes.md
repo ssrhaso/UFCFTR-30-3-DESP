@@ -38,7 +38,7 @@ Each process has a verb-noun name. The owning function is the lane that holds th
 
 | ID | Process | Owning function | Also involved | Trigger | Outcome | Source | In UC2 |
 |---|---|---|---|---|---|---|---|
-| P01 | Manage product listing | F01 Product listing | Producer (A04), F04 Quality | A producer has a new product, or its availability, stock or price changes | The listing shows the name, the description, the price, the availability timeframe, the stock, the category, the harvest date, the farm origin, and the organic, allergen and best-before information | CS pp. 1-2, UC1 | No (its stock data is an input) |
+| P01 | Manage products | F01 Product listing | Producer (A04), F04 Quality | A producer has a new product, or its availability, stock or price changes | The listing shows the name, the description, the price, the availability timeframe, the stock, the category, the harvest date, the farm origin, and the organic, allergen and best-before information | CS pp. 1-2, UC1 | No (its stock data is an input) |
 | P02 | Verify organic certification | F04 Quality and traceability | E02 Certification service | A producer marks a product as organic | The product shows a verified organic status, or the claim is rejected | CS p. 2, UC1 | No |
 | P03 | Browse and search catalogue | F01 Product listing | Customer (A01 to A03) | A customer opens the marketplace | The customer finds products by category or by search, sees the harvest dates, the farm origin and the seasonal availability, and adds products to a basket | CS p. 2, UC2 | Yes (the start of UC2) |
 | P04 | Process order | F02 Orders | Customer (A01 to A03), Producer (A04) | A customer proceeds to checkout | The stock is checked, the producers and the delivery or collection arrangements are identified, the customer confirms, and the marketplace order is split into producer order elements | CS p. 2, UC2 | Yes |
@@ -63,7 +63,7 @@ One row for each process. Each cell gives the part of the actor in the process, 
 
 | ID | Process | Customer (A01 to A03) | Producer (A04) | BRF Network (A05), by function | External (E01 to E06) |
 |---|---|---|---|---|---|
-| P01 | Manage product listing | None | Lists the product with its name, description, price and availability timeframe. Updates the stock and the seasonal availability. States the organic status, the allergens and the best-before date | F01 stores and publishes the listing. F04 keeps the traceability fields | None |
+| P01 | Manage products | None | Lists the product with its name, description, price and availability timeframe. Updates the stock and the seasonal availability. States the organic status, the allergens and the best-before date | F01 stores and publishes the listing. F04 keeps the traceability fields | None |
 | P02 | Verify organic certification | None | Claims the certification and gives its details | F04 sends the claim for verification and records the result | E02 checks the certification |
 | P03 | Browse and search catalogue | Browses by category, searches, reads the harvest date, the farm origin and the seasonal availability, and fills the basket | None | F01 serves the catalogue and the search | None |
 | P04 | Process order | Proceeds to checkout, amends the order when an item is unavailable, reviews the order and confirms | Keeps the stock accurate (through P01) so that the check is right. Has set its delivery or collection arrangements | F02 checks the stock, identifies the producers and the arrangements, creates the marketplace order and splits it by producer | None |
