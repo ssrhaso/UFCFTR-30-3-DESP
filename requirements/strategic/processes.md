@@ -16,15 +16,15 @@ Source keys: CS is the case study (UWE Bristol, 2026a), with the page number. UC
 
 ## 2. Functions
 
-A function is an area of the enterprise with its own responsibility. The functions of the network (A05) are the lanes of its pool in Figure 1. The customer and the producer are separate pools, so their work is not a lane of the network.
+A function is an area of the enterprise with its own responsibility. The functions of the BRF Network (A05, the Bristol Regional Food Network) are the lanes of its pool in Figure 1. The customer and the producer are separate pools, so their work is not a lane of the network.
 
 | ID | Function | Pool | Purpose | Used by | Takes part in |
 |---|---|---|---|---|---|
-| F01 | Product listing | Network (A05) | Keeps the product listings and the categories that the customers browse, and shows the content of the other lanes next to the products | P01, P03 | P09, P11 |
-| F02 | Orders | Network (A05) | Turns a basket into a confirmed marketplace order, splits it by producer, and keeps each producer informed of its orders | P04 | P05, P06, P10 |
-| F03 | Finance | Network (A05) | Takes the customer payments, calculates the 5% commission and settles the producers each week with an audit trail | P05, P07 | None |
-| F04 | Quality and traceability | Network (A05) | Keeps the certification, allergen and best-before information, the records that link customers, products and producers, and the incident process | P02, P08 | P01 |
-| F05 | Quality assurance and community features | Network (A05) | Reports food miles and runs the community features of the case study: surplus produce offers and the educational content that connects customers to the farms. Named after the section of the case study (CS p. 2) | P09, P10, P11 | None |
+| F01 | Product listing | BRF Network (A05) | Keeps the product listings and the categories that the customers browse, and shows the content of the other lanes next to the products | P01, P03 | P09, P11 |
+| F02 | Orders | BRF Network (A05) | Turns a basket into a confirmed marketplace order, splits it by producer, and keeps each producer informed of its orders | P04 | P05, P06, P10 |
+| F03 | Finance | BRF Network (A05) | Takes the customer payments, calculates the 5% commission and settles the producers each week with an audit trail | P05, P07 | None |
+| F04 | Quality and traceability | BRF Network (A05) | Keeps the certification, allergen and best-before information, the records that link customers, products and producers, and the incident process | P02, P08 | P01 |
+| F05 | Quality assurance and community features | BRF Network (A05) | Reports food miles and runs the community features of the case study: surplus produce offers and the educational content that connects customers to the farms. Named after the section of the case study (CS p. 2) | P09, P10, P11 | None |
 | F06 | Producer operations | Producer (A04) | The work that each producer does on its side: listing products, keeping stock up to date, and preparing the orders for delivery or collection | P06 | P01, P02, P04, P05, P07, P08, P10, P11 |
 | F07 | Customer | Customer (A01 to A03) | The work of the customer: browsing, ordering, paying, collecting or receiving the goods, and raising a quality issue | None | P03, P04, P05, P06, P08, P09, P10, P11 |
 
@@ -63,7 +63,7 @@ Each process has a verb-noun name. The owning function is the lane that holds th
 
 One row for each process. Each cell gives the part of the actor in the process, or "none".
 
-| ID | Process | Customer (A01 to A03) | Producer (A04) | Network (A05), by function | External (E01 to E06) |
+| ID | Process | Customer (A01 to A03) | Producer (A04) | BRF Network (A05), by function | External (E01 to E06) |
 |---|---|---|---|---|---|
 | P01 | Manage product listing | None | Lists the product with its name, description, price and availability timeframe. Updates the stock and the seasonal availability. States the organic status, the allergens and the best-before date | F01 stores and publishes the listing. F04 keeps the traceability fields | None |
 | P02 | Verify organic certification | None | Claims the certification and gives its details | F04 sends the claim for verification and records the result | E02 checks the certification |
