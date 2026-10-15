@@ -6,7 +6,7 @@
 
 ## 1. Purpose and scope
 
-This document lists the major business processes of the Bristol Regional Food Network marketplace, the function that owns each process (or the pool, for the one process outside the network), and the responsibilities of each actor in it. The strategic BPMN model (Figure 1) shows each process as one activity. The functions become the lanes of the network pool. Task 1.3 takes the messages between the processes from this list, and task 2.2 takes the candidate functionalities from it. Section 6 restates the requirements of the case study as functional requirements and links them to the actors in a use case diagram, for task 2.2 and the product backlog (task 2.5).
+This document lists the major business processes of the Bristol Regional Food Network marketplace, the function that owns each process (or the pool, for the one process outside the network), and the responsibilities of each actor in it. The strategic BPMN model (Figure 1) shows each process as one activity. The functions become the lanes of the network pool. Task 1.3 takes the messages between the processes from this list, and task 2.2 takes the candidate functionalities from it. Section 6 restates the requirements of the case study as functional requirements and links them to the actors, for task 2.2 and the product backlog (task 2.5).
 
 The actors and the external services are in [actors.md](actors.md) (task 1.1). This document uses its IDs: A01 to A07 for the actors and E01 to E06 for the external organisations and services. The chosen use case is Use Case 2: Customer Multi-Vendor Order, Checkout and Payment ([use-case.md](../scope/use-case.md)). The "In UC2" column shows the processes that it needs.
 
@@ -105,7 +105,7 @@ Use Case 2 adds these points, which the mapping also covers: the stock check at 
 
 ## 6. Functional requirements and the actors
 
-The functional requirements below restate the requirements of section 5 as functions of the system, each with the actors that use it and the processes that deliver it. The use case diagram after the table links each actor to its functions. The two UC3 roles (A06, A07) are shown as the network staff. The external services are secondary actors on the right.
+The functional requirements below restate the requirements of section 5 as functions of the system, each with the actors that use it and the processes that deliver it. The two UC3 roles are A06 and A07.
 
 | ID | Functional requirement | Primary actors | Secondary actors | Processes |
 |---|---|---|---|---|
@@ -125,66 +125,9 @@ The functional requirements below restate the requirements of section 5 as funct
 | FR14 | Offer surplus produce at a last-minute discount, and receive the offer | Producer (A04), Customer (A01 to A03) | E03 | P10 |
 | FR15 | Share and read seasonal recipes, storage guidance and farm stories | Producer (A04), Customer (A01 to A03) | None | P11 |
 
-Constraints from the case study that are not functions, so they are not in the diagram: the payment service is a sandbox or a mock, never live (CS p. 1); the financial transactions comply with data protection and financial services regulations (CS p. 2); and the producer tools work for producers with little technical skill (CS p. 1).
+Constraints from the case study that are not functions, so they are not in the table: the payment service is a sandbox or a mock, never live (CS p. 1); the financial transactions comply with data protection and financial services regulations (CS p. 2); and the producer tools work for producers with little technical skill (CS p. 1).
 
-```mermaid
-flowchart LR
-  Customer["Customer (A01 to A03)"]
-  Producer["Producer (A04)"]
-  Staff["Network staff (A06, A07)"]
-  subgraph BRF["BRF Network marketplace (A05)"]
-    FR01([FR01 List and update products])
-    FR02([FR02 Verify organic certification])
-    FR03([FR03 State allergens and best-before])
-    FR04([FR04 Browse by category])
-    FR05([FR05 Search products])
-    FR06([FR06 See origin and traceability])
-    FR07([FR07 Check out an order])
-    FR08([FR08 Pay for an order])
-    FR09([FR09 Calculate amounts and commission])
-    FR10([FR10 See incoming orders])
-    FR11([FR11 Receive weekly settlement])
-    FR12([FR12 Handle a quality concern])
-    FR13([FR13 See food miles])
-    FR14([FR14 Offer surplus produce])
-    FR15([FR15 Share recipes and farm stories])
-  end
-  E01["Payment service (E01)"]
-  E02["Certification service (E02)"]
-  E03["Notification service (E03)"]
-  E04["Postcode distance service (E04)"]
-  E06["Tax authority (E06)"]
-
-  Producer --- FR01
-  Producer --- FR02
-  Producer --- FR03
-  Producer --- FR10
-  Producer --- FR11
-  Producer --- FR12
-  Producer --- FR14
-  Producer --- FR15
-  Customer --- FR04
-  Customer --- FR05
-  Customer --- FR06
-  Customer --- FR07
-  Customer --- FR08
-  Customer --- FR12
-  Customer --- FR13
-  Customer --- FR14
-  Customer --- FR15
-  Staff --- FR12
-  FR02 --- E02
-  FR08 --- E01
-  FR08 -. includes .-> FR09
-  FR07 -. includes .-> FR06
-  FR10 --- E03
-  FR11 --- E06
-  FR12 --- E03
-  FR13 --- E04
-  FR14 --- E03
-```
-
-FR09 has no human actor. The network performs it inside FR08 and FR11, so the diagram shows it as an included function of the payment.
+FR09 has no human actor. The network performs it inside FR08 and FR11.
 
 ## 7. Open questions
 
