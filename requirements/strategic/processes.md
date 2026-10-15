@@ -6,7 +6,7 @@
 
 ## 1. Purpose and scope
 
-This document lists the major business processes of the Bristol Regional Food Network marketplace, the function that owns each process (or the pool, for the one process outside the network), and the responsibilities of each actor in it. The strategic BPMN model (Figure 1) shows each process as one activity. The functions become the lanes of the network pool. Task 1.3 takes the messages between the processes from this list, and task 2.2 takes the candidate functionalities from it. Section 6 restates the requirements of the case study as functional requirements and links them to the actors, for task 2.2 and the product backlog (task 2.5).
+This document lists the major business processes of the Bristol Regional Food Network marketplace, the function that owns each process (or the pool, for the one process outside the network), and the responsibilities of each actor in it. The strategic BPMN model (Figure 1) shows each process as one activity. The functions become the lanes of the network pool. Task 1.3 takes the messages between the processes from this list, and task 2.2 takes the candidate functionalities from it.
 
 The actors and the external services are in [actors.md](actors.md) (task 1.1). This document uses its IDs: A01 to A07 for the actors and E01 to E06 for the external organisations and services. The chosen use case is Use Case 2: Customer Multi-Vendor Order, Checkout and Payment ([use-case.md](../scope/use-case.md)). The "In UC2" column shows the processes that it needs.
 
@@ -103,33 +103,7 @@ Each requirement of the Stakeholder Requirements and the System Requirements sec
 
 Use Case 2 adds these points, which the mapping also covers: the stock check at checkout and the request to amend the order (P04), the split of the marketplace order into producer order elements (P04), the stock update and the producer notifications after payment (P05), the retry after a decline and the exception path when the payment service is unavailable (P05), and the amount of each producer and the commission for a multi-vendor order (P05).
 
-## 6. Functional requirements and the actors
-
-The functional requirements below restate the requirements of section 5 as functions of the system, each with the actors that use it and the processes that deliver it. The two UC3 roles are A06 and A07.
-
-| ID | Functional requirement | Primary actors | Secondary actors | Processes |
-|---|---|---|---|---|
-| FR01 | List a product with its name, description, price and availability timeframe, and update its seasonal stock | Producer (A04) | None | P01 |
-| FR02 | Mark a product as organic and have the certification verified | Producer (A04) | E02 | P01, P02 |
-| FR03 | State the allergen warnings and the best-before date of a product | Producer (A04) | None | P01 |
-| FR04 | Browse the products by category: vegetables, dairy, bakery, preserves, seasonal specialities | Customer (A01 to A03) | None | P03 |
-| FR05 | Search for a product | Customer (A01 to A03) | None | P03 |
-| FR06 | See the harvest date, the farm origin, the seasonal availability and the traceability information of a product | Customer (A01 to A03) | None | P03 |
-| FR07 | Check out a single-vendor or multi-vendor order, with the supplier, delivery and collection arrangements of each part | Customer (A01 to A03) | None | P04 |
-| FR08 | Pay for an order through a sandbox payment service, with retry after a decline and an exception path when the service is unavailable | Customer (A01 to A03) | E01 | P05 |
-| FR09 | Calculate the amount of each producer and the 5% commission of the network | BRF Network (A05), Finance | None | P05, P07 |
-| FR10 | See the incoming orders at least 48 hours before they are due, with a notification for each new order | Producer (A04) | E03 | P05, P06 |
-| FR11 | Receive a weekly settlement with an audit trail suitable for tax reporting | Producer (A04) | E06 | P07 |
-| FR12 | Report a food quality or safety concern, and reach everyone affected through the records that link customers, products and producers | Customer (A01 to A03), Producer (A04), Administrator (A06), Representative (A07) | E03 | P04, P08 |
-| FR13 | See the food miles of a product or an order, from the postcodes | Customer (A01 to A03) | E04 | P09 |
-| FR14 | Offer surplus produce at a last-minute discount, and receive the offer | Producer (A04), Customer (A01 to A03) | E03 | P10 |
-| FR15 | Share and read seasonal recipes, storage guidance and farm stories | Producer (A04), Customer (A01 to A03) | None | P11 |
-
-Constraints from the case study that are not functions, so they are not in the table: the payment service is a sandbox or a mock, never live (CS p. 1); the financial transactions comply with data protection and financial services regulations (CS p. 2); and the producer tools work for producers with little technical skill (CS p. 1).
-
-FR09 has no human actor. The network performs it inside FR08 and FR11.
-
-## 7. Open questions
+## 6. Open questions
 
 | No. | Question | Reason |
 |---|---|---|
@@ -140,7 +114,7 @@ FR09 has no human actor. The network performs it inside FR08 and FR11.
 
 The three open questions of actors.md (the delivery assumption, the payer of the settlements, and the place of E03 and E04) also apply to P06, P07, P05 and P09.
 
-## 8. References
+## 7. References
 
 UWE Bristol (2026a) *Bristol Regional Food Network: digital marketplace* [Case study]. UFCFTR-30-3 Distributed and Enterprise Software Development. Unpublished. Copy in [case_study/Case Study - v2.pdf](../../case_study/Case%20Study%20-%20v2.pdf).
 
