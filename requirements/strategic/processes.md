@@ -18,9 +18,9 @@ Source keys: CS is the case study (UWE Bristol, 2026a), with the page number. UC
 
 A function is an area of the enterprise with its own responsibility. The functions of the network (A05) are the lanes of its pool in Figure 1. The customer and the producer are separate pools, so their work is not a lane of the network.
 
-| ID | Function | Pool | Purpose | Owns | Takes part in |
+| ID | Function | Pool | Purpose | Used by | Takes part in |
 |---|---|---|---|---|---|
-| F01 | Catalogue | Network (A05) | Keeps the product listings and the categories that the customers browse, and shows the content of the other lanes next to the products | P01, P03 | P09, P11 |
+| F01 | Product listing | Network (A05) | Keeps the product listings and the categories that the customers browse, and shows the content of the other lanes next to the products | P01, P03 | P09, P11 |
 | F02 | Orders | Network (A05) | Turns a basket into a confirmed marketplace order, splits it by producer, and keeps each producer informed of its orders | P04 | P05, P06, P10 |
 | F03 | Finance | Network (A05) | Takes the customer payments, calculates the 5% commission and settles the producers each week with an audit trail | P05, P07 | None |
 | F04 | Quality and traceability | Network (A05) | Keeps the certification, allergen and best-before information, the records that link customers, products and producers, and the incident process | P02, P08 | P01 |
@@ -40,17 +40,17 @@ Each process has a verb-noun name. The owning function is the lane that holds th
 
 | ID | Process | Owning function | Also involved | Trigger | Outcome | Source | In UC2 |
 |---|---|---|---|---|---|---|---|
-| P01 | Manage product listing | F01 Catalogue | F06 Producer operations, F04 Quality | A producer has a new product, or its availability, stock or price changes | The listing shows the name, the description, the price, the availability timeframe, the stock, the category, the harvest date, the farm origin, and the organic, allergen and best-before information | CS pp. 1-2, UC1 | No (its stock data is an input) |
+| P01 | Manage product listing | F01 Product listing | F06 Producer operations, F04 Quality | A producer has a new product, or its availability, stock or price changes | The listing shows the name, the description, the price, the availability timeframe, the stock, the category, the harvest date, the farm origin, and the organic, allergen and best-before information | CS pp. 1-2, UC1 | No (its stock data is an input) |
 | P02 | Verify organic certification | F04 Quality and traceability | E02 Certification service | A producer marks a product as organic | The product shows a verified organic status, or the claim is rejected | CS p. 2, UC1 | No |
-| P03 | Browse and search catalogue | F01 Catalogue | F07 Customer | A customer opens the marketplace | The customer finds products by category or by search, sees the harvest dates, the farm origin and the seasonal availability, and adds products to a basket | CS p. 2, UC2 | Yes (the start of UC2) |
+| P03 | Browse and search catalogue | F01 Product listing | F07 Customer | A customer opens the marketplace | The customer finds products by category or by search, sees the harvest dates, the farm origin and the seasonal availability, and adds products to a basket | CS p. 2, UC2 | Yes (the start of UC2) |
 | P04 | Process order | F02 Orders | F07 Customer, F06 Producer operations | A customer proceeds to checkout | The stock is checked, the producers and the delivery or collection arrangements are identified, the customer confirms, and the marketplace order is split into producer order elements | CS p. 2, UC2 | Yes |
 | P05 | Process payment | F03 Finance | F07 Customer, E01 Payment service, E03 Notification service | A confirmed order needs payment | The payment succeeds and the order is confirmed, the stock is updated and the producers are notified, or the customer retries after a decline, or the process follows the exception path when the payment service is unavailable. The amount of each producer and the 5% commission are calculated | CS p. 2, UC2 | Yes |
 | P06 | Fulfil order | F06 Producer operations | F02 Orders, F07 Customer | A producer receives a confirmed producer order element | The producer prepares the goods within the lead time (at least 48 hours), and delivers them or hands them over for collection | CS pp. 1-2 | No (follows UC2) |
 | P07 | Settle producer payments | F03 Finance | F06 Producer operations, E06 Tax authority | The weekly settlement date | Each producer receives the amount for its orders less the 5% commission, with an audit trail that is suitable for tax reporting | CS p. 2 | No (follows UC2) |
 | P08 | Handle quality incident | F04 Quality and traceability | F07 Customer, F06 Producer operations, E03 Notification service | A customer, a producer or the administrator reports a food quality or safety concern | The records that link the customer, the product and the producer identify everyone affected, they are contacted, and the representative reviews the incident and closes it or requests further action | CS p. 2, UC3 | No |
-| P09 | Report food miles | F05 Quality assurance and community features | F01 Catalogue, E04 Postcode distance service | A product is shown, or an order is placed, with a customer postcode | The customer sees the distance between the farm and the delivery or collection point, from the postcodes | CS p. 2 | No |
+| P09 | Report food miles | F05 Quality assurance and community features | F01 Product listing, E04 Postcode distance service | A product is shown, or an order is placed, with a customer postcode | The customer sees the distance between the farm and the delivery or collection point, from the postcodes | CS p. 2 | No |
 | P10 | Offer surplus produce | F05 Quality assurance and community features | F02 Orders, F06 Producer operations, E03 Notification service | A producer has surplus produce | A last-minute discount is published and the interested customers are told | CS p. 2 | No |
-| P11 | Share educational content | F05 Quality assurance and community features | F01 Catalogue, F06 Producer operations | A producer writes a seasonal recipe, storage guidance or a farm story | The content is published next to the products of the producer | CS p. 2 | No |
+| P11 | Share educational content | F05 Quality assurance and community features | F01 Product listing, F06 Producer operations | A producer writes a seasonal recipe, storage guidance or a farm story | The content is published next to the products of the producer | CS p. 2 | No |
 
 **Notes:**
 
