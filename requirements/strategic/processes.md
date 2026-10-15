@@ -20,7 +20,7 @@ A function is an area of the enterprise with its own responsibility. The functio
 
 | ID | Function | Pool | Purpose | Used by | Takes part in |
 |---|---|---|---|---|---|
-| F01 | Product listing | BRF Network (A05) | Keeps the product listings and the categories that the customers browse, and shows the content of the other lanes next to the products | P01, P03 | P09, P11 |
+| F01 | Product listing | BRF Network (A05) | Keeps the product listings, the stock and the categories that the customers browse, and shows the content of the other lanes next to the products | P01, P03 | P05, P09, P11 |
 | F02 | Orders | BRF Network (A05) | Turns a basket into a confirmed marketplace order, splits it by producer, and keeps each producer informed of its orders | P04 | P05, P06, P10 |
 | F03 | Finance | BRF Network (A05) | Takes the customer payments, calculates the 5% commission and settles the producers each week with an audit trail | P05, P07 | None |
 | F04 | Quality and traceability | BRF Network (A05) | Keeps the certification, allergen and best-before information, the records that link customers, products and producers, and the incident process | P02, P08 | P01 |
@@ -42,7 +42,7 @@ Each process has a verb-noun name. The owning function is the lane that holds th
 | P02 | Verify organic certification | F04 Quality and traceability | E02 Certification service | A producer marks a product as organic | The product shows a verified organic status, or the claim is rejected | CS p. 2, UC1 | No |
 | P03 | Browse and search catalogue | F01 Product listing | Customer (A01 to A03) | A customer opens the marketplace | The customer finds products by category or by search, sees the harvest dates, the farm origin and the seasonal availability, and adds products to a basket | CS p. 2, UC2 | Yes (the start of UC2) |
 | P04 | Process order | F02 Orders | Customer (A01 to A03), Producer (A04) | A customer proceeds to checkout | The stock is checked, the producers and the delivery or collection arrangements are identified, the customer confirms, and the marketplace order is split into producer order elements | CS p. 2, UC2 | Yes |
-| P05 | Process payment | F03 Finance | Customer (A01 to A03), E01 Payment service, E03 Notification service | A confirmed order needs payment | The payment succeeds and the order is confirmed, the stock is updated and the producers are notified, or the customer retries after a decline, or the process follows the exception path when the payment service is unavailable. The amount of each producer and the 5% commission are calculated | CS p. 2, UC2 | Yes |
+| P05 | Process payment | F03 Finance | Customer (A01 to A03), F01 Product listing, F02 Orders, E01 Payment service, E03 Notification service | A confirmed order needs payment | The payment succeeds and the order is confirmed, the stock is updated and the producers are notified, or the customer retries after a decline, or the process follows the exception path when the payment service is unavailable. The amount of each producer and the 5% commission are calculated | CS p. 2, UC2 | Yes |
 | P06 | Fulfil order | Producer (A04) | F02 Orders, Customer (A01 to A03) | A producer receives a confirmed producer order element | The producer prepares the goods within the lead time (at least 48 hours), and delivers them or hands them over for collection | CS pp. 1-2 | No (follows UC2) |
 | P07 | Settle producer payments | F03 Finance | Producer (A04), E06 Tax authority | The weekly settlement date | Each producer receives the amount for its orders less the 5% commission, with an audit trail that is suitable for tax reporting | CS p. 2 | No (follows UC2) |
 | P08 | Handle quality incident | F04 Quality and traceability | Customer (A01 to A03), Producer (A04), E03 Notification service | A customer, a producer or the administrator reports a food quality or safety concern | The records that link the customer, the product and the producer identify everyone affected, they are contacted, and the representative reviews the incident and closes it or requests further action | CS p. 2, UC3 | No |
@@ -52,7 +52,7 @@ Each process has a verb-noun name. The owning function is the lane that holds th
 
 **Notes:**
 
-- P04 and P05 are the two halves of Use Case 2. The use case runs from the checkout (P04) to the payment result, the stock update and the producer notifications (P05). Together they are the likely call activity for the first operational model (task 2.6). Tasks 2.2 and 2.3 make that decision.
+- P04 and P05 are the two halves of Use Case 2. The use case runs from the checkout (P04) to the payment result, the stock update and the producer notifications (P05). Together they are the likely call activity for the first operational model (task 2.6). Task 2.1 chooses the other process.
 - P03 is the first sentence of UC2 ("a customer browses or searches the marketplace and adds products ... to their basket"). It is a separate process here because browsing happens many times before one checkout.
 - P01 is the listing half of Use Case 1. It is split from P02 because the certification check needs an external service and has its own exception path (service unavailable).
 - The sources do not describe how a producer joins the network. There is no onboarding process in this list (G1 below).
@@ -67,13 +67,18 @@ One row for each process. Each cell gives the part of the actor in the process, 
 | P02 | Verify organic certification | None | Claims the certification and gives its details | F04 sends the claim for verification and records the result | E02 checks the certification |
 | P03 | Browse and search catalogue | Browses by category, searches, reads the harvest date, the farm origin and the seasonal availability, and fills the basket | None | F01 serves the catalogue and the search | None |
 | P04 | Process order | Proceeds to checkout, amends the order when an item is unavailable, reviews the order and confirms | Keeps the stock accurate (through P01) so that the check is right. Has set its delivery or collection arrangements | F02 checks the stock, identifies the producers and the arrangements, creates the marketplace order and splits it by producer | None |
-| P05 | Process payment | Submits the payment and retries after a decline | Receives the notification of a new order | F03 submits the payment, handles the decline and the unavailable paths, confirms the order, updates the stock and calculates the producer amounts and the commission. F02 notifies the producers | E01 takes the payment and returns success, decline or unavailable. E03 sends the notifications |
+| P05 | Process payment | Submits the payment and retries after a decline | Receives the notification of a new order | F03 submits the payment, handles the decline and the unavailable paths, confirms the order, calculates the producer amounts and the commission, and triggers the stock update and the producer notifications when the payment succeeds. F01 updates the stock. F02 notifies the producers | E01 takes the payment and returns success, decline or unavailable. E03 sends the notifications |
 | P06 | Fulfil order | Receives the delivery or collects the goods | Prepares the goods within the lead time and delivers them or hands them over | F02 shows the producer its incoming orders at least 48 hours ahead | None |
 | P07 | Settle producer payments | None | Receives the settlement and uses the audit trail for its accounts and tax | F03 calculates the amount of each producer less the 5% commission, pays it weekly and keeps the audit trail | E06 receives the tax reports of the producers. The payer of the settlements is open (Q2 in actors.md) |
 | P08 | Handle quality incident | Reports a concern. Receives the food safety notice | Reports a concern. Answers the questions of the network and withdraws the product if asked | F04: A06 reports or receives the concern and finds the affected customers, products and producers from the records. A07 reviews the incident and closes it or requests further action | E03 sends the notices. E05 sets the data protection rules for the records |
 | P09 | Report food miles | Gives a postcode and reads the food miles | Gives the postcode of the farm (through P01) | F05 calculates the distance and F01 shows it | E04 gives the distance between the postcodes |
 | P10 | Offer surplus produce | Receives the offer and orders through P04 | Reports the surplus and sets the discount | F05 publishes the offer. F02 applies the discount to the order | E03 tells the customers |
 | P11 | Share educational content | Reads the content | Writes the recipes, the storage guidance and the farm stories | F05 collects the content and F01 publishes it with the products | None |
+
+**Decisions:**
+
+- **Stock update after payment:** P05 triggers it and F01 (Product listing) performs it, because F01 keeps the stock and the availability check in P04 reads the same data. In Figure 1 the activity is in the F01 lane, with a sequence flow from the payment success in P05.
+- **Producer notification:** P05 triggers it and F02 (Orders) sends it, because F02 owns the producer order elements. In Figure 1 the activity is in the F02 lane, with a sequence flow from the payment success in P05.
 
 ## 5. Messages between the participants
 
@@ -150,15 +155,13 @@ Use Case 2 adds these points, which the mapping also covers: the stock check at 
 
 ## 7. Open questions
 
-The group settles the first three questions itself. The tutor answers the second three, and the group asks them at a stand-up.
+The group settles the first question itself. The tutor answers the other three, and the group asks them at a stand-up.
 
 ### Questions for the group
 
 | No. | Question | Reason |
 |---|---|---|
 | G1 | Does the model need a producer onboarding process? The case study says that forty SMEs are in the network, but it does not say how a producer joins or how its account is set up | It decides if the list has a twelfth process and if the strategic model has an activity for it |
-| G2 | Is the stock update after a successful payment part of P05 (as in UC2) or of P01 (where the stock is kept)? | It decides which lane holds the stock update in Figure 1 and where the inventory data belongs when the models become services in Task 2 |
-| G3 | Is the notification of the producers a step of P05 (Finance) or of P04 (Orders)? UC2 places it after the payment, but the orders function owns the producer order elements | It decides the lane of the notification in Figure 1 and in the operational model |
 
 ### Questions for the tutor
 
