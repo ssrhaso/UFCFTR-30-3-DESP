@@ -6,7 +6,7 @@
 
 ## 1. Purpose and scope
 
-This document lists the major business processes of the Bristol Regional Food Network marketplace, the function that owns each process (or the pool, for the one process outside the network), and the responsibilities of each actor in it. The strategic BPMN model (Figure 1) shows each process as one activity. The functions become the lanes of the network pool. Section 5 lists the messages between the participants, which task 1.4 draws as message flows.
+This document lists the major business processes of the Bristol Regional Food Network marketplace, the function that owns each process (or the pool, for the one process outside the network), and the responsibilities of each actor in it. The strategic BPMN model (Figure 1) shows each process as one activity. The functions become the lanes of the network pool. Section 5 lists the messages between the participants, which task 1.5 draws as message flows.
 
 The actors and the external services are in [actors.md](actors.md) (task 1.1). This document uses its IDs: A01 to A07 for the actors and E01 to E06 for the external organisations and services. The chosen use case is Use Case 2: Customer Multi-Vendor Order, Checkout and Payment ([use-case.md](../scope/use-case.md)). The "In UC2" column shows the processes that it needs.
 
@@ -52,7 +52,7 @@ Each process has a verb-noun name. The owning function is the lane that holds th
 
 **Notes:**
 
-- P04 and P05 are the two halves of Use Case 2. The use case runs from the checkout (P04) to the payment result, the stock update and the producer notifications (P05). Together they are the likely call activity for the first operational model (task 2.6). Task 2.1 chooses the other process.
+- P04 and P05 are the two halves of Use Case 2. The use case runs from the checkout (P04) to the payment result, the stock update and the producer notifications (P05). Together they are the likely call activity for the first operational model (task 2.6). Task 2.2 chooses the other process.
 - P03 is the first sentence of UC2 ("a customer browses or searches the marketplace and adds products ... to their basket"). It is a separate process here because browsing happens many times before one checkout.
 - P01 is the listing half of Use Case 1. It is split from P02 because the certification check needs an external service and has its own exception path (service unavailable).
 - The sources do not describe how a producer joins the network. There is no onboarding process in this list (G1 below).
@@ -82,7 +82,7 @@ One row for each process. Each cell gives the part of the actor in the process, 
 
 ## 5. Messages between the participants
 
-A message is something that one participant sends to another across a pool boundary. Task 1.4 draws each row as a message flow in Figure 1. The participants are the Customer pool (A01 to A03), the Producer pool (A04), the BRF Network pool (A05) and the external participants E01 to E04 (actors.md). The lanes inside the BRF Network pool talk through sequence flow, so they send no messages.
+A message is something that one participant sends to another across a pool boundary. Task 1.5 draws each row as a message flow in Figure 1. The participants are the Customer pool (A01 to A03), the Producer pool (A04), the BRF Network pool (A05) and the external participants E01 to E04 (actors.md). The lanes inside the BRF Network pool talk through sequence flow, so they send no messages.
 
 | No. | Sender | Receiver | Message | Process | Source |
 |---|---|---|---|---|---|
@@ -167,8 +167,8 @@ The group settles the first question itself. The tutor answers the other three, 
 
 | No. | Question | Reason |
 |---|---|---|
-| T1 | Which processes become the two functionalities? UC2 (P04 and P05) is the first. The board treats it as given (task 2.6), and task 2.1 chooses the other process, for example P01 (manage products), P07 (settle producer payments) or P10 (offer surplus produce). The group proposes its choice and the tutor agrees it | It decides which processes are call activities in task 1.5, the table in task 2.1 and the second set of operational tasks |
-| T2 | Must the second functionality come from inside UC2, or can it be another process of the marketplace? The wording of task 2.1 suggests another process, but the brief does not say | It decides if the choice in T1 is open to every process in section 3 or only to P04 and P05 |
+| T1 | Which processes become the two functionalities? UC2 (P04 and P05) is the first. The board treats it as given (task 2.6), and task 2.2 chooses the other process, for example P01 (manage products), P07 (settle producer payments) or P10 (offer surplus produce). The group proposes its choice and the tutor agrees it | It decides which processes are call activities in task 1.6, the table in task 2.2 and the second set of operational tasks |
+| T2 | Must the second functionality come from inside UC2, or can it be another process of the marketplace? The wording of task 2.2 suggests another process, but the brief does not say | It decides if the choice in T1 is open to every process in section 3 or only to P04 and P05 |
 | T3 | Is P02 (verify organic certification through an external service) required? The case study only says that producers indicate the certification status. The verification service comes from the UC1 summary in actors.md | It decides if P02, E02 and the messages M03 and M04 stay in the model |
 
 The three open questions of actors.md (the delivery assumption, the payer of the settlements, and the place of E03 and E04) also apply to P06, P07, P05 and P09.
