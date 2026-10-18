@@ -6,7 +6,7 @@
 
 ## 1. Purpose and scope
 
-This document lists the major business processes of the Bristol Regional Food Network marketplace, the function that owns each process (or the pool, for the one process outside the network), and the responsibilities of each actor in it. The strategic BPMN model (Figure 1) shows each process as one activity. The functions become the lanes of the network pool. Section 5 lists the messages between the participants, which [#83](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/83) draws as message flows.
+This document lists the major business processes of the Bristol Regional Food Network marketplace, the function that owns each process (or the pool, for the one process outside the network), and the responsibilities of each actor in it. The strategic BPMN model (Figure 1) shows each process as one activity. The functions become the lanes of the network pool.
 
 The actors and the external services are in [actors.md](actors.md) ([#79](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/79)). This document uses its IDs: A01 to A07 for the actors and E01 to E06 for the external organisations and services. The chosen use case is Use Case 2: Customer Multi-Vendor Order, Checkout and Payment ([use-case.md](../scope/use-case.md)). The "In UC2" column shows the processes that it needs.
 
@@ -80,52 +80,7 @@ One row for each process. Each cell gives the part of the actor in the process, 
 - **Stock update after payment:** P05 triggers it and F01 (Product listing) performs it, because F01 keeps the stock and the availability check in P04 reads the same data. In Figure 1 the activity is in the F01 lane, with a sequence flow from the payment success in P05.
 - **Producer notification:** P05 triggers it and F02 (Orders) sends it, because F02 owns the producer order elements. In Figure 1 the activity is in the F02 lane, with a sequence flow from the payment success in P05.
 
-## 5. Messages between the participants
-
-A message is something that one participant sends to another across a pool boundary. [#83](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/83) draws each row as a message flow in Figure 1. The participants are the Customer pool (A01 to A03), the Producer pool (A04), the BRF Network pool (A05) and the external participants E01 to E04 (actors.md). The lanes inside the BRF Network pool talk through sequence flow, so they send no messages.
-
-| No. | Sender | Receiver | Message | Process | Source |
-|---|---|---|---|---|---|
-| M01 | Producer | BRF Network | Product listing (with the organic claim, allergens and best-before date) | P01 | CS pp. 1-2, UC1 |
-| M02 | Producer | BRF Network | Stock and availability update | P01 | CS pp. 1-2 |
-| M03 | BRF Network | Certification service (E02) | Certification check request | P02 | UC1 |
-| M04 | Certification service (E02) | BRF Network | Certification result | P02 | UC1 |
-| M05 | Customer | BRF Network | Browse or search request | P03 | CS p. 2, UC2 |
-| M06 | BRF Network | Customer | Product results | P03 | CS p. 2, UC2 |
-| M07 | Customer | BRF Network | Order request | P04 | UC2 |
-| M08 | BRF Network | Customer | Stock unavailable notice | P04 | UC2 |
-| M09 | Customer | BRF Network | Amended order | P04 | UC2 |
-| M10 | BRF Network | Customer | Order summary for review (producers, delivery or collection, totals) | P04 | UC2 |
-| M11 | Customer | BRF Network | Purchase confirmation | P04 | UC2 |
-| M12 | BRF Network | Payment service (E01) | Payment request | P05 | UC2 |
-| M13 | Payment service (E01) | BRF Network | Payment result (success, decline or unavailable) | P05 | UC2 |
-| M14 | BRF Network | Customer | Payment declined notice | P05 | UC2 |
-| M15 | Customer | BRF Network | Payment retry | P05 | UC2 |
-| M16 | BRF Network | Customer | Order confirmation | P05 | UC2 |
-| M17 | BRF Network | Producer | New order notification (with the delivery or collection arrangement) | P05 | CS p. 1, UC2 |
-| M18 | Producer | BRF Network | Fulfilment confirmation | P06 | Assumption |
-| M19 | BRF Network | Producer | Weekly settlement statement | P07 | CS p. 1 |
-| M20 | Customer | BRF Network | Quality concern report | P08 | CS p. 2, UC3 |
-| M21 | Producer | BRF Network | Quality concern report | P08 | CS p. 2, UC3 |
-| M22 | BRF Network | Customer | Food safety notice | P08 | CS p. 2, UC3 |
-| M23 | BRF Network | Producer | Food safety notice | P08 | CS p. 2, UC3 |
-| M24 | Customer | BRF Network | Postcode | P09 | CS p. 2 |
-| M25 | BRF Network | Postcode distance service (E04) | Distance request | P09 | CS p. 2 |
-| M26 | Postcode distance service (E04) | BRF Network | Distance result | P09 | CS p. 2 |
-| M27 | Producer | BRF Network | Surplus produce report (with the discount) | P10 | CS p. 2 |
-| M28 | BRF Network | Customer | Surplus offer | P10 | CS p. 2 |
-| M29 | Producer | BRF Network | Educational content (recipe, storage guidance or farm story) | P11 | CS p. 2 |
-
-**Notes:**
-
-- The notification service (E03) is not a sender or a receiver in the table, because actors.md leaves its place open (Q3 in actors.md). If E03 is an external participant, M17, M22, M23 and M28 go through it: the network sends the request to E03 and E03 sends the message.
-- The food miles result (P09) reaches the customer inside M06 and M10, so it has no message of its own.
-- When the payment service is unavailable, no message comes back. The retry or exception path starts in the network, so M13 shows "unavailable" as an outcome of the call.
-- The physical delivery or collection of the goods (P06) is not a message, so it has no row.
-- The regulators (E05) and the tax authority (E06) are not in the BPMN (actors.md), so they send and receive no messages here. The payer of the settlements in M19 is open (Q2 in actors.md).
-- M18 is an assumption. The sources do not say that the producer confirms the fulfilment. Keep it only if the model needs the network to know that an order was delivered or collected.
-
-## 6. Mapping to the requirements of the case study
+## 5. Mapping to the requirements of the case study
 
 Each requirement of the Stakeholder Requirements and the System Requirements sections of the case study maps to at least one process. The first column is the section of the case study.
 
@@ -153,7 +108,7 @@ Each requirement of the Stakeholder Requirements and the System Requirements sec
 
 Use Case 2 adds these points, which the mapping also covers: the stock check at checkout and the request to amend the order (P04), the split of the marketplace order into producer order elements (P04), the stock update and the producer notifications after payment (P05), the retry after a decline and the exception path when the payment service is unavailable (P05), and the amount of each producer and the commission for a multi-vendor order (P05).
 
-## 7. Open questions
+## 6. Open questions
 
 The group settles the first question itself. The tutor answers the other three, and the group asks them at a stand-up.
 
@@ -169,11 +124,11 @@ The group settles the first question itself. The tutor answers the other three, 
 |---|---|---|
 | T1 | Which processes become the two functionalities? UC2 (P04 and P05) is the first. The board treats it as given ([#49](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/49)), and [#36](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/36) chooses the other process, for example P01 (manage products), P07 (settle producer payments) or P10 (offer surplus produce). The group proposes its choice and the tutor agrees it | It decides which processes are call activities in [#84](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/84), the table in [#36](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/36) and the second set of operational tasks |
 | T2 | Must the second functionality come from inside UC2, or can it be another process of the marketplace? The wording of [#36](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/36) suggests another process, but the brief does not say | It decides if the choice in T1 is open to every process in section 3 or only to P04 and P05 |
-| T3 | Is P02 (verify organic certification through an external service) required? The case study only says that producers indicate the certification status. The verification service comes from the UC1 summary in actors.md | It decides if P02, E02 and the messages M03 and M04 stay in the model |
+| T3 | Is P02 (verify organic certification through an external service) required? The case study only says that producers indicate the certification status. The verification service comes from the UC1 summary in actors.md | It decides if P02 and E02 stay in the model |
 
 The three open questions of actors.md (the delivery assumption, the payer of the settlements, and the place of E03 and E04) also apply to P06, P07, P05 and P09.
 
-## 8. References
+## 7. References
 
 UWE Bristol (2026a) *Bristol Regional Food Network: digital marketplace* [Case study]. UFCFTR-30-3 Distributed and Enterprise Software Development. Unpublished. Copy in [case_study/Case Study - v2.pdf](../../case_study/Case%20Study%20-%20v2.pdf).
 
