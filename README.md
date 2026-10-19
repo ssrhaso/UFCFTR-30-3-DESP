@@ -34,26 +34,18 @@ Payments use a sandbox or simulated service only (Stripe test mode, PayPal sandb
 
 ## How we work
 
-The group tracks the work at two levels:
-
-| Level | Tool | Content |
-|---|---|---|
-| High | Jira, [DESD space](https://desdproject.atlassian.net/jira/software/projects/SCRUM/summary) (key `SCRUM`) | One work item for each deliverable, planned into the Jira sprints |
-| Low | GitHub Projects: [DESD Task 1: Figures](https://github.com/orgs/UWE-DESP/projects/1) and [DESD Task 2: System](https://github.com/orgs/UWE-DESP/projects/2) | One parent issue for each Jira work item, with one sub-issue (task) for each piece of work. Each task has one owner |
-
-The GitHub for Atlassian app connects Jira to this repository. Jira shows each pull request and commit that contains a `SCRUM` key on the work item with that key.
+The group tracks the work in GitHub Projects: [DESD Task 1: Process modelling and automation](https://github.com/users/ssrhaso/projects/4) and [DESD Task 2: System](https://github.com/users/ssrhaso/projects/5). Each figure has one parent issue, with one sub-issue (task) for each piece of work. Each task has one owner.
 
 ### Steps for each task
 
 1. Assign the task to yourself, and set its status to In progress.
 2. Create a branch from the task (Development > Create a branch).
-3. Start each commit message with the Jira key of the figure, for example `SCRUM-12 Add the pools to the strategic model`.
-4. Open a pull request. Start the title with the Jira key, and put `Closes #<task number>` in the body. Set the task to In review.
-5. At least 1 other member reviews and approves the pull request. Then merge it with a merge commit.
+3. Open a pull request. Name it after the task, for example `1.1 Identify the key actors, external organisations and services`, and put `Closes #<task number>` in the body. Set the task to In review.
+4. At least 1 other member reviews and approves the pull request. Then merge it with a merge commit.
 
-When the pull request merges, GitHub closes the task, and the board moves it to Done. The GitHub checks run only when a pull request is merged into `main`. They flag each merge that has no `SCRUM` key, no `Closes #<task number>`, no approval from another member, or a model that fails the BPMN lint. GitHub cannot block a merge on this plan, so check these rules before you merge. Move the Jira work items by hand at sprint planning and at the Sprint Review.
+When the pull request merges, GitHub closes the task, and the board moves it to Done. The GitHub checks run only when a pull request is merged into `main`. They flag each merge that has no `Closes #<task number>`, no approval from another member, or a model that fails the BPMN lint. GitHub cannot block a merge on this plan, so check these rules before you merge.
 
-The Task 1 board has one tab for each figure and one for the critical evaluation. Figure 1 is the strategic BPMN model (SCRUM-12), Figure 2 is the operational BPMN models (SCRUM-13) and Figure 3 is the i* model (SCRUM-14). The critical evaluation is the fourth parent issue ([#50](https://github.com/UWE-DESP/UFCFTR-30-3-DESP/issues/50)). It has no Jira key yet, so leave the key out of its pull request titles until the work item exists. The tasks of each parent have numbers: 1.1, 1.2 and so on, and 4.1, 4.2 and so on for the evaluation. To add a task, open the parent, create a sub-issue with the "Task" template, and start its title with the next number of that parent.
+The Task 1 board has one tab for each figure and one for the critical evaluation. Figure 1 is the strategic BPMN model, Figure 2 is the operational BPMN models and Figure 3 is the i* model. The critical evaluation is the fourth parent issue ([#50](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/50)). The tasks of each parent have numbers: 1.1, 1.2 and so on, and 4.1, 4.2 and so on for the evaluation. To add a task, open the parent, create a sub-issue with the "Task" template, and start its title with the next number of that parent.
 
 ### Definition of done
 
