@@ -8,7 +8,7 @@
 - Blockers: none
 
 ### Royden
-- Done since the last stand-up: set up [Jira](https://desdproject.atlassian.net/jira/software/projects/SCRUM/summary); documented the stand-ups ([#98](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/98)); attended 2 group meetings
+- Done since the last stand-up: set up Jira; documented the stand-ups ([#98](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/98)); attended 2 group meetings
 - Next: complete the assigned Sprint 1 tasks; update Jira; identify the key actors, external organisations and services with Hasaan ([#79](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/79))
 - Blockers: none
 
