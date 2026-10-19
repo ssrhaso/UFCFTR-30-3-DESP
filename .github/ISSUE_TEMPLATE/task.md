@@ -17,4 +17,4 @@ assignees: []
 ## Definition of done
 
 - [ ]
-- [ ] Merged through a reviewed pull request. The title starts with the Jira key of the figure, and the body contains `Closes #<this issue number>`
+- [ ] Merged through a reviewed pull request. The body contains `Closes #<this issue number>`

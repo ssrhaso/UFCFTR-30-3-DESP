@@ -9,4 +9,4 @@ The Week 7 practical asks each group to record the skills that it covers. Use th
 | Docker or containers | | |
 | Git and GitHub or GitLab | | |
 | Process modelling (BPMN, UML, flowcharts) | | |
-| Project management tools (Jira, Trello) | | |
+| Project management tools (GitHub Projects, Trello) | | |
