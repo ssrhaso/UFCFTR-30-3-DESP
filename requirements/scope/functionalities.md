@@ -16,7 +16,7 @@ This document has three parts:
 2. **Scope:** the choice of two, the reasons, and the scope of each (sections 3 to 5).
 3. **Agree:** the record of the agreement with the module team (section 6).
 
-The document uses the IDs of [actors.md](../strategic/actors.md) (A01 to A07, E01 to E06) and [processes.md](../strategic/processes.md) (F01 to F05, P01 to P11). The message IDs (M01 to M25, O01 to O04) and the relationship IDs (R01 to R16) come from [interactions.md](../strategic/interactions.md). That document is task 1.3, in review in [#102](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/102). The chosen use case is Use Case 2 ([use-case.md](use-case.md)).
+The document uses the IDs of [actors.md](../strategic/actors.md) (A01 to A07, E01 to E06) and [processes.md](../strategic/processes.md) (F01 to F05, P01 to P11). The message IDs (M01 to M22, O01 to O04) and the relationship IDs (R01 to R17) come from [interactions.md](../strategic/interactions.md). That document is task 1.3, in review in [#102](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/102). The chosen use case is Use Case 2 ([use-case.md](use-case.md)).
 
 Source keys: CS is the case study (UWE Bristol, 2026a), with the page number. UC1, UC2 and UC3 are the three use cases (UWE Bristol, 2026b). **Proposal** marks a design choice of this draft that the sources do not state. The reviewers confirm or change each proposal.
 
@@ -36,9 +36,9 @@ Each candidate is one process of processes.md, or a set of processes that work t
 
 | ID | Candidate | Processes | Owning function | Actors and services | Use case | Trigger | Outcome |
 |---|---|---|---|---|---|---|---|
-| C1 | Process order | [P04](../strategic/processes.md#3-major-processes) | F02 Orders | Customer (A01 to A03). Producer (A04), through its stock and its delivery or collection arrangements | [UC2](use-case.md#comparison) | The customer proceeds to checkout (M07) | The marketplace order exists and is split into producer order elements (R06) |
-| C2 | Process payment | [P05](../strategic/processes.md#3-major-processes) | F03 Finance, with F01 and F02 | Customer, Producer, E01 Payment service, E03 Notification service | [UC2](use-case.md#comparison) | A confirmed order needs payment (R06) | The order is confirmed, the stock is updated and the producers are notified (M12, M13, R07). Or the decline and unavailable paths apply |
-| C3 | Checkout and payment (all of UC2) | [P04 and P05](../strategic/processes.md#3-major-processes) | F02 and F03 | As C1 and C2 | [UC2](use-case.md#comparison) | The customer proceeds to checkout (M07) | As C2 |
+| C1 | Process order | [P04](../strategic/processes.md#3-major-processes) | F02 Orders | Customer (A01 to A03). Producer (A04), through its stock and its delivery or collection arrangements | [UC2](use-case.md#comparison) | The customer proceeds to checkout (M04) | The marketplace order exists and is split into producer order elements (R06) |
+| C2 | Process payment | [P05](../strategic/processes.md#3-major-processes) | F03 Finance, with F01 and F02 | Customer, Producer, E01 Payment service, E03 Notification service | [UC2](use-case.md#comparison) | A confirmed order needs payment (R06) | The order is confirmed, the stock is updated and the producers are notified (M07, M08, M09, R07). Or the decline and unavailable paths apply |
+| C3 | Checkout and payment (all of UC2) | [P04 and P05](../strategic/processes.md#3-major-processes) | F02 and F03 | As C1 and C2 | [UC2](use-case.md#comparison) | The customer proceeds to checkout (M04) | As C2 |
 | C4 | Product listing and certification | [P01 and P02](../strategic/processes.md#3-major-processes) | F01 and F04 | Producer, E02 Certification service | [UC1](use-case.md#comparison) (not chosen) | A producer has a new product, or a change to a product | The product is listed with a verified organic status, or the claim is rejected |
 | C5 | Settle producer payments | [P07](../strategic/processes.md#3-major-processes) | F03 Finance | Producer, E06 Tax authority. The payer is open (Q2 in actors.md) | None (CS p. 2) | The weekly settlement date | Each producer receives its amount less the 5% commission, with an audit trail |
 | C6 | Handle quality incident | [P08](../strategic/processes.md#3-major-processes) | F04 Quality and traceability | Customer, Producer, A06, A07, E03, E05 | [UC3](use-case.md#comparison) (not chosen) | A customer, a producer or the administrator reports a concern | The incident is closed, or further action is requested |
@@ -96,7 +96,7 @@ The group chose C1 and C2 at [stand-up 2](../../sprints/task1-sprint1/standups.m
 
 | No. | Weak point | Effect | Response |
 |---|---|---|---|
-| W1 | UC2 gives P04 no external service | FN1 is weak on service interaction | **Proposal:** FN1 calls a stock service through service tasks, to check and reserve the stock. In Task 1 it is a mock service in Docker. In Task 2 it becomes part of the product service. The food miles in the order summary (M08, R14) can add the postcode distance service (E04), if Q3 makes it external |
+| W1 | UC2 gives P04 no external service | FN1 is weak on service interaction | **Proposal:** FN1 calls a stock service through service tasks, to check and reserve the stock. In Task 1 it is a mock service in Docker. In Task 2 it becomes part of the product service. The food miles in the order summary (R14) can add the postcode distance service (E04), if Q3 makes it external |
 | W2 | The module team can see P04 and P05 as two halves of one process | The Sprint 2 fail band includes functionalities that "do not represent meaningful end-to-end processes" (UWE Bristol, 2026c, p. 15) | Each functionality has its own trigger, owner, outcome, exception paths and service (section 4). The group asks the module team about this directly (A2). The fallback is C3 as FN1 and C5 as FN2 |
 | W3 | The stock can change between the check in FN1 and the update in FN2 | Two customers can buy the last unit of a product | **Proposal:** FN1 reserves the stock for a time limit. FN2 changes the reservation into a stock update after a successful payment. The reservation is released when the order is cancelled |
 
@@ -110,10 +110,10 @@ The group chose C1 and C2 at [stand-up 2](../../sprints/task1-sprint1/standups.m
 | Owning lane | F02 Orders | F03 Finance |
 | Other lanes | F01 Product listing (the stock) | F01 (the stock update) and F02 (the producer notifications) |
 | Participants | Customer, BRF Network, stock service (proposal, W1) | Customer, BRF Network, Producer, E01 Payment service, E03 Notification service (Q3) |
-| Start | The customer proceeds to checkout with the basket (M07) | FN1 gives a confirmed order that needs payment (R06) |
-| Normal end | The marketplace order and the producer order elements exist. The stock is reserved (proposal, W3) | The order is confirmed (M12). The stock is updated (R07). Each producer is notified (M13) |
+| Start | The customer proceeds to checkout with the basket (M04) | FN1 gives a confirmed order that needs payment (R06) |
+| Normal end | The marketplace order and the producer order elements exist. The stock is reserved (proposal, W3) | The order is confirmed (M07). The stock is updated (R07). Each producer is notified (M08, M09) |
 | Other ends | The customer cancels. The customer does not confirm within the time limit (proposal, W3) | The customer cancels after a decline. The payment service stays unavailable after the last retry |
-| Data to the next step | To FN2: the order ID, the producer order elements, the amounts and the reservation | To P06: the producer order elements (M13). To P07: the producer amounts and the commission (R09) |
+| Data to the next step | To FN2: the order ID, the producer order elements, the amounts and the reservation | To P06: the producer order elements (M08, M09). To P07: the producer amounts and the commission (R09) |
 | In scope | The stock check, the amendment, the producers and their arrangements, the review and confirmation, the order and the split | The payment request, the decline and retry, the unavailable path, the producer amounts and the commission, the confirmation, the stock update and the notifications |
 | Out of scope | The browsing and the basket (P03). The surplus discounts (P10, R15) | The weekly settlement (P07). Refunds. Fulfilment (P06). Live payments |
 | Planned process ID | `process_order` | `process_payment` |
@@ -127,7 +127,7 @@ The operational models decide the pools and the lanes in Sprint 2. **Proposal:**
 | Point | Example | Source | Planned element |
 |---|---|---|---|
 | User interaction | The customer amends the order when an item is unavailable (O01, O02) | UC2 | User task with a Camunda Form |
-| User interaction | The customer reviews the order summary and confirms the purchase (M08, M09) | UC2 | User task with a Camunda Form |
+| User interaction | The customer reviews the order summary and confirms the purchase (M04; D2 in interactions.md) | UC2 | User task with a Camunda Form |
 | Automated processing | The system checks the stock of each item in the basket | UC2 | Service task, job type `check-stock` |
 | Automated processing | The system identifies the producers, creates the marketplace order and splits it into producer order elements | UC2 | Service tasks `identify-producers`, `create-order` and `split-order` |
 | Business decisions | Is each item available in the requested quantity? | UC2 | Exclusive gateway with a FEEL condition |
@@ -145,8 +145,8 @@ The operational models decide the pools and the lanes in Sprint 2. **Proposal:**
 |---|---|---|---|
 | User interaction | The customer gives the payment details. Only sandbox test data is permitted | UC2 | User task with a Camunda Form |
 | User interaction | After a decline, the customer chooses to retry or to cancel (O03, O04) | UC2 | User task with a Camunda Form |
-| Automated processing | The system submits the payment (M10) and reads the response (M11) | UC2 | Service task, job type `submit-payment` |
-| Automated processing | The system confirms the order, updates the stock and notifies each producer (M12, M13, R07) | UC2 | Service tasks `confirm-order` and `update-stock`. A multi-instance service task `notify-producer`, with one instance for each producer order element |
+| Automated processing | The system submits the payment (M05) and reads the response (M06) | UC2 | Service task, job type `submit-payment` |
+| Automated processing | The system confirms the order, updates the stock and notifies each producer (M07, M08, M09, R07) | UC2 | Service tasks `confirm-order` and `update-stock`. A multi-instance service task `notify-producer`, with one instance for each producer order element |
 | Business decisions | The payment result: success, decline or service unavailable | UC2 | Exclusive gateway and error boundary events |
 | Business decisions | The amount for each producer and the 5% commission | UC2, CS p. 2 | FEEL expressions in output mappings |
 | Business decisions | The maximum number of retries before the order is cancelled | Proposal | Exclusive gateway with a FEEL condition on a retry counter |
@@ -177,16 +177,16 @@ Each sentence of UC2 maps to FN1, to FN2 or to a process outside the two functio
 
 | No. | UC2 text (shortened) | Functionality | Process | Messages and relationships |
 |---|---|---|---|---|
-| U1 | The customer browses or searches and adds products to the basket | None (the input of FN1) | P03 | M05, M06, R05 |
-| U2 | At checkout, the system checks that all products are available in the requested quantities | FN1 | P04 | M07, R04 |
+| U1 | The customer browses or searches and adds products to the basket | None (the input of FN1) | P03 | R05 (D1 in interactions.md) |
+| U2 | At checkout, the system checks that all products are available in the requested quantities | FN1 | P04 | M04, R04 |
 | U3 | If an item is unavailable, the customer is told and asked to amend the order | FN1 | P04 | O01, O02 |
-| U4 | The system identifies the producers and the delivery or collection arrangements | FN1 | P04 | M08 |
-| U5 | The customer reviews the order and confirms the purchase | FN1 | P04 | M08, M09 |
+| U4 | The system identifies the producers and the delivery or collection arrangements | FN1 | P04 | None (D2 in interactions.md) |
+| U5 | The customer reviews the order and confirms the purchase | FN1 | P04 | M04 (D2 in interactions.md) |
 | U6 | The system creates the marketplace order and separates it into producer order elements | FN1 | P04 | R06 |
-| U7 | The payment goes to an external or simulated payment service | FN2 | P05 | M10, M11 |
-| U8 | On success, the order is confirmed, the stock is updated and the producers are notified | FN2 | P05 | M12, M13, R07, R08 |
+| U7 | The payment goes to an external or simulated payment service | FN2 | P05 | M05, M06 |
+| U8 | On success, the order is confirmed, the stock is updated and the producers are notified | FN2 | P05 | M07, M08, M09, R07, R08 |
 | U9 | On a decline, the customer is told and can retry | FN2 | P05 | O03, O04 |
-| U10 | If the payment service is unavailable, an exception or retry path applies, not a simple termination | FN2 | P05 | M11 (no response) |
+| U10 | If the payment service is unavailable, an exception or retry path applies, not a simple termination | FN2 | P05 | M06 (no response) |
 | U11 | For multi-vendor orders, the system calculates the amount of each producer and the 5% commission | FN2 | P05 | R09 |
 | U12 | The group uses a sandbox or simulated payment service, not a live system | FN2 | P05 | E01 |
 
@@ -212,7 +212,7 @@ A4 is also on the list of questions from stand-up 2.
 
 ### 6.3 Record
 
-Complete this table after the meeting with the module team. The agreement must be in place before the Sprint 1 Review (Thu 29 Oct 2026, 14:01).
+Complete this table after the meeting with the module team. The agreement must be in place before the Sprint 1 Review (Thu 29 Oct 2026, 14:00).
 
 | Field | Value |
 |---|---|
