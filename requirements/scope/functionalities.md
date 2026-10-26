@@ -1,6 +1,6 @@
 # 2.2 Two major functionalities
 
-**Authors:** the group chose the two functionalities at stand-up 2 (Mon 19 Oct 2026). Hasaan Ahmad recorded the choice and wrote this draft. Royden Dias revised the draft to address the review feedback.
+**Authors:** the group chose the two functionalities at stand-up 2 (Mon 19 Oct 2026). Hasaan Ahmad recorded the choice and wrote this draft. Ishaq Modassir Mushtaq, Royden Dias and Shamy reviewed it in [#115](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/115). Royden Dias revised the draft after the review.
 **Task:** [#86](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/86), Criterion 2: analysis and planning
 **Status:** draft for review. The module team has not agreed the choice yet (section 6).
 
@@ -87,18 +87,18 @@ The group chose C1 and C2 at [stand-up 2](../../sprints/task1-sprint1/standups.m
 
 ### 3.3 Other candidates
 
-- C3 is the strongest single candidate, but it combines all of UC2 into one functionality. If the module team rejects the P04/P05 split, C3 is the proposed first functionality. The group must then agree a second functionality and the resulting scope change with the module team (W2, A2).
-- C4 and C6 are strong, but they are outside UC2. They also need actors and services that UC2 does not use (E02, A06 and A07). C4 is a possible second functionality in the fallback because it is rated strong across all six points.
-- C5 concerns the producer payments that follow customer checkout and payment, but it is rated weak on user interaction and exception flows, and its payer is open (Q2 in actors.md). It remains a possible second functionality in the fallback, not an agreed choice. The group asks the module team whether C5 or C4 is acceptable and what additional scope would be required.
-- C7 is a small process with few decisions.
+- **C3** is the strongest single candidate, but it puts all of UC2 into one functionality. If the module team rejects the split into P04 and P05, the group proposes C3 as FN1. The group then agrees the second functionality and the change of scope with the module team (W2, A2).
+- **C4 and C6** are strong, but they are outside UC2. They also need actors and services that UC2 does not use (E02, A06 and A07). C4 is a possible FN2 in the fallback, because it is strong on all six points (section 2.3).
+- **C5** settles the producer payments that follow the checkout and the payment. It is weak on user interaction and on exception flows, and its payer is open (Q2 in actors.md). C5 is the other possible FN2 in the fallback. The group asks the module team which of C4 and C5 it accepts, and which change of scope it permits (A2).
+- **C7** is a small process with few decisions.
 
 ### 3.4 Weak points
 
 | No. | Weak point | Effect | Response |
 |---|---|---|---|
 | W1 | UC2 gives P04 no external service | FN1 is weak on service interaction | **Proposal:** FN1 calls a stock service through service tasks, to check and reserve the stock. In Task 1 it is a mock service in Docker. In Task 2 it becomes part of the product service. The food miles in the order summary (R14) can add the postcode distance service (E04), if Q3 makes it external |
-| W2 | The module team can see P04 and P05 as two halves of one process | The Sprint 2 fail band includes functionalities that "do not represent meaningful end-to-end processes" (UWE Bristol, 2026c, p. 15) | Each functionality has its own trigger, owner, outcome, exception paths and service (section 4). The group asks the module team about this directly (A2). If the split is rejected, the proposed fallback is C3 as FN1, with C5 or C4 as FN2 subject to module-team agreement. Both alternatives extend the current UC2 scope. Section 3.3 explains their strengths and weaknesses |
-| W3 | The stock can change between the check in FN1 and the update in FN2 | Two customers can buy the last unit of a product | Proposal: FN1 reserves the stock for a time limit. FN2 changes the reservation into a stock update after a successful payment. The reservation is released when the order is cancelled or the reservation expires. Sprint 2 must define expiry handling during payment and retries, including what happens if payment succeeds after expiry (S1) |
+| W2 | The module team can see P04 and P05 as two halves of one process | The Sprint 2 fail band includes functionalities that "do not represent meaningful end-to-end processes" (UWE Bristol, 2026c, p. 15) | Each functionality has its own trigger, owner, outcome, exception paths and service (section 4). The group asks the module team about this directly (A2). If the module team rejects the split, the fallback is C3 as FN1 and C4 or C5 as FN2. The module team must agree the choice of FN2. Both options extend the scope beyond UC2. Section 3.3 compares them |
+| W3 | The stock can change between the check in FN1 and the update in FN2 | Two customers can buy the last unit of a product | **Proposal:** FN1 reserves the stock for a time limit. FN2 changes the reservation into a stock update after a successful payment. The reservation is released when the order is cancelled or the reservation expires. Sprint 2 defines the expiry during the payment and its retries. It also defines the result of a payment that succeeds after the expiry (S1) |
 
 ## 4. Scope
 
@@ -112,7 +112,7 @@ The group chose C1 and C2 at [stand-up 2](../../sprints/task1-sprint1/standups.m
 | Participants | Customer, BRF Network, stock service (proposal, W1) | Customer, BRF Network, Producer, E01 Payment service, E03 Notification service (Q3) |
 | Start | The customer proceeds to checkout with the basket (M04) | FN1 gives a confirmed order that needs payment (R06) |
 | Normal end | The marketplace order and the producer order elements exist. The stock is reserved (proposal, W3) | The order is confirmed (M07). The stock is updated (R07). Each producer is notified (M08, M09) |
-| Other ends | The customer cancels. The customer does not confirm within the time limit (proposal, W3) | The customer cancels after a decline (proposal). The order is cancelled after the final payment-service-unavailability retry (proposal; policy to be agreed in Sprint 2) |
+| Other ends | The customer cancels. The customer does not confirm within the time limit (proposal, W3) | The customer cancels after a decline (proposal). The payment service stays unavailable after the last retry, and the order is cancelled (proposal, S3) |
 | Data to the next step | To FN2: the order ID, the producer order elements, the amounts and the reservation | To P06: the producer order elements (M08, M09). To P07: the producer amounts and the commission (R09) |
 | In scope | The stock check, the amendment, the producers and their arrangements, the review and confirmation, the order and the split | The payment request, the decline and retry, the unavailable path, the producer amounts and the commission, the confirmation, the stock update and the notifications |
 | Out of scope | The browsing and the basket (P03). The surplus discounts (P10, R15) | The weekly settlement (P07). Refunds. Fulfilment (P06). Live payments |
@@ -137,28 +137,28 @@ The operational models decide the pools and the lanes in Sprint 2. **Proposal:**
 | Data processing | The basket lines, the stock levels, the producer IDs and the delivery or collection choices become the marketplace order and its producer order elements | UC2 | Process variables. The order record links the customer, the products and the producers (CS p. 2, R10) |
 | Alternative or exception flows | An item is unavailable: the customer is told and amends the order. Then the check runs again | UC2 | Exclusive gateway and a loop back to the check |
 | Alternative or exception flows | The customer does not confirm within the time limit: the reservation is released and the process ends | Proposal (W3) | Interrupting timer boundary event on the review task |
-| Alternative or exception flows | The stock service does not respond: the operation is retried, then a modelled recovery path informs the customer | Proposal | Retry and recovery design to be agreed in Sprint 2. Exhausted job retries raise an incident, not an automatic boundary error. If recovery uses an error boundary event, the worker must explicitly throw a matching BPMN error |
+| Alternative or exception flows | The stock service does not respond: the process retries the call, then a modelled recovery path tells the customer | Proposal | Sprint 2 agrees the retry and recovery design. Exhausted job retries raise an incident. They do not trigger an error boundary event. If the recovery uses an error boundary event, the worker must explicitly throw a matching BPMN error |
 
 ### 4.3 FN2 Process payment
 
 | Point | Example | Source | Planned element |
 |---|---|---|---|
-| User interaction | The customer selects a simulated payment option or supplies a sandbox payment reference. The form does not collect card numbers or card security codes | UC2 permits sandbox or simulated payments; proposed form design | User task with a Camunda Form. The exact fields are agreed in Sprint 2 |
+| User interaction | The customer selects a simulated payment option or gives a sandbox payment reference. The form does not collect card numbers or card security codes | UC2 (the sandbox or simulated payment). Proposal (the form fields) | User task with a Camunda Form. Sprint 2 agrees the fields |
 | User interaction | After a decline, the customer chooses to retry or to cancel (O03, O04) | UC2 | User task with a Camunda Form |
 | Automated processing | The system submits the payment (M05) and reads the response (M06) | UC2 | Service task, job type `submit-payment` |
 | Automated processing | The system confirms the order, updates the stock and notifies each producer (M07, M08, M09, R07) | UC2 | Service tasks `confirm-order` and `update-stock`. A multi-instance service task `notify-producer`, with one instance for each producer order element |
 | Business decisions | The payment result: success, decline or service unavailable | UC2 | Exclusive gateway and error boundary events |
 | Business decisions | The amount for each producer and the 5% commission | UC2, CS p. 2 | FEEL expressions in output mappings |
-| Business decisions | The retry limits and the action after the final unsuccessful attempt. Cancellation after the final service-unavailability retry is a proposal | Proposal; to be agreed in Sprint 2 (S3) | Retry policy to be agreed in Sprint 2. A modelled retry loop may use an exclusive gateway with a FEEL condition on a retry counter |
+| Business decisions | The retry limits, and the action when the last attempt fails | Proposal (S3) | Sprint 2 agrees the retry policy (S3). A modelled retry loop can use an exclusive gateway with a FEEL condition on a retry counter |
 | Service interaction | The payment service takes the payment: a sandbox (for example, Stripe test mode) or a mock service in Docker | UC2, CS p. 1 | Service task with a job worker |
 | Service interaction | The notification service sends the producer notifications | UC2 (Q3) | Service task |
 | Data processing | The order total, the producer amounts, the commission, the payment reference, the payment status and the retry count | UC2 | Process variables. The payment record supplies the weekly settlement (R09) |
-| Alternative or exception flows | The payment service is unavailable: the process follows an exception or retry path. Proposal: after the final unsuccessful attempt, cancel the order, release the stock and tell the customer | UC2 for exception or retry handling; proposal for the final cancellation policy | Retry and recovery design to be agreed in Sprint 2 (S3). Exhausted job retries raise an incident. If recovery uses an error boundary event, the worker must explicitly throw `PAYMENT_SERVICE_UNAVAILABLE`. A modelled retry loop may use a timer event |
-| Alternative or exception flows | The stock reservation expires during payment or retries, or payment succeeds after the reservation has expired | Proposal (W3) | Expiry and recovery handling to be agreed in Sprint 2 (S1). The review-task timer in FN1 does not cover this period |
-| Alternative or exception flows | The payment is declined: the customer is told and can retry (O03, O04) | UC2 | Proposed implementation: the worker explicitly throws `PAYMENT_DECLINED`, caught by an error boundary event leading to the customer retry-or-cancel task |
+| Alternative or exception flows | The payment service is unavailable: the process follows an exception or retry path. **Proposal:** when the last attempt fails, the process cancels the order, releases the stock and tells the customer | UC2 (the exception or retry path). Proposal (the cancellation after the last attempt) | Sprint 2 agrees the retry and recovery design (S3). Exhausted job retries raise an incident. If the recovery uses an error boundary event, the worker must explicitly throw `PAYMENT_SERVICE_UNAVAILABLE`. A modelled retry loop can use a timer event |
+| Alternative or exception flows | The stock reservation expires during the payment or its retries. Or the payment succeeds after the reservation expires | Proposal (W3) | Sprint 2 agrees the expiry and recovery design (S1). The timer on the review task in FN1 does not cover this period |
+| Alternative or exception flows | The payment is declined: the customer is told and can retry (O03, O04) | UC2 | **Proposal:** the worker explicitly throws the BPMN error `PAYMENT_DECLINED`. An error boundary event catches it and starts the user task in which the customer chooses to retry or to cancel |
 | Alternative or exception flows | The customer cancels after a decline: the stock is released and the order is cancelled | Proposal | Exclusive gateway and an end event |
 
-**Constraint**: the payment form and process variables must not hold card numbers or card security codes, including sandbox card details. Use a simulated payment choice or a sandbox payment reference instead. The process may retain the payment reference, payment status and the order and accounting data listed above, but not the underlying card details. No live payment system or real financial data is used during development or testing (CS p. 1). All financial transactions must obey the data protection and financial services regulations (CS p. 2).
+**Constraint:** the payment form and the process variables must not hold card numbers or card security codes. This rule also applies to sandbox card details. Use a simulated payment choice or a sandbox payment reference instead. The process can keep the payment reference, the payment status and the order and accounting data above, but not the card details. Development and testing use no live payment system and no real financial data (CS p. 1). All financial transactions must obey the data protection and financial services regulations (CS p. 2).
 
 ### 4.4 Naming rules
 
@@ -187,7 +187,7 @@ Each sentence of UC2 maps to FN1, to FN2 or to a process outside the two functio
 | U7 | The payment goes to an external or simulated payment service | FN2 | P05 | M05, M06 |
 | U8 | On success, the order is confirmed, the stock is updated and the producers are notified | FN2 | P05 | M07, M08, M09, R07, R08 |
 | U9 | On a decline, the customer is told and can retry | FN2 | P05 | O03, O04 |
-| U10 | If the payment service is unavailable, an exception or retry path applies, not a simple termination | FN2 | P05 | M06 for an explicit error response; otherwise the service-unavailability exception path |
+| U10 | If the payment service is unavailable, an exception or retry path applies, not a simple termination | FN2 | P05 | M06 for an explicit error response. Otherwise, the exception path for an unavailable service |
 | U11 | For multi-vendor orders, the system calculates the amount of each producer and the 5% commission | FN2 | P05 | R09 |
 | U12 | The group uses a sandbox or simulated payment service, not a live system | FN2 | P05 | E01 |
 
@@ -204,7 +204,7 @@ Each sentence of UC2 maps to FN1, to FN2 or to a process outside the two functio
 | No. | Question | Effect |
 |---|---|---|
 | A1 | Do you agree P04 Process order and P05 Process payment as the two major functionalities? | The main decision of this task |
-| A2 | Is each of the two sufficiently end-to-end? If one functionality must contain all of UC2, would you accept C3 as FN1 and either C5 or C4 as FN2? C5 has weak user interaction and exception flows, while C4 is strong across all six points. What scope change would you permit? | If the P04/P05 split is rejected, the group agrees the second functionality and the extension beyond UC2 with the module team before revising the scope |
+| A2 | Is each of the two sufficiently end-to-end? If one functionality must contain all of UC2, do you accept C3 as FN1 and C4 or C5 as FN2? C4 is strong on all six points. C5 is weak on user interaction and on exception flows. Which change of scope do you permit? | If the module team rejects the split, the group agrees FN2 and the scope beyond UC2 with the module team. Then the group changes the scope in section 4 |
 | A3 | Is a mock stock service sufficient for the service interaction of FN1 (W1)? | It decides the service tasks of FN1 |
 | A4 | Do you accept that each producer delivers its goods, or that the customer collects them (Q1 in [actors.md](../strategic/actors.md#5-open-questions))? | It decides the delivery or collection decision in FN1 |
 | A5 | Are the notification service (E03) and the postcode distance service (E04) external (Q3 in actors.md)? | It decides the service tasks for the notifications in FN2 and for the food miles in FN1 |
@@ -234,13 +234,13 @@ Complete this table after the meeting with the module team. The agreement must b
 
 ## 7. Open questions for the group
 
-The reviewers of this pull request answer these questions, or move them to Sprint 2. The answers reflect the review of Sat 24 Oct 2026 and subsequent pull-request feedback.
+The reviewers of this pull request answer these questions, or move them to Sprint 2. The answers come from the reviews of Sat 24 Oct and Mon 26 Oct 2026.
 
 | No. | Question | Reason | Answer |
 |---|---|---|---|
-| S1 | Do we accept the stock reservation (W3)? If so, what is the time limit, and how is expiry handled during payment or retries? | It adds expiry and release handling across FN1 and FN2. The timer on the review task covers only the period before customer confirmation | Keep the reservation as a proposal. It follows the reserve, pay and release pattern of a saga (UWE Bristol, 2026d, slide 24). The group confirms the reservation, the time limit and expiry handling in Sprint 2, when it builds the operational models. This includes what happens if the reservation expires during payment or retries, or payment succeeds after expiry |
+| S1 | Do we accept the stock reservation (W3)? If so, what is the time limit? What happens when the reservation expires during the payment or its retries? | It adds the expiry and the release of the reservation to FN1 and FN2. The timer on the review task covers only the time before the customer confirms | Keep the reservation as a proposal. It follows the reserve, pay and release pattern of a saga (UWE Bristol, 2026d, slide 24). The group confirms the reservation, the time limit and the expiry in Sprint 2, when it builds the operational models. This includes an expiry during the payment or its retries, and a payment that succeeds after the expiry |
 | S2 | How does FN2 start: as a call activity of a parent process, or from a message that FN1 sends? | It decides the interface between the two Camunda processes, and the call activities in #84 | Moved to Sprint 2. Until then, 1.6 ([#84](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/84)) shows P04 and P05 as call activities in Figure 1 |
-| S3 | How many retries do we permit for a decline and for an unavailable service? How long is the wait, and what happens after the final unsuccessful attempt? | It decides the retry counters, timer values and final recovery policy in FN2. The design must distinguish job retries and incidents from explicitly thrown BPMN errors | Moved to Sprint 2. Agree the retry mechanism, any BPMN error codes and the final recovery policy. Cancellation after the final service-unavailability retry remains a proposal |
+| S3 | How many retries do we permit for a decline and for an unavailable service? How long is the wait? What happens when the last attempt fails? | It decides the retry counters, the timer values and the recovery policy in FN2. The design must keep job retries and incidents separate from the BPMN errors that the workers throw | Moved to Sprint 2. Agree the retry mechanism, the BPMN error codes and the recovery policy. The cancellation after the last retry of an unavailable service stays a proposal |
 | S4 | How do we round the producer amounts and the commission? | The rounded amounts must add up to the order total | Moved to Sprint 2 |
 
 The Sprint 2 plan (2.7, [#91](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/91)) gives each of S1 to S4 a task.
