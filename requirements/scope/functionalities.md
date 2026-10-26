@@ -16,7 +16,7 @@ This document has three parts:
 2. **Scope:** the choice of two, the reasons, and the scope of each (sections 3 to 5).
 3. **Agree:** the record of the agreement with the module team (section 6).
 
-The document uses the IDs of [actors.md](../strategic/actors.md) (A01 to A07, E01 to E06) and [processes.md](../strategic/processes.md) (F01 to F05, P01 to P11). The message IDs (M01 to M22, O01 to O04) and the relationship IDs (R01 to R17) come from [interactions.md](../strategic/interactions.md). That document is task 1.3, in review in [#102](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/102). The chosen use case is Use Case 2 ([use-case.md](use-case.md)).
+The document uses the IDs of [actors.md](../strategic/actors.md) (A01 to A07, E01 to E06) and [processes.md](../strategic/processes.md) (F01 to F05, P01 to P11). The message IDs (M01 to M26, O01 to O04) and the relationship IDs (R01 to R17) come from [interactions.md](../strategic/interactions.md). That document is task 1.3, merged in [#102](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/102). The chosen use case is Use Case 2 ([use-case.md](use-case.md)).
 
 Source keys: CS is the case study (UWE Bristol, 2026a), with the page number. UC1, UC2 and UC3 are the three use cases (UWE Bristol, 2026b). **Proposal** marks a design choice of this draft that the sources do not state. The reviewers confirm or change each proposal.
 
@@ -137,13 +137,13 @@ The operational models decide the pools and the lanes in Sprint 2. **Proposal:**
 | Data processing | The basket lines, the stock levels, the producer IDs and the delivery or collection choices become the marketplace order and its producer order elements | UC2 | Process variables. The order record links the customer, the products and the producers (CS p. 2, R10) |
 | Alternative or exception flows | An item is unavailable: the customer is told and amends the order. Then the check runs again | UC2 | Exclusive gateway and a loop back to the check |
 | Alternative or exception flows | The customer does not confirm within the time limit: the reservation is released and the process ends | Proposal (W3) | Interrupting timer boundary event on the review task |
-| Alternative or exception flows | The stock service does not respond: the worker retries, then the customer is told | Proposal | Job retries, then an error boundary event |
+| Alternative or exception flows | The stock service does not respond: the worker retries, then the customer is told | Proposal | Job retries. After the last retry, the worker throws a BPMN error that an error boundary event catches (exhausted retries alone raise an incident) |
 
 ### 4.3 FN2 Process payment
 
 | Point | Example | Source | Planned element |
 |---|---|---|---|
-| User interaction | The customer gives the payment details. Only sandbox test data is permitted | UC2 | User task with a Camunda Form |
+| User interaction | The customer confirms the payment with a simulated payment choice or a sandbox test reference. The form has no card number field | UC2 | User task with a Camunda Form |
 | User interaction | After a decline, the customer chooses to retry or to cancel (O03, O04) | UC2 | User task with a Camunda Form |
 | Automated processing | The system submits the payment (M05) and reads the response (M06) | UC2 | Service task, job type `submit-payment` |
 | Automated processing | The system confirms the order, updates the stock and notifies each producer (M07, M08, M09, R07) | UC2 | Service tasks `confirm-order` and `update-stock`. A multi-instance service task `notify-producer`, with one instance for each producer order element |
@@ -154,7 +154,7 @@ The operational models decide the pools and the lanes in Sprint 2. **Proposal:**
 | Service interaction | The notification service sends the producer notifications | UC2 (Q3) | Service task |
 | Data processing | The order total, the producer amounts, the commission, the payment reference, the payment status and the retry count | UC2 | Process variables. The payment record supplies the weekly settlement (R09) |
 | Alternative or exception flows | The payment is declined: the customer is told and can retry (O03, O04) | UC2 | Error boundary event (`PAYMENT_DECLINED`) and a loop back to the payment task |
-| Alternative or exception flows | The payment service is unavailable: the process waits and retries. After the last retry, it cancels the order, releases the stock and tells the customer | UC2 | Job retries with a backoff, an error boundary event (`PAYMENT_SERVICE_UNAVAILABLE`) and a timer event |
+| Alternative or exception flows | The payment service is unavailable: the process waits and retries. After the last retry, it cancels the order, releases the stock and tells the customer | UC2 (the wait and retry). Proposal (the cancellation after the last retry) | Job retries with a backoff and a timer event. After the last retry, the worker throws the BPMN error `PAYMENT_SERVICE_UNAVAILABLE`, which an error boundary event catches (exhausted retries alone raise an incident) |
 | Alternative or exception flows | The customer cancels after a decline: the stock is released and the order is cancelled | Proposal | Exclusive gateway and an end event |
 
 **Constraint:** the process variables must not hold card numbers. The payment service returns a reference, and the process keeps only this reference. All financial transactions must obey the data protection and financial services regulations (CS p. 2).
@@ -186,7 +186,7 @@ Each sentence of UC2 maps to FN1, to FN2 or to a process outside the two functio
 | U7 | The payment goes to an external or simulated payment service | FN2 | P05 | M05, M06 |
 | U8 | On success, the order is confirmed, the stock is updated and the producers are notified | FN2 | P05 | M07, M08, M09, R07, R08 |
 | U9 | On a decline, the customer is told and can retry | FN2 | P05 | O03, O04 |
-| U10 | If the payment service is unavailable, an exception or retry path applies, not a simple termination | FN2 | P05 | M06 (no response) |
+| U10 | If the payment service is unavailable, an exception or retry path applies, not a simple termination | FN2 | P05 | M06 for an explicit error response; otherwise the service-unavailability exception path |
 | U11 | For multi-vendor orders, the system calculates the amount of each producer and the 5% commission | FN2 | P05 | R09 |
 | U12 | The group uses a sandbox or simulated payment service, not a live system | FN2 | P05 | E01 |
 
@@ -237,7 +237,7 @@ The reviewers of this pull request answer these questions, or move them to Sprin
 
 | No. | Question | Reason | Answer |
 |---|---|---|---|
-| S1 | Do we accept the stock reservation (W3)? If so, what is the time limit? | It adds a timer and a release path to FN1 and FN2 | Keep the reservation as a proposal. It follows the reserve, pay and release pattern of a saga (UWE Bristol, 2026d, slide 24). It gives FN1 and FN2 real exception and compensation paths. The group confirms the reservation and the time limit in Sprint 2, when it builds the operational models |
+| S1 | Do we accept the stock reservation (W3)? If so, what is the time limit? | It adds a timer and a release path to FN1 and FN2 | Keep the reservation as a proposal. It follows the reserve, pay and release pattern of a saga (UWE Bristol, 2026d, slide 24). It gives FN1 and FN2 real exception and compensation paths. The group confirms the reservation and the time limit in Sprint 2, when it builds the operational models. That task also decides how the reservation expires during the payment and its retries, because the timer on the review task only covers the time before the confirmation |
 | S2 | How does FN2 start: as a call activity of a parent process, or from a message that FN1 sends? | It decides the interface between the two Camunda processes, and the call activities in #84 | Moved to Sprint 2. Until then, 1.6 ([#84](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/84)) shows P04 and P05 as call activities in Figure 1 |
 | S3 | How many retries do we permit for a decline and for an unavailable service? How long is the wait between them? | It decides the retry counters and the timer values in FN2 | Moved to Sprint 2 |
 | S4 | How do we round the producer amounts and the commission? | The rounded amounts must add up to the order total | Moved to Sprint 2 |
