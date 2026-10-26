@@ -31,7 +31,7 @@
         <bpmn:flowNodeRef>End_P07</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_PaymentSucceeded</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P05</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_0ski230</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_PaymentNotCompleted</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_F04" name="Quality and traceability">
         <bpmn:flowNodeRef>Start_P02</bpmn:flowNodeRef>
@@ -64,7 +64,7 @@
     <bpmn:task id="P04" name="Process order">
       <bpmn:documentation>P04. Owner: F02 Orders. Stock check, delivery or collection, order split by producer (Use Case 2). See requirements/strategic/processes.md, section 3.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_02</bpmn:incoming>
-      <bpmn:outgoing>Flow_0ypxvem</bpmn:outgoing>
+      <bpmn:outgoing>Flow_BRF_03</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="Task_UpdateStock" name="Update stock">
       <bpmn:documentation>Triggered by P05, performed by F01, which keeps the stock. See the Decisions in section 4 of processes.md.</bpmn:documentation>
@@ -94,7 +94,7 @@
     <bpmn:startEvent id="Start_P07" name="Weekly settlement date">
       <bpmn:outgoing>Flow_BRF_12</bpmn:outgoing>
       <bpmn:timerEventDefinition id="Def_Start_P07">
-        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression" />
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R/P7D</bpmn:timeCycle>
       </bpmn:timerEventDefinition>
     </bpmn:startEvent>
     <bpmn:task id="P07" name="Settle producer payments">
@@ -187,24 +187,22 @@
     <bpmn:sequenceFlow id="Flow_BRF_21" sourceRef="P10" targetRef="End_P10" />
     <bpmn:sequenceFlow id="Flow_BRF_22" sourceRef="Start_P11" targetRef="P11" />
     <bpmn:sequenceFlow id="Flow_BRF_23" sourceRef="P11" targetRef="End_P11" />
-    <bpmn:sequenceFlow id="Flow_0ypxvem" sourceRef="P04" targetRef="Gateway_0ski230" />
-    <bpmn:exclusiveGateway id="Gateway_PaymentSucceeded" name="Payment successful?">
+    <bpmn:sequenceFlow id="Flow_BRF_03" sourceRef="P04" targetRef="P05" />
+    <bpmn:sequenceFlow id="Flow_BRF_04" name="No" sourceRef="Gateway_PaymentSucceeded" targetRef="End_PaymentNotCompleted" />
+    <bpmn:exclusiveGateway id="Gateway_PaymentSucceeded" name="Payment successful?" default="Flow_BRF_04">
       <bpmn:incoming>Flow_BRF_05</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_06</bpmn:outgoing>
-      <bpmn:outgoing>Flow_0ac5wuf</bpmn:outgoing>
+      <bpmn:outgoing>Flow_BRF_04</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_0ac5wuf" sourceRef="Gateway_PaymentSucceeded" targetRef="Gateway_0ski230" />
-    <bpmn:sequenceFlow id="Flow_0rchlp9" sourceRef="Gateway_0ski230" targetRef="P05" />
     <bpmn:task id="P05" name="Process payment">
       <bpmn:documentation>P05. Owner: F03 Finance. Sandbox payment, decline and retry, service unavailable path, 5% commission (Use Case 2). See requirements/strategic/processes.md, section 3.</bpmn:documentation>
-      <bpmn:incoming>Flow_0rchlp9</bpmn:incoming>
+      <bpmn:incoming>Flow_BRF_03</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_05</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:exclusiveGateway id="Gateway_0ski230">
-      <bpmn:incoming>Flow_0ypxvem</bpmn:incoming>
-      <bpmn:incoming>Flow_0ac5wuf</bpmn:incoming>
-      <bpmn:outgoing>Flow_0rchlp9</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_PaymentNotCompleted" name="Payment not completed">
+      <bpmn:documentation>The payment failed after the retries in P05. The operational model of P05 shows the decline, retry and service unavailable paths.</bpmn:documentation>
+      <bpmn:incoming>Flow_BRF_04</bpmn:incoming>
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmn:process id="Process_Producer" name="Producer" isExecutable="false">
     <bpmn:startEvent id="Start_P06" name="Producer order received">
@@ -212,7 +210,7 @@
       <bpmn:messageEventDefinition id="Def_Start_P06" messageRef="Message_ProducerOrder" />
     </bpmn:startEvent>
     <bpmn:task id="P06" name="Fulfil order">
-      <bpmn:documentation>P06. Owner: the producer (A04). Prepares the goods within the 48-hour lead time. See requirements/strategic/processes.md, section 3.</bpmn:documentation>
+      <bpmn:documentation>P06. Owner: the producer (A04). Prepares the goods for the agreed delivery or collection. Producers require visibility of incoming orders with at least 48 hours' lead time for preparation. See requirements/strategic/processes.md, section 3.</bpmn:documentation>
       <bpmn:incoming>Flow_Producer_01</bpmn:incoming>
       <bpmn:outgoing>Flow_Producer_02</bpmn:outgoing>
     </bpmn:task>
@@ -343,14 +341,11 @@
       <bpmndi:BPMNShape id="Gateway_PaymentSucceeded_di" bpmnElement="Gateway_PaymentSucceeded" isMarkerVisible="true">
         <dc:Bounds x="925" y="655" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="985" y="666" width="58" height="27" />
+          <dc:Bounds x="921" y="712" width="58" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="P05_di" bpmnElement="P05">
         <dc:Bounds x="750" y="640" width="140" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0ski230_di" bpmnElement="Gateway_0ski230" isMarkerVisible="true">
-        <dc:Bounds x="675" y="655" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_BRF_01_di" bpmnElement="Flow_BRF_01">
         <di:waypoint x="278" y="240" />
@@ -439,22 +434,24 @@
         <di:waypoint x="1670" y="1020" />
         <di:waypoint x="1722" y="1020" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0ypxvem_di" bpmnElement="Flow_0ypxvem">
-        <di:waypoint x="670" y="500" />
-        <di:waypoint x="700" y="500" />
-        <di:waypoint x="700" y="655" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0ac5wuf_di" bpmnElement="Flow_0ac5wuf">
-        <di:waypoint x="950" y="705" />
-        <di:waypoint x="950" y="750" />
-        <di:waypoint x="620" y="750" />
-        <di:waypoint x="620" y="680" />
-        <di:waypoint x="670" y="680" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0rchlp9_di" bpmnElement="Flow_0rchlp9">
-        <di:waypoint x="725" y="680" />
+      <bpmndi:BPMNEdge id="Flow_BRF_03_di" bpmnElement="Flow_BRF_03">
+        <di:waypoint x="600" y="540" />
+        <di:waypoint x="600" y="680" />
         <di:waypoint x="750" y="680" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_04_di" bpmnElement="Flow_BRF_04">
+        <di:waypoint x="975" y="680" />
+        <di:waypoint x="1042" y="680" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1001" y="662" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="End_PaymentNotCompleted_di" bpmnElement="End_PaymentNotCompleted">
+        <dc:Bounds x="1042" y="662" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1015" y="705" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_Producer_di" bpmnElement="Participant_Producer" isHorizontal="true">
         <dc:Bounds x="160" y="1140" width="1640" height="160" />
         <bpmndi:BPMNLabel />
