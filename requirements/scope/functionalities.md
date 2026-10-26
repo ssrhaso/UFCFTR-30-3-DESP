@@ -233,14 +233,16 @@ Complete this table after the meeting with the module team. The agreement must b
 
 ## 7. Open questions for the group
 
-The reviewers of this pull request answer these questions, or move them to Sprint 2.
+The reviewers of this pull request answer these questions, or move them to Sprint 2. The answers come from the review of Sat 24 Oct 2026.
 
-| No. | Question | Reason |
-|---|---|---|
-| S1 | Do we accept the stock reservation (W3)? If so, what is the time limit? | It adds a timer and a release path to FN1 and FN2 |
-| S2 | How does FN2 start: as a call activity of a parent process, or from a message that FN1 sends? | It decides the interface between the two Camunda processes, and the call activities in #84 |
-| S3 | How many retries do we permit for a decline and for an unavailable service? How long is the wait between them? | It decides the retry counters and the timer values in FN2 |
-| S4 | How do we round the producer amounts and the commission? | The rounded amounts must add up to the order total |
+| No. | Question | Reason | Answer |
+|---|---|---|---|
+| S1 | Do we accept the stock reservation (W3)? If so, what is the time limit? | It adds a timer and a release path to FN1 and FN2 | Keep the reservation as a proposal. It follows the reserve, pay and release pattern of a saga (UWE Bristol, 2026d, slide 24). It gives FN1 and FN2 real exception and compensation paths. The group confirms the reservation and the time limit in Sprint 2, when it builds the operational models |
+| S2 | How does FN2 start: as a call activity of a parent process, or from a message that FN1 sends? | It decides the interface between the two Camunda processes, and the call activities in #84 | Moved to Sprint 2. Until then, 1.6 ([#84](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/84)) shows P04 and P05 as call activities in Figure 1 |
+| S3 | How many retries do we permit for a decline and for an unavailable service? How long is the wait between them? | It decides the retry counters and the timer values in FN2 | Moved to Sprint 2 |
+| S4 | How do we round the producer amounts and the commission? | The rounded amounts must add up to the order total | Moved to Sprint 2 |
+
+The Sprint 2 plan (2.7, [#91](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/91)) gives each of S1 to S4 a task.
 
 ## 8. References
 
@@ -249,3 +251,5 @@ UWE Bristol (2026a) *Bristol Regional Food Network: digital marketplace* [Case s
 UWE Bristol (2026b) *Assessment Task 1 use cases* [Assessment material]. UFCFTR-30-3 Distributed and Enterprise Software Development. Unpublished. Use Case 2 is in [case_study/Case_study.txt](../../case_study/Case_study.txt).
 
 UWE Bristol (2026c) *Assessment Task 1 brief* [Assessment brief]. UFCFTR-30-3 Distributed and Enterprise Software Development. Unpublished.
+
+UWE Bristol (2026d) *Distributed systems* [Lecture slides, week 8]. UFCFTR-30-3 Distributed and Enterprise Software Development. Unpublished. Copy in [lectures/w08 - Distributed systems (lecture).pdf](../../lectures/w08%20-%20Distributed%20systems%20%28lecture%29.pdf).
