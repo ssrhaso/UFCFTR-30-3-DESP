@@ -24,6 +24,8 @@
         <bpmn:flowNodeRef>P04</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_NotifyProducers</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_UC2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_PaymentSplit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_PaymentJoin</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_F03" name="Finance">
         <bpmn:flowNodeRef>Start_P07</bpmn:flowNodeRef>
@@ -68,16 +70,16 @@
     </bpmn:task>
     <bpmn:task id="Task_UpdateStock" name="Update stock">
       <bpmn:documentation>Triggered by P05, performed by F01, which keeps the stock. See the Decisions in section 4 of processes.md.</bpmn:documentation>
-      <bpmn:incoming>Flow_BRF_06</bpmn:incoming>
-      <bpmn:outgoing>Flow_BRF_07</bpmn:outgoing>
+      <bpmn:incoming>Flow_BRF_09</bpmn:incoming>
+      <bpmn:outgoing>Flow_BRF_25</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="Task_NotifyProducers" name="Notify producers">
       <bpmn:documentation>Triggered by P05, performed by F02, which owns the producer order elements. See the Decisions in section 4 of processes.md.</bpmn:documentation>
-      <bpmn:incoming>Flow_BRF_07</bpmn:incoming>
+      <bpmn:incoming>Flow_BRF_24</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_08</bpmn:outgoing>
     </bpmn:task>
     <bpmn:endEvent id="End_UC2" name="Order confirmed">
-      <bpmn:incoming>Flow_BRF_08</bpmn:incoming>
+      <bpmn:incoming>Flow_BRF_26</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:startEvent id="Start_P01" name="Product details received">
       <bpmn:outgoing>Flow_BRF_10</bpmn:outgoing>
@@ -168,11 +170,10 @@
     <bpmn:sequenceFlow id="Flow_BRF_01" sourceRef="Start_UC2" targetRef="P03" />
     <bpmn:sequenceFlow id="Flow_BRF_02" sourceRef="P03" targetRef="P04" />
     <bpmn:sequenceFlow id="Flow_BRF_05" sourceRef="P05" targetRef="Gateway_PaymentSucceeded" />
-    <bpmn:sequenceFlow id="Flow_BRF_06" name="Yes" sourceRef="Gateway_PaymentSucceeded" targetRef="Task_UpdateStock">
+    <bpmn:sequenceFlow id="Flow_BRF_06" name="Yes" sourceRef="Gateway_PaymentSucceeded" targetRef="Gateway_PaymentSplit">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">payment succeeded</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_BRF_07" sourceRef="Task_UpdateStock" targetRef="Task_NotifyProducers" />
-    <bpmn:sequenceFlow id="Flow_BRF_08" sourceRef="Task_NotifyProducers" targetRef="End_UC2" />
+    <bpmn:sequenceFlow id="Flow_BRF_08" sourceRef="Task_NotifyProducers" targetRef="Gateway_PaymentJoin" />
     <bpmn:sequenceFlow id="Flow_BRF_10" sourceRef="Start_P01" targetRef="P01" />
     <bpmn:sequenceFlow id="Flow_BRF_11" sourceRef="P01" targetRef="End_P01" />
     <bpmn:sequenceFlow id="Flow_BRF_12" sourceRef="Start_P07" targetRef="P07" />
@@ -203,6 +204,20 @@
       <bpmn:documentation>The payment failed after the retries in P05. The operational model of P05 shows the decline, retry and service unavailable paths.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_04</bpmn:incoming>
     </bpmn:endEvent>
+    <bpmn:parallelGateway id="Gateway_PaymentSplit">
+      <bpmn:incoming>Flow_BRF_06</bpmn:incoming>
+      <bpmn:outgoing>Flow_BRF_09</bpmn:outgoing>
+      <bpmn:outgoing>Flow_BRF_24</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:parallelGateway id="Gateway_PaymentJoin">
+      <bpmn:incoming>Flow_BRF_25</bpmn:incoming>
+      <bpmn:incoming>Flow_BRF_08</bpmn:incoming>
+      <bpmn:outgoing>Flow_BRF_26</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_BRF_09" sourceRef="Gateway_PaymentSplit" targetRef="Task_UpdateStock" />
+    <bpmn:sequenceFlow id="Flow_BRF_24" sourceRef="Gateway_PaymentSplit" targetRef="Task_NotifyProducers" />
+    <bpmn:sequenceFlow id="Flow_BRF_25" sourceRef="Task_UpdateStock" targetRef="Gateway_PaymentJoin" />
+    <bpmn:sequenceFlow id="Flow_BRF_26" sourceRef="Gateway_PaymentJoin" targetRef="End_UC2" />
   </bpmn:process>
   <bpmn:process id="Process_Producer" name="Producer" isExecutable="false">
     <bpmn:startEvent id="Start_P06" name="Producer order received">
@@ -267,10 +282,10 @@
         <dc:Bounds x="530" y="460" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_UpdateStock_di" bpmnElement="Task_UpdateStock">
-        <dc:Bounds x="1010" y="200" width="140" height="80" />
+        <dc:Bounds x="1110" y="200" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_NotifyProducers_di" bpmnElement="Task_NotifyProducers">
-        <dc:Bounds x="1190" y="460" width="140" height="80" />
+        <dc:Bounds x="1110" y="460" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_UC2_di" bpmnElement="End_UC2">
         <dc:Bounds x="1402" y="482" width="36" height="36" />
@@ -362,21 +377,15 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_06_di" bpmnElement="Flow_BRF_06">
         <di:waypoint x="950" y="655" />
-        <di:waypoint x="950" y="468" />
-        <di:waypoint x="1080" y="468" />
-        <di:waypoint x="1080" y="280" />
+        <di:waypoint x="950" y="500" />
+        <di:waypoint x="1025" y="500" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="961" y="545" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_07_di" bpmnElement="Flow_BRF_07">
-        <di:waypoint x="1150" y="240" />
-        <di:waypoint x="1260" y="240" />
-        <di:waypoint x="1260" y="460" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_08_di" bpmnElement="Flow_BRF_08">
-        <di:waypoint x="1330" y="500" />
-        <di:waypoint x="1402" y="500" />
+        <di:waypoint x="1250" y="500" />
+        <di:waypoint x="1300" y="500" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_10_di" bpmnElement="Flow_BRF_10">
         <di:waypoint x="278" y="360" />
@@ -489,6 +498,30 @@
         <dc:Bounds x="160" y="1580" width="1640" height="60" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_PaymentSplit_di" bpmnElement="Gateway_PaymentSplit">
+        <dc:Bounds x="1025" y="475" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_PaymentJoin_di" bpmnElement="Gateway_PaymentJoin">
+        <dc:Bounds x="1300" y="475" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_BRF_09_di" bpmnElement="Flow_BRF_09">
+        <di:waypoint x="1050" y="475" />
+        <di:waypoint x="1050" y="240" />
+        <di:waypoint x="1110" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_24_di" bpmnElement="Flow_BRF_24">
+        <di:waypoint x="1075" y="500" />
+        <di:waypoint x="1110" y="500" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_25_di" bpmnElement="Flow_BRF_25">
+        <di:waypoint x="1250" y="240" />
+        <di:waypoint x="1325" y="240" />
+        <di:waypoint x="1325" y="475" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_26_di" bpmnElement="Flow_BRF_26">
+        <di:waypoint x="1350" y="500" />
+        <di:waypoint x="1402" y="500" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
