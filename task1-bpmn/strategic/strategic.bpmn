@@ -41,6 +41,8 @@
         <bpmn:flowNodeRef>Start_P01</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P01</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_P01</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_OrganicClaim</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_OrganicMerge</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_F02" name="Orders">
         <bpmn:flowNodeRef>P04</bpmn:flowNodeRef>
@@ -58,9 +60,7 @@
         <bpmn:flowNodeRef>End_PaymentNotCompleted</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_F04" name="Quality and traceability">
-        <bpmn:flowNodeRef>Start_P02</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P02</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>End_P02</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Start_P08</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P08</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_P08</bpmn:flowNodeRef>
@@ -112,8 +112,19 @@
       <bpmn:incoming>Flow_BRF_10</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_11</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:endEvent id="End_P01" name="Listing published">
+    <bpmn:exclusiveGateway id="Gateway_OrganicClaim" name="Organic claim?" default="Flow_BRF_27">
+      <bpmn:documentation>R01 and R02. A listing that claims organic certification goes to P02 for verification before it is published. See requirements/strategic/interactions.md, section 4.2.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_11</bpmn:incoming>
+      <bpmn:outgoing>Flow_BRF_14</bpmn:outgoing>
+      <bpmn:outgoing>Flow_BRF_27</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_OrganicMerge">
+      <bpmn:incoming>Flow_BRF_27</bpmn:incoming>
+      <bpmn:incoming>Flow_BRF_15</bpmn:incoming>
+      <bpmn:outgoing>Flow_BRF_28</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_P01" name="Listing published">
+      <bpmn:incoming>Flow_BRF_28</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:startEvent id="Start_P07" name="Weekly settlement date">
       <bpmn:outgoing>Flow_BRF_12</bpmn:outgoing>
@@ -129,18 +140,11 @@
     <bpmn:endEvent id="End_P07" name="Producers settled">
       <bpmn:incoming>Flow_BRF_13</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:startEvent id="Start_P02" name="Organic claim received">
-      <bpmn:outgoing>Flow_BRF_14</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="Def_Start_P02" messageRef="Message_OrganicClaim" />
-    </bpmn:startEvent>
     <bpmn:task id="P02" name="Verify organic certification">
       <bpmn:documentation>P02. Owner: F04 Quality and traceability. Open question T3 in processes.md. See requirements/strategic/processes.md, section 3.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_14</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_15</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:endEvent id="End_P02" name="Certification status recorded">
-      <bpmn:incoming>Flow_BRF_15</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:startEvent id="Start_P08" name="Quality concern received">
       <bpmn:outgoing>Flow_BRF_16</bpmn:outgoing>
       <bpmn:messageEventDefinition id="Def_Start_P08" messageRef="Message_QualityConcern" />
@@ -197,11 +201,15 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_BRF_08" sourceRef="Task_NotifyProducers" targetRef="Gateway_PaymentJoin" />
     <bpmn:sequenceFlow id="Flow_BRF_10" sourceRef="Start_P01" targetRef="P01" />
-    <bpmn:sequenceFlow id="Flow_BRF_11" sourceRef="P01" targetRef="End_P01" />
+    <bpmn:sequenceFlow id="Flow_BRF_11" sourceRef="P01" targetRef="Gateway_OrganicClaim" />
     <bpmn:sequenceFlow id="Flow_BRF_12" sourceRef="Start_P07" targetRef="P07" />
     <bpmn:sequenceFlow id="Flow_BRF_13" sourceRef="P07" targetRef="End_P07" />
-    <bpmn:sequenceFlow id="Flow_BRF_14" sourceRef="Start_P02" targetRef="P02" />
-    <bpmn:sequenceFlow id="Flow_BRF_15" sourceRef="P02" targetRef="End_P02" />
+    <bpmn:sequenceFlow id="Flow_BRF_14" name="Yes" sourceRef="Gateway_OrganicClaim" targetRef="P02">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">organic certification claimed</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_BRF_15" sourceRef="P02" targetRef="Gateway_OrganicMerge" />
+    <bpmn:sequenceFlow id="Flow_BRF_27" name="No" sourceRef="Gateway_OrganicClaim" targetRef="Gateway_OrganicMerge" />
+    <bpmn:sequenceFlow id="Flow_BRF_28" sourceRef="Gateway_OrganicMerge" targetRef="End_P01" />
     <bpmn:sequenceFlow id="Flow_BRF_16" sourceRef="Start_P08" targetRef="P08" />
     <bpmn:sequenceFlow id="Flow_BRF_17" sourceRef="P08" targetRef="End_P08" />
     <bpmn:sequenceFlow id="Flow_BRF_18" sourceRef="Start_P09" targetRef="P09" />
@@ -258,7 +266,6 @@
     <bpmn:sequenceFlow id="Flow_Producer_02" sourceRef="P06" targetRef="End_P06" />
   </bpmn:process>
   <bpmn:message id="Message_ProductDetails" name="product-details-received" />
-  <bpmn:message id="Message_OrganicClaim" name="organic-claim-received" />
   <bpmn:message id="Message_QualityConcern" name="quality-concern-received" />
   <bpmn:message id="Message_Postcode" name="postcode-received" />
   <bpmn:message id="Message_SurplusReported" name="surplus-produce-reported" />
@@ -271,11 +278,11 @@
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_NotificationService_di" bpmnElement="Participant_NotificationService" isHorizontal="true">
-        <dc:Bounds x="1600" y="80" width="900" height="60" />
+        <dc:Bounds x="1600" y="80" width="1020" height="60" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_BRFNetwork_di" bpmnElement="Participant_BRFNetwork" isHorizontal="true">
-        <dc:Bounds x="160" y="180" width="2340" height="920" />
+        <dc:Bounds x="160" y="180" width="2460" height="920" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_PostcodeService_di" bpmnElement="Participant_PostcodeService" isHorizontal="true">
@@ -283,7 +290,7 @@
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_CertificationService_di" bpmnElement="Participant_CertificationService" isHorizontal="true">
-        <dc:Bounds x="560" y="1160" width="220" height="60" />
+        <dc:Bounds x="2400" y="1160" width="220" height="60" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_PaymentService_di" bpmnElement="Participant_PaymentService" isHorizontal="true">
@@ -291,27 +298,27 @@
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_Producer_di" bpmnElement="Participant_Producer" isHorizontal="true">
-        <dc:Bounds x="930" y="1160" width="1570" height="160" />
+        <dc:Bounds x="930" y="1160" width="1430" height="160" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_F01_di" bpmnElement="Lane_F01" isHorizontal="true">
-        <dc:Bounds x="190" y="180" width="2310" height="240" />
+        <dc:Bounds x="190" y="180" width="2430" height="240" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_F02_di" bpmnElement="Lane_F02" isHorizontal="true">
-        <dc:Bounds x="190" y="420" width="2310" height="160" />
+        <dc:Bounds x="190" y="420" width="2430" height="160" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_F03_di" bpmnElement="Lane_F03" isHorizontal="true">
-        <dc:Bounds x="190" y="580" width="2310" height="200" />
+        <dc:Bounds x="190" y="580" width="2430" height="200" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_F04_di" bpmnElement="Lane_F04" isHorizontal="true">
-        <dc:Bounds x="190" y="780" width="2310" height="160" />
+        <dc:Bounds x="190" y="780" width="2430" height="160" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_F05_di" bpmnElement="Lane_F05" isHorizontal="true">
-        <dc:Bounds x="190" y="940" width="2310" height="160" />
+        <dc:Bounds x="190" y="940" width="2430" height="160" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_UC2_di" bpmnElement="Start_UC2">
@@ -362,8 +369,17 @@
       <bpmndi:BPMNShape id="P01_di" bpmnElement="P01">
         <dc:Bounds x="2160" y="320" width="140" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_OrganicClaim_di" bpmnElement="Gateway_OrganicClaim" isMarkerVisible="true">
+        <dc:Bounds x="2340" y="335" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2320" y="310" width="90" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_OrganicMerge_di" bpmnElement="Gateway_OrganicMerge" isMarkerVisible="true">
+        <dc:Bounds x="2470" y="335" width="50" height="50" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_P01_di" bpmnElement="End_P01">
-        <dc:Bounds x="2340" y="342" width="36" height="36" />
+        <dc:Bounds x="2560" y="342" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_P07_di" bpmnElement="Start_P07">
         <dc:Bounds x="1150" y="662" width="36" height="36" />
@@ -374,14 +390,8 @@
       <bpmndi:BPMNShape id="End_P07_di" bpmnElement="End_P07">
         <dc:Bounds x="1414" y="662" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Start_P02_di" bpmnElement="Start_P02">
-        <dc:Bounds x="500" y="842" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="P02_di" bpmnElement="P02">
-        <dc:Bounds x="570" y="820" width="140" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="End_P02_di" bpmnElement="End_P02">
-        <dc:Bounds x="750" y="842" width="36" height="36" />
+        <dc:Bounds x="2400" y="820" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_P08_di" bpmnElement="Start_P08">
         <dc:Bounds x="1482" y="842" width="36" height="36" />
@@ -429,13 +439,16 @@
         <dc:Bounds x="1215" y="1002" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_P06_di" bpmnElement="Start_P06">
-        <dc:Bounds x="2160" y="1242" width="36" height="36" />
+        <dc:Bounds x="2020" y="1242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1993" y="1205" width="90" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="P06_di" bpmnElement="P06">
-        <dc:Bounds x="2240" y="1220" width="140" height="80" />
+        <dc:Bounds x="2100" y="1220" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_P06_di" bpmnElement="End_P06">
-        <dc:Bounds x="2420" y="1242" width="36" height="36" />
+        <dc:Bounds x="2280" y="1242" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_BRF_01_di" bpmnElement="Flow_BRF_01">
         <di:waypoint x="278" y="240" />
@@ -509,12 +522,27 @@
         <di:waypoint x="1414" y="680" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_14_di" bpmnElement="Flow_BRF_14">
-        <di:waypoint x="536" y="860" />
-        <di:waypoint x="570" y="860" />
+        <di:waypoint x="2365" y="385" />
+        <di:waypoint x="2365" y="860" />
+        <di:waypoint x="2400" y="860" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2372" y="398" width="18" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_15_di" bpmnElement="Flow_BRF_15">
-        <di:waypoint x="710" y="860" />
-        <di:waypoint x="750" y="860" />
+        <di:waypoint x="2495" y="820" />
+        <di:waypoint x="2495" y="385" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_27_di" bpmnElement="Flow_BRF_27">
+        <di:waypoint x="2390" y="360" />
+        <di:waypoint x="2470" y="360" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2422" y="342" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_28_di" bpmnElement="Flow_BRF_28">
+        <di:waypoint x="2520" y="360" />
+        <di:waypoint x="2560" y="360" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_16_di" bpmnElement="Flow_BRF_16">
         <di:waypoint x="1518" y="860" />
@@ -549,12 +577,12 @@
         <di:waypoint x="1215" y="1020" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Producer_01_di" bpmnElement="Flow_Producer_01">
-        <di:waypoint x="2196" y="1260" />
-        <di:waypoint x="2240" y="1260" />
+        <di:waypoint x="2056" y="1260" />
+        <di:waypoint x="2100" y="1260" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Producer_02_di" bpmnElement="Flow_Producer_02">
-        <di:waypoint x="2380" y="1260" />
-        <di:waypoint x="2420" y="1260" />
+        <di:waypoint x="2240" y="1260" />
+        <di:waypoint x="2280" y="1260" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M01_di" bpmnElement="M01">
         <di:waypoint x="2100" y="1160" />
@@ -564,17 +592,17 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M02_di" bpmnElement="M02">
-        <di:waypoint x="610" y="900" />
-        <di:waypoint x="610" y="1160" />
+        <di:waypoint x="2440" y="900" />
+        <di:waypoint x="2440" y="1160" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="515" y="950" width="90" height="27" />
+          <dc:Bounds x="2345" y="950" width="90" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M03_di" bpmnElement="M03">
-        <di:waypoint x="660" y="1160" />
-        <di:waypoint x="660" y="900" />
+        <di:waypoint x="2500" y="1160" />
+        <di:waypoint x="2500" y="900" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="668" y="950" width="90" height="27" />
+          <dc:Bounds x="2508" y="950" width="90" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M04_di" bpmnElement="M04">
@@ -615,13 +643,13 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M09_di" bpmnElement="M09">
-        <di:waypoint x="2500" y="110" />
-        <di:waypoint x="2540" y="110" />
-        <di:waypoint x="2540" y="1190" />
-        <di:waypoint x="2178" y="1190" />
-        <di:waypoint x="2178" y="1242" />
+        <di:waypoint x="2620" y="110" />
+        <di:waypoint x="2660" y="110" />
+        <di:waypoint x="2660" y="1340" />
+        <di:waypoint x="2038" y="1340" />
+        <di:waypoint x="2038" y="1278" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2548" y="640" width="90" height="27" />
+          <dc:Bounds x="2668" y="640" width="90" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M10_di" bpmnElement="M10">
