@@ -47,7 +47,8 @@ The strategic model carries half of the marks, so it has the most time. If the v
 - [ ] #85 (design decisions) is in progress. The video explains the decisions of [interactions.md, section 8](../../requirements/strategic/interactions.md#8-decisions)
 - [x] #90 (product backlog) is merged ([#148](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/148)). The Sprint 1 plan (#94) and the Sprint 2 plan (#91) are on the board
 - [x] The stale `task1-bpmn/strategic/strategic-architecture.bpmn` template is not on `main`
-- [ ] Every Sprint 1 output is on `main` by 14:00
+- [ ] The ZIP files are in [submission/](submission/): `links.txt`, and the board screenshots in `board/`. The MP4 is not in the repository
+- [ ] Every Sprint 1 output is on `main` by 14:00, and the tag `sprint-1-review` marks the last commit
 - [ ] Each member has pulled `main`, and the video uses `main`, not a local branch
 - [ ] The Camunda model, the PNG, the documents, the pull request list, the board and `standups.md` are open in tabs, in the order of section 3
 - [ ] The group has rehearsed once with a timer
