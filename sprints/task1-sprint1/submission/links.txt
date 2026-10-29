@@ -1,0 +1,37 @@
+UFCFTR-30-3 Distributed and Enterprise Software Development
+Task 1, Sprint 1 Review (video)
+
+Repository
+https://github.com/ssrhaso/UFCFTR-30-3-DESP
+Branch: main
+Files: https://github.com/ssrhaso/UFCFTR-30-3-DESP/tree/main
+Merged pull requests and reviews: https://github.com/ssrhaso/UFCFTR-30-3-DESP/pulls?q=is%3Apr+is%3Amerged
+
+Project management (GitHub Projects)
+Task 1 board: https://github.com/users/ssrhaso/projects/4
+Task 2 board: https://github.com/users/ssrhaso/projects/5
+The Sprint 1 plan and the Sprint 2 plan are the Sprint 1 and Sprint 2 tasks on the Task 1 board. Each task has owners, a priority, an estimate and a week.
+
+Sprint 1 outputs in the repository
+Strategic BPMN model: task1-bpmn/strategic/strategic.bpmn (image: strategic.png)
+Use case: requirements/scope/use-case.md
+Actors and external organisations: requirements/strategic/actors.md
+Major processes and responsibilities: requirements/strategic/processes.md
+Interactions between the processes, and the design decisions of the model: requirements/strategic/interactions.md
+Two major functionalities: requirements/scope/functionalities.md
+Initial product backlog: requirements/product-backlog.md
+Stand-up records: sprints/task1-sprint1/standups.md
+Sprint 1 review plan: sprints/task1-sprint1/sprint-1-review-plan.md
+
+Group members (name: GitHub username)
+Hasaan Ahmad: ssrhaso
+Royden Dias: ValerianDias
+Shamy: shamykyzer
+Ishaq Modassir Mushtaq: ishaq231
+The Camunda sync commits show the bot account desp-camunda-sync. Their message gives the member, for example "by Royden Dias".
+
+Files in this ZIP
+links.txt: this file
+sprint-1-review.mp4: the Sprint 1 Review video
+strategic-bpmn.png: export of the strategic BPMN model (task1-bpmn/strategic/strategic.png)
+board/: screenshots of the Task 1 board
