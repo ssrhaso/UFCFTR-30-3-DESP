@@ -3,8 +3,8 @@ Task 1, Sprint 1 Review (video)
 
 Repository
 https://github.com/ssrhaso/UFCFTR-30-3-DESP
-State at submission: the tag sprint-1-review on the branch main
-Files at the submission: https://github.com/ssrhaso/UFCFTR-30-3-DESP/tree/sprint-1-review
+Branch: main
+Files: https://github.com/ssrhaso/UFCFTR-30-3-DESP/tree/main
 Merged pull requests and reviews: https://github.com/ssrhaso/UFCFTR-30-3-DESP/pulls?q=is%3Apr+is%3Amerged
 
 Project management (GitHub Projects)
@@ -33,5 +33,5 @@ The Camunda sync commits show the bot account desp-camunda-sync. Their message g
 Files in this ZIP
 links.txt: this file
 sprint-1-review.mp4: the Sprint 1 Review video
-strategic-bpmn.png: export of the strategic BPMN model at the submission (task1-bpmn/strategic/strategic.png)
+strategic-bpmn.png: export of the strategic BPMN model (task1-bpmn/strategic/strategic.png)
 board/: screenshots of the Task 1 board
