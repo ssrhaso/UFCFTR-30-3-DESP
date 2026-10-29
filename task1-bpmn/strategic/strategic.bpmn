@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_Strategic" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="f127538" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_Strategic" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="5acd1b5" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
   <bpmn:collaboration id="Collaboration_Strategic">
     <bpmn:documentation>Figure 1: strategic BPMN model of the Bristol Regional Food Network marketplace. Pools from requirements/strategic/actors.md, lanes and processes from requirements/strategic/processes.md. The message flows are added in issue #83.</bpmn:documentation>
     <bpmn:participant id="Participant_Customer" name="Customer" />
@@ -34,39 +34,6 @@
   </bpmn:collaboration>
   <bpmn:process id="Process_BRFNetwork" name="BRF Network" isExecutable="false">
     <bpmn:laneSet id="LaneSet_BRFNetwork">
-      <bpmn:lane id="Lane_F01" name="Product listing">
-        <bpmn:flowNodeRef>Start_UC2</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>P03</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_UpdateStock</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Start_P01</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>P01</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>End_P01</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_OrganicClaim</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_OrganicMerge</bpmn:flowNodeRef>
-      </bpmn:lane>
-      <bpmn:lane id="Lane_F02" name="Orders">
-        <bpmn:flowNodeRef>P04</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_NotifyProducers</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>End_UC2</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_PaymentSplit</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_PaymentJoin</bpmn:flowNodeRef>
-      </bpmn:lane>
-      <bpmn:lane id="Lane_F03" name="Finance">
-        <bpmn:flowNodeRef>Start_P07</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>P07</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>End_P07</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_PaymentSucceeded</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>P05</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>End_PaymentNotCompleted</bpmn:flowNodeRef>
-      </bpmn:lane>
-      <bpmn:lane id="Lane_F04" name="Quality and traceability">
-        <bpmn:flowNodeRef>P02</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_CertificationVerified</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>End_ListingNotPublished</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Start_P08</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>P08</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>End_P08</bpmn:flowNodeRef>
-      </bpmn:lane>
       <bpmn:lane id="Lane_F05" name="Quality assurance and community features">
         <bpmn:flowNodeRef>Start_P09</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P09</bpmn:flowNodeRef>
@@ -78,6 +45,39 @@
         <bpmn:flowNodeRef>P11</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_P11</bpmn:flowNodeRef>
       </bpmn:lane>
+      <bpmn:lane id="Lane_F04" name="Quality and traceability">
+        <bpmn:flowNodeRef>P02</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_CertificationVerified</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_ListingNotPublished</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Start_P08</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P08</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_P08</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_F03" name="Finance">
+        <bpmn:flowNodeRef>Start_P07</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P07</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_P07</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_PaymentSucceeded</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_PaymentNotCompleted</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P05</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_F02" name="Orders">
+        <bpmn:flowNodeRef>Task_NotifyProducers</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_UC2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_PaymentSplit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_PaymentJoin</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P04</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_F01" name="Product listing">
+        <bpmn:flowNodeRef>Start_UC2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P03</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_UpdateStock</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Start_P01</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P01</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_OrganicClaim</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_OrganicMerge</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_P01</bpmn:flowNodeRef>
+      </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="Start_UC2" name="Customer opens the marketplace">
       <bpmn:outgoing>Flow_BRF_01</bpmn:outgoing>
@@ -86,11 +86,6 @@
       <bpmn:documentation>P03. Owner: F01 Product listing. Use Case 2 starts here. See requirements/strategic/processes.md, section 3.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_01</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_02</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="P04" name="Process order">
-      <bpmn:documentation>P04. Owner: F02 Orders. Stock check, delivery or collection, order split by producer (Use Case 2). See requirements/strategic/processes.md, section 3.</bpmn:documentation>
-      <bpmn:incoming>Flow_BRF_02</bpmn:incoming>
-      <bpmn:outgoing>Flow_BRF_03</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="Task_UpdateStock" name="Update stock">
       <bpmn:documentation>Triggered by P05, performed by F01, which keeps the stock. See the Decisions in section 4 of processes.md.</bpmn:documentation>
@@ -204,47 +199,11 @@
     <bpmn:endEvent id="End_P11" name="Content published">
       <bpmn:incoming>Flow_BRF_23</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_BRF_01" sourceRef="Start_UC2" targetRef="P03" />
-    <bpmn:sequenceFlow id="Flow_BRF_02" sourceRef="P03" targetRef="P04" />
-    <bpmn:sequenceFlow id="Flow_BRF_05" sourceRef="P05" targetRef="Gateway_PaymentSucceeded" />
-    <bpmn:sequenceFlow id="Flow_BRF_06" name="Yes" sourceRef="Gateway_PaymentSucceeded" targetRef="Gateway_PaymentSplit">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">payment succeeded</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_BRF_08" sourceRef="Task_NotifyProducers" targetRef="Gateway_PaymentJoin" />
-    <bpmn:sequenceFlow id="Flow_BRF_10" sourceRef="Start_P01" targetRef="P01" />
-    <bpmn:sequenceFlow id="Flow_BRF_11" sourceRef="P01" targetRef="Gateway_OrganicClaim" />
-    <bpmn:sequenceFlow id="Flow_BRF_12" sourceRef="Start_P07" targetRef="P07" />
-    <bpmn:sequenceFlow id="Flow_BRF_13" sourceRef="P07" targetRef="End_P07" />
-    <bpmn:sequenceFlow id="Flow_BRF_14" name="Yes" sourceRef="Gateway_OrganicClaim" targetRef="P02">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">organic certification claimed</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_BRF_15" sourceRef="P02" targetRef="Gateway_CertificationVerified" />
-    <bpmn:sequenceFlow id="Flow_BRF_29" name="Yes" sourceRef="Gateway_CertificationVerified" targetRef="Gateway_OrganicMerge">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">certification verified</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_BRF_30" name="No" sourceRef="Gateway_CertificationVerified" targetRef="End_ListingNotPublished" />
-    <bpmn:sequenceFlow id="Flow_BRF_27" name="No" sourceRef="Gateway_OrganicClaim" targetRef="Gateway_OrganicMerge" />
-    <bpmn:sequenceFlow id="Flow_BRF_28" sourceRef="Gateway_OrganicMerge" targetRef="End_P01" />
-    <bpmn:sequenceFlow id="Flow_BRF_16" sourceRef="Start_P08" targetRef="P08" />
-    <bpmn:sequenceFlow id="Flow_BRF_17" sourceRef="P08" targetRef="End_P08" />
-    <bpmn:sequenceFlow id="Flow_BRF_18" sourceRef="Start_P09" targetRef="P09" />
-    <bpmn:sequenceFlow id="Flow_BRF_19" sourceRef="P09" targetRef="End_P09" />
-    <bpmn:sequenceFlow id="Flow_BRF_20" sourceRef="Start_P10" targetRef="P10" />
-    <bpmn:sequenceFlow id="Flow_BRF_21" sourceRef="P10" targetRef="End_P10" />
-    <bpmn:sequenceFlow id="Flow_BRF_22" sourceRef="Start_P11" targetRef="P11" />
-    <bpmn:sequenceFlow id="Flow_BRF_23" sourceRef="P11" targetRef="End_P11" />
-    <bpmn:sequenceFlow id="Flow_BRF_03" sourceRef="P04" targetRef="P05" />
-    <bpmn:sequenceFlow id="Flow_BRF_04" name="No" sourceRef="Gateway_PaymentSucceeded" targetRef="End_PaymentNotCompleted" />
     <bpmn:exclusiveGateway id="Gateway_PaymentSucceeded" name="Payment successful?" default="Flow_BRF_04">
       <bpmn:incoming>Flow_BRF_05</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_06</bpmn:outgoing>
       <bpmn:outgoing>Flow_BRF_04</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:task id="P05" name="Process payment">
-      <bpmn:documentation>P05. Owner: F03 Finance. Sandbox payment, decline and retry, service unavailable path, 5% commission (Use Case 2). See requirements/strategic/processes.md, section 3.</bpmn:documentation>
-      <bpmn:incoming>Flow_BRF_03</bpmn:incoming>
-      <bpmn:outgoing>Flow_BRF_05</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:endEvent id="End_PaymentNotCompleted" name="Payment not completed">
       <bpmn:documentation>The payment failed after the retries in P05. The operational model of P05 shows the decline, retry and service unavailable paths.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_04</bpmn:incoming>
@@ -259,10 +218,57 @@
       <bpmn:incoming>Flow_BRF_08</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_26</bpmn:outgoing>
     </bpmn:parallelGateway>
+    <bpmn:callActivity id="P04" name="Process order">
+      <bpmn:documentation>P04. Owner: F02 Orders. Stock check, delivery or collection, order split by producer (Use Case 2). See requirements/strategic/processes.md, section 3.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="process_order" propagateAllChildVariables="false" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_BRF_02</bpmn:incoming>
+      <bpmn:outgoing>Flow_BRF_03</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:callActivity id="P05" name="Process payment">
+      <bpmn:documentation>P05. Owner: F03 Finance. Sandbox payment, decline and retry, service unavailable path, 5% commission (Use Case 2). See requirements/strategic/processes.md, section 3.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="process_payment" propagateAllChildVariables="false" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_BRF_03</bpmn:incoming>
+      <bpmn:outgoing>Flow_BRF_05</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_BRF_01" sourceRef="Start_UC2" targetRef="P03" />
+    <bpmn:sequenceFlow id="Flow_BRF_02" sourceRef="P03" targetRef="P04" />
     <bpmn:sequenceFlow id="Flow_BRF_09" sourceRef="Gateway_PaymentSplit" targetRef="Task_UpdateStock" />
-    <bpmn:sequenceFlow id="Flow_BRF_24" sourceRef="Gateway_PaymentSplit" targetRef="Task_NotifyProducers" />
     <bpmn:sequenceFlow id="Flow_BRF_25" sourceRef="Task_UpdateStock" targetRef="Gateway_PaymentJoin" />
+    <bpmn:sequenceFlow id="Flow_BRF_24" sourceRef="Gateway_PaymentSplit" targetRef="Task_NotifyProducers" />
+    <bpmn:sequenceFlow id="Flow_BRF_08" sourceRef="Task_NotifyProducers" targetRef="Gateway_PaymentJoin" />
     <bpmn:sequenceFlow id="Flow_BRF_26" sourceRef="Gateway_PaymentJoin" targetRef="End_UC2" />
+    <bpmn:sequenceFlow id="Flow_BRF_10" sourceRef="Start_P01" targetRef="P01" />
+    <bpmn:sequenceFlow id="Flow_BRF_11" sourceRef="P01" targetRef="Gateway_OrganicClaim" />
+    <bpmn:sequenceFlow id="Flow_BRF_14" name="Yes" sourceRef="Gateway_OrganicClaim" targetRef="P02">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">organic certification claimed</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_BRF_27" name="No" sourceRef="Gateway_OrganicClaim" targetRef="Gateway_OrganicMerge" />
+    <bpmn:sequenceFlow id="Flow_BRF_29" name="Yes" sourceRef="Gateway_CertificationVerified" targetRef="Gateway_OrganicMerge">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">certification verified</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_BRF_28" sourceRef="Gateway_OrganicMerge" targetRef="End_P01" />
+    <bpmn:sequenceFlow id="Flow_BRF_12" sourceRef="Start_P07" targetRef="P07" />
+    <bpmn:sequenceFlow id="Flow_BRF_13" sourceRef="P07" targetRef="End_P07" />
+    <bpmn:sequenceFlow id="Flow_BRF_15" sourceRef="P02" targetRef="Gateway_CertificationVerified" />
+    <bpmn:sequenceFlow id="Flow_BRF_30" name="No" sourceRef="Gateway_CertificationVerified" targetRef="End_ListingNotPublished" />
+    <bpmn:sequenceFlow id="Flow_BRF_16" sourceRef="Start_P08" targetRef="P08" />
+    <bpmn:sequenceFlow id="Flow_BRF_17" sourceRef="P08" targetRef="End_P08" />
+    <bpmn:sequenceFlow id="Flow_BRF_18" sourceRef="Start_P09" targetRef="P09" />
+    <bpmn:sequenceFlow id="Flow_BRF_19" sourceRef="P09" targetRef="End_P09" />
+    <bpmn:sequenceFlow id="Flow_BRF_20" sourceRef="Start_P10" targetRef="P10" />
+    <bpmn:sequenceFlow id="Flow_BRF_21" sourceRef="P10" targetRef="End_P10" />
+    <bpmn:sequenceFlow id="Flow_BRF_22" sourceRef="Start_P11" targetRef="P11" />
+    <bpmn:sequenceFlow id="Flow_BRF_23" sourceRef="P11" targetRef="End_P11" />
+    <bpmn:sequenceFlow id="Flow_BRF_05" sourceRef="P05" targetRef="Gateway_PaymentSucceeded" />
+    <bpmn:sequenceFlow id="Flow_BRF_06" name="Yes" sourceRef="Gateway_PaymentSucceeded" targetRef="Gateway_PaymentSplit">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">payment succeeded</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_BRF_04" name="No" sourceRef="Gateway_PaymentSucceeded" targetRef="End_PaymentNotCompleted" />
+    <bpmn:sequenceFlow id="Flow_BRF_03" sourceRef="P04" targetRef="P05" />
   </bpmn:process>
   <bpmn:process id="Process_Producer" name="Producer" isExecutable="false">
     <bpmn:startEvent id="Start_P06" name="Producer order received">
@@ -289,502 +295,535 @@
   <bpmndi:BPMNDiagram id="Diagram_Strategic">
     <bpmndi:BPMNPlane id="Plane_Strategic" bpmnElement="Collaboration_Strategic">
       <bpmndi:BPMNShape id="Participant_Customer_di" bpmnElement="Participant_Customer" isHorizontal="true">
-        <dc:Bounds x="160" y="80" width="1380" height="60" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Participant_NotificationService_di" bpmnElement="Participant_NotificationService" isHorizontal="true">
-        <dc:Bounds x="1600" y="80" width="1140" height="60" />
+        <dc:Bounds x="260" y="80" width="1380" height="60" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_BRFNetwork_di" bpmnElement="Participant_BRFNetwork" isHorizontal="true">
-        <dc:Bounds x="160" y="180" width="2580" height="920" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Participant_PostcodeService_di" bpmnElement="Participant_PostcodeService" isHorizontal="true">
-        <dc:Bounds x="280" y="1160" width="240" height="60" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Participant_CertificationService_di" bpmnElement="Participant_CertificationService" isHorizontal="true">
-        <dc:Bounds x="2400" y="1160" width="220" height="60" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Participant_PaymentService_di" bpmnElement="Participant_PaymentService" isHorizontal="true">
-        <dc:Bounds x="810" y="1160" width="95" height="60" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Participant_Producer_di" bpmnElement="Participant_Producer" isHorizontal="true">
-        <dc:Bounds x="930" y="1160" width="1430" height="160" />
+        <dc:Bounds x="260" y="180" width="2580" height="920" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_F01_di" bpmnElement="Lane_F01" isHorizontal="true">
-        <dc:Bounds x="190" y="180" width="2550" height="240" />
+        <dc:Bounds x="290" y="180" width="2550" height="240" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_F02_di" bpmnElement="Lane_F02" isHorizontal="true">
-        <dc:Bounds x="190" y="420" width="2550" height="160" />
+        <dc:Bounds x="290" y="420" width="2550" height="160" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_F03_di" bpmnElement="Lane_F03" isHorizontal="true">
-        <dc:Bounds x="190" y="580" width="2550" height="200" />
+        <dc:Bounds x="290" y="580" width="2550" height="200" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_F04_di" bpmnElement="Lane_F04" isHorizontal="true">
-        <dc:Bounds x="190" y="780" width="2550" height="160" />
+        <dc:Bounds x="290" y="780" width="2550" height="160" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_F05_di" bpmnElement="Lane_F05" isHorizontal="true">
-        <dc:Bounds x="190" y="940" width="2550" height="160" />
+        <dc:Bounds x="290" y="940" width="2550" height="160" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_UC2_di" bpmnElement="Start_UC2">
-        <dc:Bounds x="242" y="222" width="36" height="36" />
+        <dc:Bounds x="342" y="222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="320" y="258" width="81" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="P03_di" bpmnElement="P03">
-        <dc:Bounds x="330" y="200" width="140" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P04_di" bpmnElement="P04">
-        <dc:Bounds x="530" y="460" width="140" height="80" />
+        <dc:Bounds x="430" y="200" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_UpdateStock_di" bpmnElement="Task_UpdateStock">
-        <dc:Bounds x="1110" y="200" width="140" height="80" />
+        <dc:Bounds x="1210" y="200" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_NotifyProducers_di" bpmnElement="Task_NotifyProducers">
-        <dc:Bounds x="1110" y="460" width="140" height="80" />
+        <dc:Bounds x="1210" y="460" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_UC2_di" bpmnElement="End_UC2">
-        <dc:Bounds x="1402" y="482" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P05_di" bpmnElement="P05">
-        <dc:Bounds x="750" y="640" width="140" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_PaymentSucceeded_di" bpmnElement="Gateway_PaymentSucceeded" isMarkerVisible="true">
-        <dc:Bounds x="925" y="655" width="50" height="50" />
+        <dc:Bounds x="1502" y="482" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="921" y="712" width="58" height="27" />
+          <dc:Bounds x="1480" y="518" width="80" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="End_PaymentNotCompleted_di" bpmnElement="End_PaymentNotCompleted">
-        <dc:Bounds x="1042" y="662" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1015" y="705" width="90" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_PaymentSplit_di" bpmnElement="Gateway_PaymentSplit">
-        <dc:Bounds x="1025" y="475" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_PaymentJoin_di" bpmnElement="Gateway_PaymentJoin">
-        <dc:Bounds x="1300" y="475" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_P01_di" bpmnElement="Start_P01">
-        <dc:Bounds x="2082" y="342" width="36" height="36" />
+        <dc:Bounds x="2182" y="342" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2055" y="302" width="90" height="27" />
+          <dc:Bounds x="2164" y="302" width="73" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="P01_di" bpmnElement="P01">
-        <dc:Bounds x="2160" y="320" width="140" height="80" />
+        <dc:Bounds x="2260" y="320" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_OrganicClaim_di" bpmnElement="Gateway_OrganicClaim" isMarkerVisible="true">
-        <dc:Bounds x="2340" y="335" width="50" height="50" />
+        <dc:Bounds x="2440" y="335" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2320" y="310" width="90" height="14" />
+          <dc:Bounds x="2428" y="310" width="74" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_OrganicMerge_di" bpmnElement="Gateway_OrganicMerge" isMarkerVisible="true">
-        <dc:Bounds x="2580" y="335" width="50" height="50" />
+        <dc:Bounds x="2680" y="335" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_P01_di" bpmnElement="End_P01">
-        <dc:Bounds x="2680" y="342" width="36" height="36" />
+        <dc:Bounds x="2780" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2757" y="378" width="82" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_P07_di" bpmnElement="Start_P07">
-        <dc:Bounds x="1150" y="662" width="36" height="36" />
+        <dc:Bounds x="1250" y="662" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1223" y="698" width="90" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="P07_di" bpmnElement="P07">
-        <dc:Bounds x="1230" y="640" width="140" height="80" />
+        <dc:Bounds x="1330" y="640" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_P07_di" bpmnElement="End_P07">
-        <dc:Bounds x="1414" y="662" width="36" height="36" />
+        <dc:Bounds x="1514" y="662" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1489" y="698" width="86" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="P02_di" bpmnElement="P02">
-        <dc:Bounds x="2400" y="820" width="140" height="80" />
+        <dc:Bounds x="2500" y="820" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_CertificationVerified_di" bpmnElement="Gateway_CertificationVerified" isMarkerVisible="true">
-        <dc:Bounds x="2580" y="835" width="50" height="50" />
+        <dc:Bounds x="2680" y="835" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2545" y="892" width="80" height="27" />
+          <dc:Bounds x="2656" y="892" width="59" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_ListingNotPublished_di" bpmnElement="End_ListingNotPublished">
-        <dc:Bounds x="2680" y="842" width="36" height="36" />
+        <dc:Bounds x="2780" y="842" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2655" y="885" width="80" height="27" />
+          <dc:Bounds x="2770" y="885" width="51" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_P08_di" bpmnElement="Start_P08">
-        <dc:Bounds x="1482" y="842" width="36" height="36" />
+        <dc:Bounds x="1582" y="842" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1562" y="878" width="77" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="P08_di" bpmnElement="P08">
-        <dc:Bounds x="1570" y="820" width="140" height="80" />
+        <dc:Bounds x="1670" y="820" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_P08_di" bpmnElement="End_P08">
-        <dc:Bounds x="1760" y="842" width="36" height="36" />
+        <dc:Bounds x="1860" y="842" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1841" y="878" width="74" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_P09_di" bpmnElement="Start_P09">
-        <dc:Bounds x="242" y="1002" width="36" height="36" />
+        <dc:Bounds x="342" y="1002" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="215" y="962" width="90" height="27" />
+          <dc:Bounds x="337" y="962" width="46" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="P09_di" bpmnElement="P09">
-        <dc:Bounds x="330" y="980" width="140" height="80" />
+        <dc:Bounds x="430" y="980" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_P09_di" bpmnElement="End_P09">
-        <dc:Bounds x="522" y="1002" width="36" height="36" />
+        <dc:Bounds x="622" y="1002" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="596" y="1038" width="89" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_P10_di" bpmnElement="Start_P10">
-        <dc:Bounds x="1740" y="1002" width="36" height="36" />
+        <dc:Bounds x="1840" y="1002" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1713" y="962" width="90" height="27" />
+          <dc:Bounds x="1818" y="962" width="81" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="P10_di" bpmnElement="P10">
-        <dc:Bounds x="1820" y="980" width="140" height="80" />
+        <dc:Bounds x="1920" y="980" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_P10_di" bpmnElement="End_P10">
-        <dc:Bounds x="2000" y="1002" width="36" height="36" />
+        <dc:Bounds x="2100" y="1002" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2087" y="1038" width="63" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_P11_di" bpmnElement="Start_P11">
-        <dc:Bounds x="965" y="1002" width="36" height="36" />
+        <dc:Bounds x="1065" y="1002" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="938" y="962" width="90" height="27" />
+          <dc:Bounds x="1038" y="962" width="90" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="P11_di" bpmnElement="P11">
-        <dc:Bounds x="1040" y="980" width="140" height="80" />
+        <dc:Bounds x="1140" y="980" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_P11_di" bpmnElement="End_P11">
-        <dc:Bounds x="1215" y="1002" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Start_P06_di" bpmnElement="Start_P06">
-        <dc:Bounds x="2020" y="1242" width="36" height="36" />
+        <dc:Bounds x="1315" y="1002" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1993" y="1205" width="90" height="27" />
+          <dc:Bounds x="1289" y="1038" width="89" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P06_di" bpmnElement="P06">
-        <dc:Bounds x="2100" y="1220" width="140" height="80" />
+      <bpmndi:BPMNShape id="Gateway_PaymentSucceeded_di" bpmnElement="Gateway_PaymentSucceeded" isMarkerVisible="true">
+        <dc:Bounds x="1025" y="655" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1021" y="712" width="58" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="End_P06_di" bpmnElement="End_P06">
-        <dc:Bounds x="2280" y="1242" width="36" height="36" />
+      <bpmndi:BPMNShape id="End_PaymentNotCompleted_di" bpmnElement="End_PaymentNotCompleted">
+        <dc:Bounds x="1142" y="662" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1129" y="705" width="62" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_PaymentSplit_di" bpmnElement="Gateway_PaymentSplit">
+        <dc:Bounds x="1125" y="475" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_PaymentJoin_di" bpmnElement="Gateway_PaymentJoin">
+        <dc:Bounds x="1400" y="475" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0icbn18_di" bpmnElement="P04">
+        <dc:Bounds x="630" y="460" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0op8ugk_di" bpmnElement="P05">
+        <dc:Bounds x="850" y="640" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_BRF_01_di" bpmnElement="Flow_BRF_01">
-        <di:waypoint x="278" y="240" />
-        <di:waypoint x="330" y="240" />
+        <di:waypoint x="378" y="240" />
+        <di:waypoint x="430" y="240" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_02_di" bpmnElement="Flow_BRF_02">
-        <di:waypoint x="470" y="240" />
-        <di:waypoint x="600" y="240" />
-        <di:waypoint x="600" y="460" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_03_di" bpmnElement="Flow_BRF_03">
-        <di:waypoint x="600" y="540" />
-        <di:waypoint x="600" y="680" />
-        <di:waypoint x="750" y="680" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_05_di" bpmnElement="Flow_BRF_05">
-        <di:waypoint x="890" y="680" />
-        <di:waypoint x="925" y="680" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_06_di" bpmnElement="Flow_BRF_06">
-        <di:waypoint x="950" y="655" />
-        <di:waypoint x="950" y="500" />
-        <di:waypoint x="1025" y="500" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="961" y="545" width="18" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_04_di" bpmnElement="Flow_BRF_04">
-        <di:waypoint x="975" y="680" />
-        <di:waypoint x="1042" y="680" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1001" y="662" width="15" height="14" />
-        </bpmndi:BPMNLabel>
+        <di:waypoint x="570" y="240" />
+        <di:waypoint x="700" y="240" />
+        <di:waypoint x="700" y="460" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_09_di" bpmnElement="Flow_BRF_09">
-        <di:waypoint x="1050" y="475" />
-        <di:waypoint x="1050" y="240" />
-        <di:waypoint x="1110" y="240" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_24_di" bpmnElement="Flow_BRF_24">
-        <di:waypoint x="1075" y="500" />
-        <di:waypoint x="1110" y="500" />
+        <di:waypoint x="1150" y="475" />
+        <di:waypoint x="1150" y="240" />
+        <di:waypoint x="1210" y="240" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_25_di" bpmnElement="Flow_BRF_25">
-        <di:waypoint x="1250" y="240" />
-        <di:waypoint x="1325" y="240" />
-        <di:waypoint x="1325" y="475" />
+        <di:waypoint x="1350" y="240" />
+        <di:waypoint x="1425" y="240" />
+        <di:waypoint x="1425" y="475" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_24_di" bpmnElement="Flow_BRF_24">
+        <di:waypoint x="1175" y="500" />
+        <di:waypoint x="1210" y="500" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_08_di" bpmnElement="Flow_BRF_08">
-        <di:waypoint x="1250" y="500" />
-        <di:waypoint x="1300" y="500" />
+        <di:waypoint x="1350" y="500" />
+        <di:waypoint x="1400" y="500" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_26_di" bpmnElement="Flow_BRF_26">
-        <di:waypoint x="1350" y="500" />
-        <di:waypoint x="1402" y="500" />
+        <di:waypoint x="1450" y="500" />
+        <di:waypoint x="1502" y="500" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_10_di" bpmnElement="Flow_BRF_10">
-        <di:waypoint x="2118" y="360" />
-        <di:waypoint x="2160" y="360" />
+        <di:waypoint x="2218" y="360" />
+        <di:waypoint x="2260" y="360" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_11_di" bpmnElement="Flow_BRF_11">
-        <di:waypoint x="2300" y="360" />
-        <di:waypoint x="2340" y="360" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_12_di" bpmnElement="Flow_BRF_12">
-        <di:waypoint x="1186" y="680" />
-        <di:waypoint x="1230" y="680" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_13_di" bpmnElement="Flow_BRF_13">
-        <di:waypoint x="1370" y="680" />
-        <di:waypoint x="1414" y="680" />
+        <di:waypoint x="2400" y="360" />
+        <di:waypoint x="2440" y="360" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_14_di" bpmnElement="Flow_BRF_14">
-        <di:waypoint x="2365" y="385" />
-        <di:waypoint x="2365" y="860" />
-        <di:waypoint x="2400" y="860" />
+        <di:waypoint x="2465" y="385" />
+        <di:waypoint x="2465" y="860" />
+        <di:waypoint x="2500" y="860" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2372" y="398" width="18" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_15_di" bpmnElement="Flow_BRF_15">
-        <di:waypoint x="2540" y="860" />
-        <di:waypoint x="2580" y="860" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_29_di" bpmnElement="Flow_BRF_29">
-        <di:waypoint x="2605" y="835" />
-        <di:waypoint x="2605" y="385" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="2612" y="800" width="18" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_30_di" bpmnElement="Flow_BRF_30">
-        <di:waypoint x="2630" y="860" />
-        <di:waypoint x="2680" y="860" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="2647" y="842" width="15" height="14" />
+          <dc:Bounds x="2472" y="398" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_27_di" bpmnElement="Flow_BRF_27">
-        <di:waypoint x="2390" y="360" />
-        <di:waypoint x="2580" y="360" />
+        <di:waypoint x="2490" y="360" />
+        <di:waypoint x="2680" y="360" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2422" y="342" width="15" height="14" />
+          <dc:Bounds x="2522" y="342" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_29_di" bpmnElement="Flow_BRF_29">
+        <di:waypoint x="2705" y="835" />
+        <di:waypoint x="2705" y="385" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2712" y="800" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_28_di" bpmnElement="Flow_BRF_28">
-        <di:waypoint x="2630" y="360" />
-        <di:waypoint x="2680" y="360" />
+        <di:waypoint x="2730" y="360" />
+        <di:waypoint x="2780" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_12_di" bpmnElement="Flow_BRF_12">
+        <di:waypoint x="1286" y="680" />
+        <di:waypoint x="1330" y="680" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_13_di" bpmnElement="Flow_BRF_13">
+        <di:waypoint x="1470" y="680" />
+        <di:waypoint x="1514" y="680" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_15_di" bpmnElement="Flow_BRF_15">
+        <di:waypoint x="2640" y="860" />
+        <di:waypoint x="2680" y="860" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_30_di" bpmnElement="Flow_BRF_30">
+        <di:waypoint x="2730" y="860" />
+        <di:waypoint x="2780" y="860" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2747" y="842" width="15" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_16_di" bpmnElement="Flow_BRF_16">
-        <di:waypoint x="1518" y="860" />
-        <di:waypoint x="1570" y="860" />
+        <di:waypoint x="1618" y="860" />
+        <di:waypoint x="1670" y="860" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_17_di" bpmnElement="Flow_BRF_17">
-        <di:waypoint x="1710" y="860" />
-        <di:waypoint x="1760" y="860" />
+        <di:waypoint x="1810" y="860" />
+        <di:waypoint x="1860" y="860" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_18_di" bpmnElement="Flow_BRF_18">
-        <di:waypoint x="278" y="1020" />
-        <di:waypoint x="330" y="1020" />
+        <di:waypoint x="378" y="1020" />
+        <di:waypoint x="430" y="1020" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_19_di" bpmnElement="Flow_BRF_19">
-        <di:waypoint x="470" y="1020" />
-        <di:waypoint x="522" y="1020" />
+        <di:waypoint x="570" y="1020" />
+        <di:waypoint x="622" y="1020" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_20_di" bpmnElement="Flow_BRF_20">
-        <di:waypoint x="1776" y="1020" />
-        <di:waypoint x="1820" y="1020" />
+        <di:waypoint x="1876" y="1020" />
+        <di:waypoint x="1920" y="1020" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_21_di" bpmnElement="Flow_BRF_21">
-        <di:waypoint x="1960" y="1020" />
-        <di:waypoint x="2000" y="1020" />
+        <di:waypoint x="2060" y="1020" />
+        <di:waypoint x="2100" y="1020" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_22_di" bpmnElement="Flow_BRF_22">
-        <di:waypoint x="1001" y="1020" />
-        <di:waypoint x="1040" y="1020" />
+        <di:waypoint x="1101" y="1020" />
+        <di:waypoint x="1140" y="1020" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_23_di" bpmnElement="Flow_BRF_23">
-        <di:waypoint x="1180" y="1020" />
-        <di:waypoint x="1215" y="1020" />
+        <di:waypoint x="1280" y="1020" />
+        <di:waypoint x="1315" y="1020" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_05_di" bpmnElement="Flow_BRF_05">
+        <di:waypoint x="950" y="680" />
+        <di:waypoint x="1025" y="680" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_06_di" bpmnElement="Flow_BRF_06">
+        <di:waypoint x="1050" y="655" />
+        <di:waypoint x="1050" y="500" />
+        <di:waypoint x="1125" y="500" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1061" y="545" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_04_di" bpmnElement="Flow_BRF_04">
+        <di:waypoint x="1075" y="680" />
+        <di:waypoint x="1142" y="680" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1101" y="662" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_03_di" bpmnElement="Flow_BRF_03">
+        <di:waypoint x="700" y="540" />
+        <di:waypoint x="700" y="680" />
+        <di:waypoint x="850" y="680" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_Producer_di" bpmnElement="Participant_Producer" isHorizontal="true">
+        <dc:Bounds x="1030" y="1160" width="1430" height="160" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_P06_di" bpmnElement="Start_P06">
+        <dc:Bounds x="2120" y="1242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2101" y="1205" width="74" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P06_di" bpmnElement="P06">
+        <dc:Bounds x="2200" y="1220" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_P06_di" bpmnElement="End_P06">
+        <dc:Bounds x="2380" y="1242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2358" y="1278" width="81" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_Producer_01_di" bpmnElement="Flow_Producer_01">
-        <di:waypoint x="2056" y="1260" />
-        <di:waypoint x="2100" y="1260" />
+        <di:waypoint x="2156" y="1260" />
+        <di:waypoint x="2200" y="1260" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Producer_02_di" bpmnElement="Flow_Producer_02">
-        <di:waypoint x="2240" y="1260" />
-        <di:waypoint x="2280" y="1260" />
+        <di:waypoint x="2340" y="1260" />
+        <di:waypoint x="2380" y="1260" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_PaymentService_di" bpmnElement="Participant_PaymentService" isHorizontal="true">
+        <dc:Bounds x="910" y="1160" width="95" height="60" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_CertificationService_di" bpmnElement="Participant_CertificationService" isHorizontal="true">
+        <dc:Bounds x="2500" y="1160" width="220" height="60" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_NotificationService_di" bpmnElement="Participant_NotificationService" isHorizontal="true">
+        <dc:Bounds x="1700" y="80" width="1140" height="60" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_PostcodeService_di" bpmnElement="Participant_PostcodeService" isHorizontal="true">
+        <dc:Bounds x="380" y="1160" width="240" height="60" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="M01_di" bpmnElement="M01">
-        <di:waypoint x="2100" y="1160" />
-        <di:waypoint x="2100" y="378" />
+        <di:waypoint x="2200" y="1160" />
+        <di:waypoint x="2200" y="378" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2108" y="673" width="90" height="14" />
+          <dc:Bounds x="2218" y="673" width="70" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M02_di" bpmnElement="M02">
-        <di:waypoint x="2440" y="900" />
-        <di:waypoint x="2440" y="1160" />
+        <di:waypoint x="2540" y="900" />
+        <di:waypoint x="2540" y="1160" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2345" y="950" width="90" height="27" />
+          <dc:Bounds x="2456" y="950" width="69" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M03_di" bpmnElement="M03">
-        <di:waypoint x="2500" y="1160" />
-        <di:waypoint x="2500" y="900" />
+        <di:waypoint x="2600" y="1160" />
+        <di:waypoint x="2600" y="900" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2508" y="950" width="90" height="27" />
+          <dc:Bounds x="2609" y="950" width="89" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M04_di" bpmnElement="M04">
-        <di:waypoint x="640" y="140" />
-        <di:waypoint x="640" y="460" />
+        <di:waypoint x="709" y="140" />
+        <di:waypoint x="709" y="460" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="648" y="293" width="40" height="14" />
+          <dc:Bounds x="723" y="293" width="29" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M05_di" bpmnElement="M05">
-        <di:waypoint x="840" y="720" />
-        <di:waypoint x="840" y="1160" />
+        <di:waypoint x="940" y="720" />
+        <di:waypoint x="940" y="1160" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="750" y="800" width="85" height="14" />
+          <dc:Bounds x="851" y="800" width="84" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M06_di" bpmnElement="M06">
-        <di:waypoint x="875" y="1160" />
-        <di:waypoint x="875" y="720" />
+        <di:waypoint x="939" y="1160" />
+        <di:waypoint x="939" y="720" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="883" y="800" width="90" height="14" />
+          <dc:Bounds x="969" y="800" width="46" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M07_di" bpmnElement="M07">
-        <di:waypoint x="780" y="640" />
-        <di:waypoint x="780" y="140" />
+        <di:waypoint x="880" y="640" />
+        <di:waypoint x="880" y="140" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="788" y="286" width="90" height="27" />
+          <dc:Bounds x="903" y="286" width="60" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M08_di" bpmnElement="M08">
-        <di:waypoint x="1240" y="540" />
-        <di:waypoint x="1240" y="563" />
-        <di:waypoint x="1630" y="563" />
-        <di:waypoint x="1630" y="140" />
+        <di:waypoint x="1340" y="540" />
+        <di:waypoint x="1340" y="563" />
+        <di:waypoint x="1730" y="563" />
+        <di:waypoint x="1730" y="140" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1535" y="300" width="90" height="40" />
+          <dc:Bounds x="1654" y="300" width="53" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M09_di" bpmnElement="M09">
-        <di:waypoint x="2740" y="110" />
-        <di:waypoint x="2780" y="110" />
-        <di:waypoint x="2780" y="1340" />
-        <di:waypoint x="2038" y="1340" />
-        <di:waypoint x="2038" y="1278" />
+        <di:waypoint x="2840" y="110" />
+        <di:waypoint x="2880" y="110" />
+        <di:waypoint x="2880" y="1340" />
+        <di:waypoint x="2138" y="1340" />
+        <di:waypoint x="2138" y="1278" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2788" y="640" width="90" height="27" />
+          <dc:Bounds x="2907" y="640" width="53" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M10_di" bpmnElement="M10">
-        <di:waypoint x="1300" y="720" />
-        <di:waypoint x="1300" y="1160" />
+        <di:waypoint x="1400" y="720" />
+        <di:waypoint x="1400" y="1160" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1308" y="800" width="90" height="14" />
+          <dc:Bounds x="1408" y="800" width="90" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M11_di" bpmnElement="M11">
-        <di:waypoint x="1500" y="140" />
-        <di:waypoint x="1500" y="842" />
+        <di:waypoint x="1600" y="140" />
+        <di:waypoint x="1600" y="842" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1405" y="290" width="90" height="27" />
+          <dc:Bounds x="1512" y="290" width="77" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M12_di" bpmnElement="M12">
-        <di:waypoint x="1590" y="1160" />
-        <di:waypoint x="1590" y="900" />
+        <di:waypoint x="1690" y="1160" />
+        <di:waypoint x="1690" y="900" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1495" y="960" width="90" height="40" />
+          <dc:Bounds x="1595" y="960" width="90" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M13_di" bpmnElement="M13">
-        <di:waypoint x="1630" y="900" />
-        <di:waypoint x="1630" y="1160" />
+        <di:waypoint x="1730" y="900" />
+        <di:waypoint x="1730" y="1160" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1638" y="1070" width="85" height="14" />
+          <dc:Bounds x="1745" y="1070" width="71" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M14_di" bpmnElement="M14">
-        <di:waypoint x="1690" y="820" />
-        <di:waypoint x="1690" y="140" />
+        <di:waypoint x="1790" y="820" />
+        <di:waypoint x="1790" y="140" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1698" y="440" width="90" height="40" />
+          <dc:Bounds x="1814" y="440" width="58" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M15_di" bpmnElement="M15">
-        <di:waypoint x="1600" y="100" />
-        <di:waypoint x="1540" y="100" />
+        <di:waypoint x="1700" y="100" />
+        <di:waypoint x="1640" y="100" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1525" y="52" width="90" height="27" />
+          <dc:Bounds x="1641" y="52" width="58" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M16_di" bpmnElement="M16">
-        <di:waypoint x="160" y="110" />
-        <di:waypoint x="130" y="110" />
-        <di:waypoint x="130" y="1130" />
-        <di:waypoint x="260" y="1130" />
-        <di:waypoint x="260" y="1038" />
+        <di:waypoint x="260" y="110" />
+        <di:waypoint x="230" y="110" />
+        <di:waypoint x="230" y="1130" />
+        <di:waypoint x="360" y="1130" />
+        <di:waypoint x="360" y="1038" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="40" y="593" width="80" height="14" />
+          <dc:Bounds x="157" y="593" width="46" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M17_di" bpmnElement="M17">
-        <di:waypoint x="370" y="1060" />
-        <di:waypoint x="370" y="1160" />
+        <di:waypoint x="470" y="1060" />
+        <di:waypoint x="470" y="1160" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="275" y="1108" width="90" height="14" />
+          <dc:Bounds x="379" y="1108" width="83" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M18_di" bpmnElement="M18">
-        <di:waypoint x="430" y="1160" />
-        <di:waypoint x="430" y="1060" />
+        <di:waypoint x="530" y="1160" />
+        <di:waypoint x="530" y="1060" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="438" y="1108" width="85" height="14" />
+          <dc:Bounds x="544" y="1108" width="73" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M19_di" bpmnElement="M19">
-        <di:waypoint x="1758" y="1160" />
-        <di:waypoint x="1758" y="1038" />
+        <di:waypoint x="1858" y="1160" />
+        <di:waypoint x="1858" y="1038" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1766" y="1108" width="90" height="27" />
+          <dc:Bounds x="1871" y="1108" width="81" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M20_di" bpmnElement="M20">
-        <di:waypoint x="1890" y="980" />
-        <di:waypoint x="1890" y="140" />
+        <di:waypoint x="1990" y="980" />
+        <di:waypoint x="1990" y="140" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1898" y="640" width="90" height="40" />
+          <dc:Bounds x="2012" y="640" width="63" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M21_di" bpmnElement="M21">
-        <di:waypoint x="1600" y="125" />
-        <di:waypoint x="1540" y="125" />
+        <di:waypoint x="1700" y="125" />
+        <di:waypoint x="1640" y="125" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1525" y="146" width="90" height="14" />
+          <dc:Bounds x="1639" y="146" width="63" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M22_di" bpmnElement="M22">
-        <di:waypoint x="983" y="1160" />
-        <di:waypoint x="983" y="1038" />
+        <di:waypoint x="1083" y="1160" />
+        <di:waypoint x="1083" y="1038" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="991" y="1108" width="90" height="14" />
+          <dc:Bounds x="1107" y="1108" width="58" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
