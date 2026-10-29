@@ -11,7 +11,7 @@ This folder holds the output of the requirements and business analysis work:
 
 | Document | Task | Content |
 |---|---|---|
-| [scope/use-case.md](scope/use-case.md) | 2.1 | The chosen use case (UC2) and the reasons |
+| [scope/use-case.md](scope/use-case.md) | 2.1 ([#77](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/77)) | The chosen use case (UC2) and the reasons |
 | [scope/functionalities.md](scope/functionalities.md) | 2.2 ([#86](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/86)) | The two major functionalities, their scope, the six points of the brief and the traceability to UC2 |
 | [strategic/actors.md](strategic/actors.md) | 1.1 ([#79](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/79)) | The actors, the external organisations and the services (A01 to A07, E01 to E06) |
 | [strategic/processes.md](strategic/processes.md) | 1.2 ([#80](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/80)) | The functions (F01 to F05), the processes (P01 to P11), the responsibilities and the mapping to the case study |

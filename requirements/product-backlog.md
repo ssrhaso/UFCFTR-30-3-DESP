@@ -332,7 +332,7 @@ Priority: Should. Points: 3. Sprint: Not planned. Traces to: U1, P03, R05. Requi
 
 ## 9. Enabler stories for Sprint 2
 
-Sprint 2 must show "initial executable Camunda processes" and "initial service-task implementation where appropriate" (UWE Bristol, 2026c, pp. 5 to 6). These stories are the setup that the functional stories need before they can run: the services that the processes call, the deployment, and the test data. They have the same fields as the functional stories, with the development team as the role. All five are **proposals**. 2.7 ([#91](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/91)) plans and assigns them.
+Sprint 2 must show "initial executable Camunda processes" and "initial service-task implementation where appropriate" (UWE Bristol, 2026c, pp. 5 to 6). These stories are the setup that the functional stories need before they can run: the services that the processes call, the deployment, and the test data. They have the same fields as the functional stories, with the development team as the role. All five are **proposals**. They belong to task 6.1 of the Sprint 2 plan on the Task 1 board (the Camunda automation criterion), and 2.7 ([#91](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/91)) sets their owners.
 
 ### B20 Run the sandbox or mock payment service with a controllable outcome
 
@@ -396,10 +396,10 @@ Each story sits on one chain. The chain starts at a page of the case study, pass
 | UC2 | U2 to U6 | U7 to U12 |
 | Strategic model | P04 in the F02 Orders lane; M04, O01, O02; R04, R06 | P05 in the F03 Finance lane, with F01 and F02; M05 to M09, O03, O04; R06 to R09 |
 | Stories | B01 to B09 | B10 to B17 |
-| Operational model | `process_order`, a call activity in Figure 1 ([#84](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/84)); the job types `check-stock`, `identify-producers`, `create-order` and `split-order`; a timer boundary event (B08) | `process_payment`, a call activity in Figure 1; the job types `submit-payment`, `confirm-order`, `update-stock` and `notify-producer`; the errors `PAYMENT_DECLINED` and `PAYMENT_SERVICE_UNAVAILABLE` |
+| Operational model | `process_order`, the call activity that 1.6 ([#84](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/84)) adds to Figure 1; the job types `check-stock`, `identify-producers`, `create-order` and `split-order`; a timer boundary event (B08) | `process_payment`, the other call activity of 1.6; the job types `submit-payment`, `confirm-order`, `update-stock` and `notify-producer`; the errors `PAYMENT_DECLINED` and `PAYMENT_SERVICE_UNAVAILABLE` |
 | Enablers | B21, B22, B24 | B20, B22, B23 |
 | Task 2 service | Order service | Payment service |
-| GitHub | 2.7 ([#91](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/91)) creates one task for each planned story, as a draft item on the Task 1 board, and sets its owner | As FN1 |
+| GitHub | The Sprint 2 tasks on the Task 1 board: 5.2 ([#146](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/146)) models the diagram, and 6.1 makes it executable in Camunda, with the enablers B21, B22 and B24. 2.7 ([#91](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/91)) sets the owners, and 7.6 plans Sprint 3 from this backlog | 5.4 ([#147](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/147)) models the diagram, and 6.1 makes it executable, with B20, B22 and B23. The owners and Sprint 3 as for FN1 |
 
 ### 10.2 From a requirement to its stories, and back
 
