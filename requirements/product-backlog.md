@@ -15,7 +15,7 @@ The brief asks for "an initial product backlog and sprint plan" in Sprint 1 (UWE
 
 Together they cover Use Case 2, the customer multi-vendor order, checkout and payment ([use-case.md](scope/use-case.md)). The first sentence of UC2 (browsing and the basket, P03) is not part of FN1 or FN2. It has two stories in section 8, so that the backlog covers the whole of UC2 whichever way the module team reads the scope.
 
-The backlog has the functional stories of FN1 (section 6), of FN2 (section 7) and of the input to FN1 (section 8), and the enabler stories that Sprint 2 needs before the functional stories can run (section 9). The group refines the backlog at each sprint planning. The stories below are the first version.
+The backlog has the functional stories of FN1 (section 6), of FN2 (section 7) and of the input to FN1 (section 8), and the enabler stories that Sprint 2 and Sprint 3 need before the functional stories can run (section 9). The group refines the backlog at each sprint planning. The stories below are the first version.
 
 The document also holds the functional requirements (section 3) and the non-functional requirements (section 4) that the stories realise, and the traceability from the case study to the requirements, the stories, the models and the Task 2 services (section 10). [#90](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/90) asks for the two kinds of requirement in separate sections. The week 9 lecture decides the list that a sentence of the case study goes in: a behaviour of the system is a functional requirement, and a property that the system must exhibit or a constraint that it must respect is a non-functional requirement (UWE Bristol, 2026e, slides 14 and 15).
 
@@ -35,7 +35,7 @@ Source keys: CS is the case study (UWE Bristol, 2026a), with the page number. UC
 | Traces to | The UC2 sentence (U1 to U12 of [functionalities.md](scope/functionalities.md#5-traceability-to-use-case-2)), the messages and relationships of interactions.md, and the planned element of functionalities.md section 4 |
 | Requirement ID | FR01 and up for a functional requirement (a behaviour of the system), NFR01 and up for a non-functional requirement (a property or a constraint), after the week 9 lecture (UWE Bristol, 2026e, slides 14 and 15). The FR list covers the whole case study, and its Scope column says which requirements are in Task 1 |
 | NFR category | One of the four sources of a non-functional requirement in the week 9 lecture: business rule, quality attribute, external interface, or design and implementation constraint |
-| Enabler story | A technical story that Sprint 2 needs before a functional story can run: a mock service, the deployment or the test data. Its role is the development team. It has the same ID series (B20 and up) and the same fields as a functional story |
+| Enabler story | A technical story that Sprint 2 or Sprint 3 needs before a functional story can run: a mock service, the deployment or the test data. Its role is the development team. It has the same ID series (B20 and up) and the same fields as a functional story. For an enabler, **Must** means that a Must functional story cannot run without it |
 | Requirements | Each story names the FRs that it realises and the NFRs that constrain it, in the summary and in its last line. **Derived** marks a story that comes from a proposal of the group (W3, S3) and not from a sentence of a source |
 
 A story is **ready** when it has acceptance criteria, an estimate and a priority. A story is **done** when its element is in the operational model, the process runs in Camunda 8, and the work is merged through a reviewed pull request ([README](../README.md#definition-of-done)). **Proposal:** the documentation field of each element in the operational model names its story ID (NFR09), so that the model and this backlog stay traceable. 2.7 ([#91](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/91)) adopts or drops this rule. The definition of done in the README is unchanged.
@@ -44,7 +44,7 @@ A story is **ready** when it has acceptance criteria, an estimate and a priority
 
 A functional requirement is a behaviour of the system: a service, a task or a function that it performs (UWE Bristol, 2026e, slide 14). The rows come from the mapping of the case study to the processes in [processes.md](strategic/processes.md#5-mapping-to-the-requirements-of-the-case-study) and from the UC2 sentences of [functionalities.md](scope/functionalities.md#5-traceability-to-use-case-2). Where the Stakeholder Requirements and the System Requirements sections of the case study state the same need, one row merges them and cites both pages. The compliance row of processes.md section 5 is a constraint, so it is NFR01.
 
-The list covers the whole case study, so that the Task 1 scope is visible against the full product. **Scope** says where each requirement is met: **FN1** or **FN2** (Task 1, with stories below), **Backlog, not planned** (P03, with the stories B18 and B19), or **Task 2** (a process that Task 1 does not model; the Task 2 system meets it). U1 to U12 stay the UC2 refinement of FR05 to FR14, and a story traces to both.
+The list covers the whole case study, so that the Task 1 scope is visible against the full product. **Scope** says where each requirement is met: **FN1** or **FN2** (Task 1, with stories below), **Backlog, not planned** (P03, with the stories B18 and B19), or **Task 2** (a process that the Task 1 operational models do not cover; the Task 2 system meets it). U1 to U12 stay the UC2 refinement of FR05 to FR14, and a story traces to both.
 
 | ID | Requirement | Source | Process | Scope | Stories |
 |---|---|---|---|---|---|
@@ -55,7 +55,7 @@ The list covers the whole case study, so that the Task 1 scope is visible agains
 | FR05 | A customer adds products from one or more producers to a basket and proceeds to checkout | UC2 (U1) | P03 | Backlog, not planned | B19 |
 | FR06 | At checkout the system checks that each item is available in the requested quantity. When an item is unavailable or short, the customer is told and asked to amend the order | UC2 (U2, U3) | P04 | FN1 | B01, B02. Derived: B07, B08 (W3) |
 | FR07 | The system identifies the producers of the order and the delivery or collection arrangement of each, with clear supplier responsibilities, for single-vendor and multi-vendor orders | CS p. 2 (Customers, Core functionality), UC2 (U4) | P04 | FN1 | B03, B04 |
-| FR08 | The customer reviews the order summary and confirms or cancels the purchase | UC2 (U5) | P04 | FN1 | B05. Derived: B08 (W3) |
+| FR08 | The customer reviews the order summary and confirms or cancels the purchase | UC2 (U5); the cancel is the group's reading (functionalities.md section 4.1) | P04 | FN1 | B05. Derived: B08 (W3) |
 | FR09 | The system creates the marketplace order and separates it into producer order elements (the aggregation of multi-vendor orders) | CS p. 2 (Core functionality), UC2 (U6) | P04 | FN1 | B06 |
 | FR10 | The system takes the payment for a single-vendor or multi-vendor order through an external or simulated payment service | CS p. 2 (Core functionality), UC2 (U7, U12) | P05 | FN2 | B10 |
 | FR11 | When a payment is declined, the customer is told and can retry | UC2 (U9) | P05 | FN2 | B11 (its cancel option is a proposal, functionalities.md section 4.3). Derived: B17 |
@@ -63,7 +63,7 @@ The list covers the whole case study, so that the Task 1 scope is visible agains
 | FR13 | After a successful payment, the order is confirmed, the stock is updated and each producer is notified of its order element | UC2 (U8) | P05 | FN2 | B14, B15, B16 |
 | FR14 | For a multi-vendor order, the system calculates the amount of each producer and the 5% commission of the marketplace | CS p. 2 (Core functionality), UC2 (U11) | P05, P07 | FN2 | B13 |
 | FR15 | Each producer has visibility of its incoming orders, with the lead time of NFR07 | CS p. 1 (Producers) | P05, P06 | FN2 (the notification). P06 is Task 2 | B16, B04 |
-| FR16 | The network settles each producer weekly, less the commission, with a transparent audit trail for tax reporting and accounting | CS p. 1 (Producers), p. 2 (Core functionality) | P07 | Task 2. B13 supplies its data (R09) | None |
+| FR16 | The network settles each producer weekly, less the commission, with a transparent audit trail for tax reporting and accounting | CS p. 2 (Producers, Core functionality) | P07 | Task 2. B13 supplies its data (R09) | None |
 | FR17 | The system keeps records that link customers, products and producers, so that a quality or food safety concern reaches everyone affected | CS p. 2 (Quality assurance) | P04 (creates), P08 (uses) | FN1 creates the record. P08 is Task 2 (UC3) | B06 |
 | FR18 | The system shows food miles from postcode-based distances | CS p. 2 (Environmental reporting) | P09 | FN1, optional (Could) | B09 |
 | FR19 | A producer publishes a surplus produce offer with a last-minute discount, and the interested customers are told | CS p. 2 (Community features) | P10 | Task 2 | None |
@@ -82,16 +82,16 @@ The sources give no performance or capacity target: the network has about forty 
 | NFR01 | All financial transactions and the personal data of an order comply with data protection and financial services regulation (for personal data, the UK GDPR and the Data Protection Act 2018). The process holds only the data that the order needs | Business rule (legal) | CS p. 2 (Core functionality); E05 in actors.md | The process variables and the Forms hold no personal data beyond the customer reference, the items, the arrangement and the amounts. The payment record holds a payment reference, not the card | PR review with the checklist; the variable list in Camunda Operate | B06, B10, B13; every Form | Compliance with regulation (A05); personal data protected (A01 to A03) |
 | NFR02 | No live payment system and no real financial data in development, testing or demonstration: a sandbox (Stripe test mode, PayPal sandbox) or a mock service in Docker only | Implementation constraint | CS p. 1 (disclaimer), UC2 (U12) | The worker configuration points at a sandbox or mock endpoint. The repository holds no live key (`.env` is ignored) | PR checklist "no secrets"; configuration review | B10, B20 | None (assessment constraint) |
 | NFR03 | Secure payment handling: no card number or card security code in a Camunda Form or a process variable, including sandbox card details. The customer gives a simulated payment choice or a sandbox payment reference | Design constraint (security) | CS p. 2 ("secure payment system"); functionalities.md section 4.3 | A search of the `.form` and `.bpmn` files finds no card field, and Operate shows none | PR review; `grep` on the model files | B10, B11 | Secure payment (A01 to A03, A05) |
-| NFR04 | Fault tolerance: every failure of an external service (payment, stock, notification) ends in a modelled state (a retry, a cancellation or a customer notice), never in an unmodelled stop. Job retries and incidents stay separate from the BPMN errors that the workers throw | Quality attribute (reliability) | UC2 (U10); functionalities.md sections 4.2 and 4.3; S3 | With the mock service set to "unavailable", the instance reaches the retry path and then the customer notice within the agreed attempts and wait (S3). No instance is left only as an incident | A run in Camunda 8 with the mock set to "unavailable"; the Operate history | B11, B12, B17, B20; B01 and B21 for the stock service | Reliable checkout (A01 to A03); no lost sale (A05) |
+| NFR04 | Fault tolerance: every failure of an external service (payment, stock, notification) ends in a modelled state (a retry, a cancellation or a customer notice), never in an unmodelled stop. Job retries and incidents stay separate from the BPMN errors that the workers throw | Quality attribute (reliability) | UC2 (U10); functionalities.md sections 4.2 and 4.3; S3 | With the mock service set to "unavailable", the instance reaches the retry path and then the customer notice within the agreed attempts and wait (S3). No instance is left only as an incident | A run in Camunda 8 with the mock set to "unavailable"; the Operate history | B11, B12, B17, B20, B23; B01 and B21 for the stock service | Reliable checkout (A01 to A03); no lost sale (A05) |
 | NFR05 | Monetary consistency: the commission is exactly 5% of the order, and the producer amounts plus the commission equal the order total after rounding (rule S4) | Business rule | CS p. 2 (Core functionality), UC2 (U11) | FEEL or DMN test cases, including a total that does not divide exactly, all sum to the total | Unit cases on the expressions; PR review | B06, B13 | Fair and accurate payment (A04); commission income (A05) |
 | NFR06 | Stock integrity: no oversell. The check, the reservation and the update never take the stock of a product below zero, and one unit cannot be sold to two customers (W3, S1) | Business rule (data integrity) | UC2 (U2, U8); functionalities.md W3 | Two instances for the last unit of a product: one reaches the payment, the other follows the amendment path, and the stock after both is not negative | Two concurrent runs against the stock mock; Operate | B01, B07, B08, B15, B17, B21, B24 | Accurate availability (A01 to A03, A04) |
 | NFR07 | Lead time: a producer sees a confirmed order at least 48 hours before its delivery or collection date | Business rule (time) | CS p. 1 (Producers) | The arrangement date that B04 sets is at least 48 hours after the order time, and the notification of B16 goes at the confirmation | A FEEL test on the date rule; the Operate timestamp of the notification | B04, B16 | Time to prepare the goods (A04) |
-| NFR08 | Auditability: every payment attempt and its result are recorded with the reference, the status, the amounts and the time, so that the weekly settlement and the tax reporting have a transparent trail (DS3) | Quality attribute | CS pp. 1 to 2 (Producers, Core functionality); R09 | After a run, the payment record has the reference, the status, the producer amounts, the commission and a timestamp for each attempt, including the declines | Inspection of the record and the Operate history after a demonstration run | B10, B13, B17 | Transparent audit trail (A04); tax compliance (E06) |
-| NFR09 | **Proposal.** Traceability: each element of an operational model names its story (Bnn) in its documentation field, each story names its FRs and NFRs, and each FR names its process, so that i*, the strategic BPMN, the operational BPMN and the Task 2 services stay consistent | Design constraint (process) | Brief pp. 4 to 5 and 15 ("clear traceability"); README definition of done | The coverage check of section 10.3 holds, and a reviewer can go from any element to a sentence of the case study in two hops | PR review; this document | All stories; the definition of done | None (modelling constraint) |
-| NFR10 | Usability for mixed technical skills: each Camunda Form asks for one decision in the words of the case study, and each notification or confirmation states the producer, the items, the arrangement, the date and the amounts in plain words. No step needs technical knowledge | Quality attribute (usability) | CS p. 1 (Producers, "without extensive technical knowledge"), p. 2 (Customers, "clear communication") | A Form review against a short checklist: one decision, labels from the case study, no code or ID that the user must type. The confirmation and the notification show the five items | Review of the Forms and the message texts at the Sprint Review rehearsal | B02, B05, B10, B11, B14, B16 | Low effort for producers (A04); easy ordering (A01 to A03) |
+| NFR08 | Auditability: every payment attempt and its result are recorded with the reference, the status, the amounts and the time, so that the weekly settlement and the tax reporting have a transparent trail (DS3) | Quality attribute | CS p. 2 (Producers, Core functionality); R09 | After a run, the payment record has the reference, the status, the producer amounts, the commission and a timestamp for each attempt, including the declines | Inspection of the record and the Operate history after a demonstration run | B10, B13, B17 | Transparent audit trail (A04); tax compliance (E06) |
+| NFR09 | **Proposal.** Traceability: each element of an operational model names its story (Bnn) in its documentation field, each story names its FRs and NFRs, and each FR names its process, so that i*, the strategic BPMN, the operational BPMN and the Task 2 services stay consistent | Design constraint (process) | Brief pp. 4 to 5 ("clear traceability") and p. 15; extends the README definition of done | The coverage check of section 10.3 holds, and a reviewer can go from any element to a sentence of the case study in two hops | PR review; this document | All stories; the definition of done | None (modelling constraint) |
+| NFR10 | Usability for mixed technical skills: each Camunda Form asks for one decision in the words of the case study, and each notification or confirmation states the producer, the items, the arrangement, the date and the amounts in plain words. No step needs technical knowledge | Quality attribute (usability) | CS p. 1 (Producers, "without requiring extensive technical knowledge or training"), p. 2 (Customers, "clear communication") | A Form review against a short checklist: one decision, labels from the case study, no code or ID that the user must type. The confirmation and the notification show the five items | Review of the Forms and the message texts at the Sprint Review rehearsal | B02, B05, B10, B11, B14, B16 | Low effort for producers (A04); easy ordering (A01 to A03) |
 | NFR11 | Deployability: both processes deploy and run on the module's Camunda 8 organisation, the job workers and the mock services run in Docker, `bpmnlint` passes, and each model has a `.png` or `.svg` export | Implementation constraint | Brief pp. 5 to 6; README definition of done; `.bpmnlintrc` | The deploy-and-run step of B22 succeeds from a clean checkout, and the BPMN lint check is green after the merge | The GitHub Actions check "BPMN lint"; the B22 script | All stories; B22 | None (platform constraint) |
 | NFR12 | Maintainability: the process IDs, the file names, the job types, the error codes and the variables follow the naming rules of functionalities.md section 4.4, and each task has a documentation field (proposal, with NFR09) | Design constraint | functionalities.md section 4.4; week 10 lab | A name check over the `.bpmn` files finds no rule break, and every task has documentation | PR review; a small script in B22 | All stories; B22 | None |
-| NFR13 | Replaceable external interfaces: each external service (E01 payment, E03 notification, and the stock service of W1) is behind one job type that carries the message contents of interactions.md section 3.1 (M05, M06, M08) and decision D6, so that the Task 2 service replaces the sandbox or mock without a change to the model | External interface | Brief p. 6 ("readiness of Task 1 components for integration into Task 2"); interactions.md sections 3.1 and 6.2 | A change of the worker's endpoint from the mock to another implementation needs no change to the `.bpmn` file | Review of the worker configuration; a demonstration with two endpoints | B10, B16, B20, B21, B23 | Readiness for Task 2 (A05, the group) |
+| NFR13 | Replaceable external interfaces: each external service (E01 payment, E03 notification, and the stock service of W1) is behind its own job types, which carry the message contents of interactions.md section 3.1 (M05, M06, M08) and decision D6, so that the Task 2 service replaces the sandbox or mock without a change to the model | External interface | Brief p. 6 ("readiness of Task 1 components for integration into Task 2"); interactions.md sections 3.1 and 6.2 | A change of the worker's endpoint from the mock to another implementation needs no change to the `.bpmn` file | Review of the worker configuration; a demonstration with two endpoints | B10, B16, B20, B21, B23 | Readiness for Task 2 (A05) |
 
 ## 5. Summary
 
@@ -115,11 +115,11 @@ The sources give no performance or capacity target: the network has about forty 
 | B16 | FN2 | Notify each producer of its order element | Must | 3 | 3 | U8, M08, M09, R08 | FR13, FR15; NFR07, NFR10, NFR13 |
 | B17 | FN2 | Cancel the order and release the stock after the last failed payment | Should | 3 | 3 | S3 (proposal) | FR11, FR12 (derived, S3); NFR04, NFR06, NFR08 |
 | B18 | Input | Browse and search for products | Should | 5 | Not planned | U1, P03 | FR03, FR04 |
-| B19 | Input | Add products from several producers to a basket | Should | 3 | Not planned | U1, P03 | FR05 |
+| B19 | Input | Add products from several producers to a basket | Should | 3 | Not planned | U1, P03, R05 | FR05 |
 | B20 | Enabler | Run the sandbox or mock payment service with a controllable outcome | Must | 3 | 2 | M05, M06, E01 | Supports FR10 to FR12; NFR02, NFR04, NFR13 |
 | B21 | Enabler | Run a mock stock service with check, reserve, release and update | Should | 3 | 2 | W1, A3, R04, R07 | Supports FR06, FR13; NFR04, NFR06, NFR13 |
 | B22 | Enabler | Deploy both processes to Camunda 8 and start the job workers with one script | Must | 3 | 2 | README definition of done | Supports all; NFR11, NFR12 |
-| B23 | Enabler | Run a notification stub that records each producer notification | Should | 2 | 3 | M08, M09, E03, A5 | Supports FR13, FR15; NFR13 |
+| B23 | Enabler | Run a notification stub that records each producer notification | Should | 2 | 3 | M08, M09, E03, A5 | Supports FR13, FR15; NFR04, NFR13 |
 | B24 | Enabler | Load test products, stock and producers from Use Case 1 | Must | 2 | 2 | R04, UC1 | Supports FR06 (test data for FR01); NFR06 |
 
 **Total:** 78 points in 24 stories: 65 in the 19 functional stories and 13 in the 5 enabler stories. 50 are Must (16 in FN1, 26 in FN2 and 8 in the enablers), 26 are Should and 2 are Could. Sprint 2 plans 42 points and Sprint 3 plans 28 points. B18 and B19 are the 8 points that are not planned. The owners are set in 2.7 ([#91](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/91)).
@@ -330,7 +330,7 @@ As a customer I can add products from one or more producers to my basket, so tha
 
 Priority: Should. Points: 3. Sprint: Not planned. Traces to: U1, P03, R05. Requirements: FR05.
 
-## 9. Enabler stories for Sprint 2
+## 9. Enabler stories
 
 Sprint 2 must show "initial executable Camunda processes" and "initial service-task implementation where appropriate" (UWE Bristol, 2026c, pp. 5 to 6). These stories are the setup that the functional stories need before they can run: the services that the processes call, the deployment, and the test data. They have the same fields as the functional stories, with the development team as the role. All five are **proposals**. They belong to task 6.1 of the Sprint 2 plan on the Task 1 board (the Camunda automation criterion), and 2.7 ([#91](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/91)) sets their owners.
 
@@ -342,7 +342,7 @@ As the development team I can run the payment service (E01) as a sandbox or a mo
 - **Given** the repository, **then** it holds no live key and no real financial data (NFR02).
 - **Given** the demonstration, **when** the outcome is set to "unavailable", **then** FN2 follows the retry path of B12 and not an incident.
 
-Priority: Must. Points: 3. Sprint: 2. Traces to: M05, M06, E01. Planned element: a Docker service, or a Stripe test mode account, behind the worker `submit-payment`. Requirements: Supports FR10 to FR12; NFR02, NFR04, NFR13.
+Priority: Must. Points: 3. Sprint: 2. Traces to: M05, M06, E01. Planned element: a Docker service, or a Stripe test mode account, behind the worker `submit-payment` (the unavailable outcome needs the mock). Requirements: Supports FR10 to FR12; NFR02, NFR04, NFR13.
 
 ### B21 Run a mock stock service with check, reserve, release and update
 
@@ -371,13 +371,13 @@ As the development team I can run a stub of the notification service (E03) that 
 - **Given** a confirmed order with several producer elements, **when** `notify-producer` runs, **then** the stub holds one record for each element, with the contents of M09 (the items, the arrangement and the date).
 - **Given** the stub, **when** it is unavailable, **then** FN2 follows a modelled path (NFR04) and the order stays confirmed.
 
-Priority: Should (A5 is pending). Points: 2. Sprint: 3. Traces to: M08, M09, E03, A5. Planned element: a Docker service behind the worker `notify-producer`. If A5 makes E03 internal, the stub becomes part of the platform and the story stays. Requirements: Supports FR13, FR15; NFR13.
+Priority: Should (A5 is pending). Points: 2. Sprint: 3. Traces to: M08, M09, E03, A5. Planned element: a Docker service behind the worker `notify-producer`. If A5 makes E03 internal, the stub becomes part of the platform and the story stays. Requirements: Supports FR13, FR15; NFR04, NFR13.
 
 ### B24 Load test products, stock and producers from Use Case 1
 
 As the development team I can load test products, stock and producers, so that FN1 and FN2 run on realistic data without the processes of Use Case 1 (P01, P02).
 
-- **Given** the seed file, **when** the stock service starts, **then** at least three producers and ten products with stock exist, each product with a name, a price, an availability timeframe and a farm origin (FR01).
+- **Given** the seed file, **when** the stock service starts, **then** at least three producers and ten products with stock exist, each product with a name, a price, an availability timeframe and a farm origin (FR01, FR04).
 - **Given** the seed, **then** one product has a stock of 1, for the oversell test of NFR06, and one producer has a collection arrangement and another a delivery arrangement (FR07).
 - **Given** the seed, **then** it holds no real person and no real business (the case study is fictitious, CS p. 1).
 
@@ -392,7 +392,7 @@ Each story sits on one chain. The chain starts at a page of the case study, pass
 | Link | FN1 Process order | FN2 Process payment |
 |---|---|---|
 | Case study | CS p. 2: checkout for single-vendor and multi-vendor orders, the aggregation of multi-vendor orders, and the records that link customers, products and producers | CS p. 2: secure payment for single and multiple vendor orders, and the 5% commission. CS p. 1: order visibility for the producers |
-| Requirements | FR06 to FR09, FR17 and FR18 (optional); NFR01, NFR04 to NFR07 and NFR09 to NFR13 | FR10 to FR15; NFR01 to NFR13 |
+| Requirements | FR06 to FR09, FR15 (B04), FR17 and FR18 (optional); NFR01, NFR04 to NFR07 and NFR09 to NFR13 | FR10 to FR15; NFR01 to NFR13 |
 | UC2 | U2 to U6 | U7 to U12 |
 | Strategic model | P04 in the F02 Orders lane; M04, O01, O02; R04, R06 | P05 in the F03 Finance lane, with F01 and F02; M05 to M09, O03, O04; R06 to R09 |
 | Stories | B01 to B09 | B10 to B17 |
@@ -403,26 +403,26 @@ Each story sits on one chain. The chain starts at a page of the case study, pass
 
 ### 10.2 From a requirement to its stories, and back
 
-The Stories column of section 3 and the Applies to column of section 4 give the stories of each requirement. The Requirements column of section 5, and the Requirements line under each story, give the requirements of each story. The two directions were checked against each other: every pair appears in both. B07, B08 and B17 are **derived**: they come from the proposals W3 and S3 of functionalities.md and not from a sentence of a source, and they say so.
+The Stories column of section 3 and the Applies to column of section 4 give the stories of each requirement. The Requirements column of section 5, and the Requirements line under each story, give the requirements of each story. The two directions were checked against each other: every pair appears in both, with two kinds of entry that are listed once. The Supports entries of B20 to B24 appear under the stories and in section 5 only, because an enabler supports a requirement without realising it. The requirements that apply to all stories (NFR09, NFR11 and NFR12) appear in section 4 only. B07, B08 and B17 are **derived**: they come from the proposals W3 and S3 of functionalities.md and not from a sentence of a source, and they say so.
 
 ### 10.3 Coverage check
 
 - Every functional requirement in Task 1 scope (FR06 to FR15, FR17 and FR18) has at least one story.
 - Every functional story (B01 to B19) realises at least one functional requirement. Every enabler story (B20 to B24) supports at least one.
-- Eight functional requirements have no Task 1 story. FR03, FR04 and FR05 are B18 and B19, which the group does not plan. FR01, FR02, FR16, FR19 and FR20 are Task 2, and each names its process and its Task 2 home. None is lost.
+- Eight functional requirements have no Task 1 story. FR03, FR04 and FR05 are B18 and B19, which the group does not plan. FR01, FR02, FR16, FR19 and FR20 are Task 2, and each names its process and is marked Task 2. None is lost.
 - Every non-functional requirement applies to at least one story, or to the definition of done (NFR09, NFR11 and NFR12).
-- Every strategic element of UC2 (M04 to M09, O01 to O04, R04 and R06 to R09) appears in the Traces to of at least one story.
+- Every strategic element of UC2 (M04 to M09, O01 to O04 and R04 to R09) appears in the Traces to of at least one story.
 
 ### 10.4 Open points that move the traces
 
-The traces above hold for the current answers to the open questions. The group decides these as a team, and this table says what moves when an answer differs.
+The traces above hold for the current answers to the open questions. The module team answers A1 to A5 and Q1 to Q3, the group settles S1 to S4 in Sprint 2, and this table says what moves when an answer differs.
 
 | Question | Where | If the answer differs |
 |---|---|---|
 | A1, A2 (the two functionalities) | functionalities.md section 6.2 | Sections 3 to 10 are rewritten for the new FN1 and FN2 |
-| A3 (the mock stock service) | functionalities.md section 6.2 | "No" removes B21 and the stock rows of NFR04 and NFR13, and the service interaction of B01 and B15 becomes an internal task |
+| A3 (the mock stock service) | functionalities.md section 6.2 | "No" removes B21 and the stock rows of NFR04 and NFR13, and the service interaction of B01 and B15 becomes an internal task; B24 then seeds the internal stock data |
 | A4 (delivery or collection by the producer) | actors.md Q1 | "No" adds a logistics participant: B03, B04 and FR07 gain the partner, and NFR07 gains its lead time |
-| A5 (E03 and E04 external) | actors.md Q3 | "Internal" removes B23 and the E03 row of NFR13. B09 and B16 keep their behaviour |
+| A5 (E03 and E04 external) | actors.md Q3 | "Internal" removes the E03 row of NFR13. B23 stays as an internal stub, and B09 and B16 keep their behaviour |
 | S1 (the reservation) | functionalities.md section 7 | "No reservation" removes B07 and B08, and NFR06 keeps only the check and the update |
 | S3 (the retries) | functionalities.md section 7 | Sets the attempts and the wait in B12 and NFR04. "No cancellation" removes B17 |
 | S4 (the rounding) | functionalities.md section 7 | Sets the rule in B13 and NFR05 |
@@ -430,7 +430,7 @@ The traces above hold for the current answers to the open questions. The group d
 
 ## 11. References
 
-The key 2026d is the week 8 lecture in functionalities.md. This document does not cite it, so the week 9 lecture is 2026e in both documents.
+The key 2026d is the week 8 lecture, which functionalities.md cites and this document does not. The week 9 lecture takes the next key, 2026e, so that one key means one source across the folder.
 
 UWE Bristol (2026a) *Bristol Regional Food Network: digital marketplace* [Case study]. UFCFTR-30-3 Distributed and Enterprise Software Development. Unpublished. Copy in [case_study/Case Study - v2.pdf](../case_study/Case%20Study%20-%20v2.pdf).
 
