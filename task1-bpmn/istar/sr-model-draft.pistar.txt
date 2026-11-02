@@ -2147,7 +2147,8 @@
     "height": 3280,
     "name": "sr-model-draft.ood (converted from OpenOME)",
     "customProperties": {
-      "Description": "Converted from the OpenOME draft sr-model-draft.ood by Royden Dias. iStar 2.0. Each changed dependency has a Conversion note property."
+      "Description": "Converted from the OpenOME draft sr-model-draft.ood by Royden Dias. iStar 2.0. Each changed dependency has a Conversion note property.",
+      "Colour key": "Goal: amber (#FFE29A). Quality: pink (#F9C6D7). Task: blue (#B9DCFA). Resource: lilac (#D9CCF2). Role: green (#C9F2CF). Agent: teal (#A6E3DC). Actor: grey (#E2E2E2)."
     }
   }
 }
