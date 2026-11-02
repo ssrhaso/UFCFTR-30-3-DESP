@@ -61,3 +61,48 @@ Tasks 1.1 and 1.2 are merged, so the week 1 work is complete. The group asks the
 
 ### Next week
 - Write the initial product backlog (2.5, [#90](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/90)).
+
+## Stand-up 3, Mon 26 Oct 2026
+
+Tasks 1.3, 1.4 and 2.2 are merged, so the week 2 work is complete. The week 3 tasks must be complete before the Sprint 1 Review submission at 14:00 on Thu 29 Oct 2026.
+
+### Hasaan
+- Done since the last stand-up: completed 2.2 and wrote the tutor questions A1 to A5 ([#115](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/115), [questions](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/86#issuecomment-6416055101)); revised 1.3 and applied the review of 22 Oct ([#102](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/102)); applied the review of 1.4 to the strategic model, so that bpmnlint passes ([#116](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/116)); merged 1.3, 2.2 and 1.4; assigned the week 3 tasks ([#83](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/83), [#84](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/84), [#85](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/85), [#90](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/90)); started the Sprint 2 plan (2.7, [#91](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/91))
+- Next: draft 1.7 for Royden to finalise ([#85](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/85)); finalise 2.5 from the draft of Royden ([#90](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/90)); complete the Sprint 2 plan ([#91](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/91)); record the answers of the tutor in [section 6.3 of functionalities.md](../../requirements/scope/functionalities.md#63-record)
+- Blockers: 1.7 waits for 1.5 and 1.6
+
+### Royden
+- Done since the last stand-up: improved the first draft of 1.3 and combined it with the review changes ([#102](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/102)); reviewed 1.4 and proposed the wording of the P06 lead time ([#116](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/116)); reviewed 2.2 and applied the review changes ([#115](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/115))
+- Next: draft 2.5, the initial product backlog, for Hasaan to finalise ([#90](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/90)); finalise 1.7 from the draft of Hasaan ([#85](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/85)); add the weeks view of Sprint 2 to the board before Thu 29 Oct ([comment on #91](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/91#issuecomment-6416321172))
+- Blockers: 2.5 needs the agreement of the tutor on the two functionalities (A1)
+
+### Shamy
+- Done since the last stand-up: reviewed 1.4 two times, then added the parallel split after a successful payment and exported `strategic.png` again ([#116](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/116)); reviewed 1.3 for the merge ([#102](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/102)); reviewed 2.2 and applied the clarifications of Royden ([#115](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/115))
+- Next: finalise 1.5 from the draft of Ishaq ([#83](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/83)); draft 1.6 for Ishaq to finalise ([#84](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/84))
+- Blockers: 1.6 waits for 1.5, because both change the strategic model
+
+### Ishaq
+- Done since the last stand-up: drew the first version of the strategic model (1.4, [#116](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/116)); reviewed and approved 1.3 ([#102](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/102)); reviewed 2.2 and answered S1 ([#115](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/115))
+- Next: draft 1.5, the message flows, for Shamy to finalise ([#83](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/83)); finalise 1.6 from the draft of Shamy ([#84](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/84))
+- Blockers: none. 1.4 is merged, so 1.5 can start
+
+### Decisions
+- Ishaq and Shamy do 1.5 and 1.6. Hasaan and Royden do 2.5 and 1.7. In each task, one member drafts and the other member finalises.
+- 1.5, 1.6 and 1.7 run in this sequence. 1.5 and 1.6 both change `strategic.bpmn`, so they cannot run at the same time. 2.5 and 2.7 do not wait for them.
+- All week 3 tasks are complete before Thu 29 Oct 2026. The group does not leave the work for the weekend. Ishaq and Shamy start 1.5 on Mon 26 Oct or on Tue 27 Oct.
+- 2.2 is merged before the tutor agrees it. If the tutor does not agree P04 and P05, the group changes 2.2 after the stand-up.
+- The Sprint 1 Review is an in-class presentation (option A). The group tells the tutors in this practical session. The group submits the ZIP before 14:00 on Thu 29 Oct 2026 ([#93](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/93)).
+- The group presents together, in the same way as the stand-ups. Each member presents their own contribution. Slides are optional, so the group shows the repository and the board.
+- Export the diagrams as PNG. The Camunda Web Modeler is not linked to GitHub. After a change to a `.bpmn` file in GitHub, upload the file to the Web Modeler again and delete the old file. Then export the PNG.
+- Another group links GitHub to Camunda, so that a push updates the model. The group can examine this option.
+- The Sprint 2 tasks start as draft issues on the board, so that the members do not get an email for each new task ([#91](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/91)). Any member can review the plan.
+
+### Questions for the tutor
+- A1 to A5 on the two functionalities ([comment on #86](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/86#issuecomment-6416055101)). A1: does the tutor agree P04 Process order and P05 Process payment?
+- D4 in [interactions.md](../../requirements/strategic/interactions.md#8-decisions): does the network settle a producer for an order when the payment succeeds, and not when the goods are delivered?
+- What is the date of the in-class Sprint 1 Review? The group thinks that it is Mon 2 Nov 2026.
+- Does the group present as one team, or does each member present separately?
+
+### Next week
+- Submit the Sprint 1 Review ZIP before 14:00 on Thu 29 Oct 2026, and give the in-class presentation (3.5, [#93](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/93)).
+- Start Sprint 2 on Mon 2 Nov 2026 from the Sprint 2 plan (2.7, [#91](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/91)).
