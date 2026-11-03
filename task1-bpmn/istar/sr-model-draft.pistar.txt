@@ -803,29 +803,19 @@
       "x": 2044,
       "y": 1148,
       "customProperties": {
-        "OpenOME source": "sr-model-draft.ood"
+        "OpenOME source": "sr-model-draft.ood",
+        "OpenOME depender element": "Reserve stock for a time limit; Retry, then cancel and release stock",
+        "Conversion note": "OpenOME had one dependum with two depender elements. iStar 2.0 does not let two dependencies share a dependum (iStar 2.0 Guide, page 9). The two copies are now one dependum, and the depender is the actor, as in SD21."
       },
-      "source": "a117cbdd-d0ac-542f-8d46-c909b8ca374c",
-      "target": "1cf58a64-9ed4-50b5-9dbf-a6be98982385"
-    },
-    {
-      "id": "f1a9b948-c5d9-5570-8835-6fe6559e9b56",
-      "text": "Business rules",
-      "type": "istar.Resource",
-      "x": 2044,
-      "y": 1218,
-      "customProperties": {
-        "OpenOME source": "sr-model-draft.ood"
-      },
-      "source": "34618c5a-30b0-5c0e-9a9b-e20519b859cb",
+      "source": "05db5b6d-9981-52b4-8cd1-86dbff857d78",
       "target": "1cf58a64-9ed4-50b5-9dbf-a6be98982385"
     },
     {
       "id": "1f5f99df-14f2-577c-af81-7e471aa6cac3",
       "text": "Payment service availability",
       "type": "istar.Quality",
-      "x": 1756,
-      "y": 1396,
+      "x": 1676,
+      "y": 1376,
       "customProperties": {
         "OpenOME source": "sr-model-draft.ood",
         "OpenOME depender element": "Payment service failure handled",
@@ -1586,25 +1576,13 @@
     {
       "id": "2dba27ff-36c1-5e4e-81fa-00833641a8da",
       "type": "istar.DependencyLink",
-      "source": "a117cbdd-d0ac-542f-8d46-c909b8ca374c",
+      "source": "05db5b6d-9981-52b4-8cd1-86dbff857d78",
       "target": "2e99f835-2ac9-58ae-ac74-ec8001a79a82"
     },
     {
       "id": "efbd9226-8d11-5344-9cdc-a864cffb45cf",
       "type": "istar.DependencyLink",
       "source": "2e99f835-2ac9-58ae-ac74-ec8001a79a82",
-      "target": "1cf58a64-9ed4-50b5-9dbf-a6be98982385"
-    },
-    {
-      "id": "fd01e982-bfe8-5d0e-911d-155b29e9b75e",
-      "type": "istar.DependencyLink",
-      "source": "34618c5a-30b0-5c0e-9a9b-e20519b859cb",
-      "target": "f1a9b948-c5d9-5570-8835-6fe6559e9b56"
-    },
-    {
-      "id": "a508980b-07e1-5f77-9280-e45c5c78cf92",
-      "type": "istar.DependencyLink",
-      "source": "f1a9b948-c5d9-5570-8835-6fe6559e9b56",
       "target": "1cf58a64-9ed4-50b5-9dbf-a6be98982385"
     },
     {
@@ -2111,11 +2089,6 @@
       "height": 44,
       "backgroundColor": "#D9CCF2"
     },
-    "f1a9b948-c5d9-5570-8835-6fe6559e9b56": {
-      "width": 110,
-      "height": 44,
-      "backgroundColor": "#D9CCF2"
-    },
     "1f5f99df-14f2-577c-af81-7e471aa6cac3": {
       "width": 110,
       "height": 44,
@@ -2137,6 +2110,70 @@
     },
     "dbea0e75-7fd1-5b56-b867-6f444ff8a455": {
       "backgroundColor": "#A6E3DC"
+    },
+    "27dc22a4-4807-5853-be78-b0f4226ea3f3": {
+      "vertices": [
+        {
+          "x": 1340,
+          "y": 1140
+        },
+        {
+          "x": 1500,
+          "y": 1438
+        }
+      ]
+    },
+    "e6b095c8-d496-5f19-a615-f330f1d73f4d": {
+      "vertices": [
+        {
+          "x": 1340,
+          "y": 1040
+        },
+        {
+          "x": 1500,
+          "y": 1894
+        }
+      ]
+    },
+    "f34dbe43-2fb3-56ba-ab11-89dd01f02b82": {
+      "vertices": [
+        {
+          "x": 1340,
+          "y": 1060
+        },
+        {
+          "x": 1500,
+          "y": 2118
+        }
+      ]
+    },
+    "57f80ab3-d763-53d5-ab14-4f96486ade39": {
+      "vertices": [
+        {
+          "x": 1340,
+          "y": 1140
+        },
+        {
+          "x": 1500,
+          "y": 2742
+        }
+      ]
+    },
+    "b623858b-7b05-5973-b446-9ba962895111": {
+      "vertices": [
+        {
+          "x": 1780,
+          "y": 180
+        }
+      ]
+    },
+    "222e09a9-d037-5a00-a9a3-aefc9ec6db81": {
+      "vertices": [
+        {
+          "x": 4060,
+          "y": 240
+        }
+      ]
     }
   },
   "tool": "pistar.2.1.0",
