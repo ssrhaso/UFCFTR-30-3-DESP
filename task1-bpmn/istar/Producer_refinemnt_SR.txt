@@ -1,6 +1,408 @@
 {
   "actors": [
     {
+      "id": "0b2721ac-387d-54fd-ba63-fd75a14e70e3",
+      "text": "Notification service",
+      "type": "istar.Agent",
+      "x": 4054,
+      "y": 1162,
+      "nodes": []
+    },
+    {
+      "id": "2497f8d9-3be8-50ad-83c5-4a0001f8f529",
+      "text": "Payment service",
+      "type": "istar.Agent",
+      "x": 1548,
+      "y": 1132,
+      "nodes": []
+    },
+    {
+      "id": "dbea0e75-7fd1-5b56-b867-6f444ff8a455",
+      "text": "BRF Network",
+      "type": "istar.Agent",
+      "x": 1806,
+      "y": 239,
+      "nodes": [
+        {
+          "id": "05a906ea-4406-59c3-8b80-0ed4e3eecc3a",
+          "text": "Local food network sustained",
+          "type": "istar.Goal",
+          "x": 2769,
+          "y": 275
+        },
+        {
+          "id": "f4fd24bb-f587-5001-9db6-86171821c905",
+          "text": "Run the digital marketplace",
+          "type": "istar.Task",
+          "x": 2771,
+          "y": 465
+        },
+        {
+          "id": "1cf58a64-9ed4-50b5-9dbf-a6be98982385",
+          "text": "Set business rules",
+          "type": "istar.Task",
+          "x": 2977,
+          "y": 805
+        },
+        {
+          "id": "015007c9-0565-5f54-adf2-67616e19c9d6",
+          "text": "Regulations complied with",
+          "type": "istar.Goal",
+          "x": 2772,
+          "y": 688
+        },
+        {
+          "id": "72bdb52a-d146-5ffd-ab9b-6abde922c51b",
+          "text": "Customer and producer trust",
+          "type": "istar.Quality",
+          "x": 3353,
+          "y": 686
+        },
+        {
+          "id": "07876635-bb5b-5b5f-ae5e-ac538d7d568c",
+          "text": "Handle quality incidents",
+          "type": "istar.Task",
+          "x": 3350,
+          "y": 542
+        },
+        {
+          "id": "1eadc149-82ca-5b98-a8f5-e336a53cd3c2",
+          "text": "Promote surplus offers, food miles and education",
+          "type": "istar.Task",
+          "x": 2000,
+          "y": 468
+        },
+        {
+          "id": "418350f8-90b5-535b-a617-eae57ddd1526",
+          "text": "Sustainability (fewer food miles, less waste)",
+          "type": "istar.Quality",
+          "x": 2004,
+          "y": 928
+        },
+        {
+          "id": "77c4c39d-01e7-5a6c-952c-d09337b4b1e9",
+          "text": "Community connections",
+          "type": "istar.Quality",
+          "x": 2230,
+          "y": 936
+        },
+        {
+          "id": "f8debb17-c037-5f90-b61b-c1a7519909e8",
+          "text": "Commission income earned",
+          "type": "istar.Goal",
+          "x": 3026,
+          "y": 573
+        },
+        {
+          "id": "597149ed-775f-5ca1-b0a2-8e096b8f7342",
+          "text": "Financial viability",
+          "type": "istar.Quality",
+          "x": 2775,
+          "y": 931
+        },
+        {
+          "id": "07731792-7213-5380-ad27-76054dc4d2ea",
+          "text": "Charge 5% commission on each order",
+          "type": "istar.Task",
+          "x": 3251,
+          "y": 928
+        },
+        {
+          "id": "ebaee70d-d08d-530c-9ff6-5a6be043bdea",
+          "text": "Settle producers weekly",
+          "type": "istar.Task",
+          "x": 3785,
+          "y": 472
+        },
+        {
+          "id": "2a3f4a34-4f7a-5188-aa2a-4871a4e68c4a",
+          "text": "Producers attracted and kept",
+          "type": "istar.Quality",
+          "x": 3787,
+          "y": 931
+        },
+        {
+          "id": "d0f1fcec-eb08-54b8-873c-784f83a886d5",
+          "text": "Offer surplus produce",
+          "type": "istar.Task",
+          "x": 1819,
+          "y": 695,
+          "customProperties": {
+            "Change": "BRF Network refinement, 3 Nov 2026",
+            "Reason": "P10. Splits \"Promote surplus offers, food miles and education\""
+          }
+        },
+        {
+          "id": "675714fc-fef0-59cd-a7bc-117f7f7f378a",
+          "text": "Report food miles",
+          "type": "istar.Task",
+          "x": 2018,
+          "y": 694,
+          "customProperties": {
+            "Change": "BRF Network refinement, 3 Nov 2026",
+            "Reason": "P09. Splits \"Promote surplus offers, food miles and education\""
+          }
+        },
+        {
+          "id": "e4408c35-c97e-54d3-b2ef-bf65d1ae9b93",
+          "text": "Share educational content",
+          "type": "istar.Task",
+          "x": 2228,
+          "y": 692,
+          "customProperties": {
+            "Change": "BRF Network refinement, 3 Nov 2026",
+            "Reason": "P11. Splits \"Promote surplus offers, food miles and education\""
+          }
+        },
+        {
+          "id": "1b05eb19-d18c-5dae-ab1f-547aa469fb74",
+          "text": "Protect personal data and keep financial audit trail",
+          "type": "istar.Task",
+          "x": 2488,
+          "y": 685,
+          "customProperties": {
+            "Change": "BRF Network refinement, 3 Nov 2026",
+            "Reason": "Means for \"Regulations complied with\" (NFR01, NFR08)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3488dfe6-c2f1-58d2-a71f-13842b59a26a",
+      "text": "Producer",
+      "type": "istar.Role",
+      "x": 4280,
+      "y": 1201,
+      "nodes": [
+        {
+          "id": "703cbf7d-c77b-5078-9aa6-5a67450ab1a6",
+          "text": "Weekly settlement received",
+          "type": "istar.Goal",
+          "x": 4472,
+          "y": 1268
+        },
+        {
+          "id": "b0d36146-3e0f-539c-804c-ce5b6ef30ac0",
+          "text": "Tax-ready accounts",
+          "type": "istar.Quality",
+          "x": 4663,
+          "y": 1258
+        },
+        {
+          "id": "6e4a2770-30ee-5018-8790-7c0b1088468b",
+          "text": "Prepare and hand over orders",
+          "type": "istar.Task",
+          "x": 4360,
+          "y": 2222
+        },
+        {
+          "id": "b0cef074-c29a-502f-8fcd-5703e6f48a99",
+          "text": "Products sold to more customers",
+          "type": "istar.Goal",
+          "x": 4706,
+          "y": 1665
+        },
+        {
+          "id": "27dbdb3a-1bb1-569b-91d6-b246366f3f14",
+          "text": "New order notification",
+          "type": "istar.Resource",
+          "x": 4304,
+          "y": 2021
+        },
+        {
+          "id": "ce153a62-82ef-5b11-91a9-f1e678376fae",
+          "text": "Enough time to prepare",
+          "type": "istar.Quality",
+          "x": 4310,
+          "y": 1875
+        },
+        {
+          "id": "5427fdb9-c214-5a6b-899f-8bfd7a0161c3",
+          "text": "Set delivery or collection arrangements",
+          "type": "istar.Task",
+          "x": 4521,
+          "y": 2396
+        },
+        {
+          "id": "64216571-77e9-5aa4-b695-71de03a46c8c",
+          "text": "Fair income per sale",
+          "type": "istar.Quality",
+          "x": 4830,
+          "y": 1477
+        },
+        {
+          "id": "7ac99284-035b-564a-893d-4b56a260d749",
+          "text": "Sell by email, telephone and markets",
+          "type": "istar.Task",
+          "x": 4912,
+          "y": 1752
+        },
+        {
+          "id": "7e1f2312-2862-5027-ad3f-ba31d8536cca",
+          "text": "Accept 5% commission",
+          "type": "istar.Task",
+          "x": 4660,
+          "y": 1486
+        },
+        {
+          "id": "1f261b50-524c-5dfb-98f2-a3c9e1c7afdd",
+          "text": "Sell through the marketplace",
+          "type": "istar.Task",
+          "x": 4516,
+          "y": 1738
+        },
+        {
+          "id": "f99fbc28-1236-5690-a3d8-b4111c246b05",
+          "text": "Low effort (limited time and skills)",
+          "type": "istar.Quality",
+          "x": 4681,
+          "y": 1830
+        },
+        {
+          "id": "3eaaa293-bdd6-5cb5-bc21-d7a6ba1f61f3",
+          "text": "List and update products",
+          "type": "istar.Task",
+          "x": 4619,
+          "y": 1948
+        },
+        {
+          "id": "5ec43d24-303f-5685-abe5-5580a1492144",
+          "text": "Keep stock levels accurate",
+          "type": "istar.Task",
+          "x": 4843,
+          "y": 2084
+        }
+      ]
+    },
+    {
+      "id": "379c2925-5fd5-5231-8d64-a649cff95a40",
+      "text": "Customer",
+      "type": "istar.Role",
+      "x": 60,
+      "y": 1180,
+      "nodes": [
+        {
+          "id": "023c9aeb-5bd3-57c3-b393-0602ae86c345",
+          "text": "Goods received",
+          "type": "istar.Goal",
+          "x": 465,
+          "y": 2878
+        },
+        {
+          "id": "72cf8700-8c18-5c1d-84a4-65044112e1ba",
+          "text": "Buy from farm shops and markets",
+          "type": "istar.Task",
+          "x": 84,
+          "y": 2084
+        },
+        {
+          "id": "d65b85f5-af80-512c-9af5-78b30dfb3bba",
+          "text": "Low supplier admin",
+          "type": "istar.Quality",
+          "x": 364,
+          "y": 1884
+        },
+        {
+          "id": "e51e7449-5a4c-5e1d-82a3-376b06ad1e16",
+          "text": "Reliable local supply",
+          "type": "istar.Quality",
+          "x": 412,
+          "y": 2084
+        },
+        {
+          "id": "3aada161-37bc-5206-a21d-c75c0d7369b9",
+          "text": "Convenience",
+          "type": "istar.Quality",
+          "x": 364,
+          "y": 2276
+        },
+        {
+          "id": "5948a6c3-e070-55ba-8d9a-127e768761fa",
+          "text": "Local produce bought",
+          "type": "istar.Goal",
+          "x": 380,
+          "y": 1564
+        },
+        {
+          "id": "13f28e66-f649-5386-ab9e-ae9be139552f",
+          "text": "Buy through the marketplace",
+          "type": "istar.Task",
+          "x": 740,
+          "y": 2076
+        },
+        {
+          "id": "e9a7afc6-7130-5d7e-80fc-20d3126433bc",
+          "text": "Products found",
+          "type": "istar.Goal",
+          "x": 668,
+          "y": 1708
+        },
+        {
+          "id": "cddba23d-2ec8-5908-9097-b79389ed917e",
+          "text": "Safe payment and personal data",
+          "type": "istar.Quality",
+          "x": 1036,
+          "y": 1540
+        },
+        {
+          "id": "5255569f-8a54-5555-bcd3-a042bfcea55c",
+          "text": "Give sandbox payment reference",
+          "type": "istar.Task",
+          "x": 1148,
+          "y": 1716
+        },
+        {
+          "id": "637ba513-69c6-5938-ac8e-cbff01808465",
+          "text": "Pay for the order",
+          "type": "istar.Task",
+          "x": 932,
+          "y": 1868
+        },
+        {
+          "id": "fe99ee34-1edf-5f0b-88a1-7a5ec74aebd1",
+          "text": "Retry or cancel after decline",
+          "type": "istar.Task",
+          "x": 1140,
+          "y": 2068
+        },
+        {
+          "id": "bfd4bba1-b7f8-5eec-a917-e08b58d11e9b",
+          "text": "Quick delivery",
+          "type": "istar.Quality",
+          "x": 276,
+          "y": 2604
+        },
+        {
+          "id": "bef23b13-5f1f-55dd-b39b-9d5e7018bbe7",
+          "text": "Check out the order",
+          "type": "istar.Task",
+          "x": 890,
+          "y": 2322
+        },
+        {
+          "id": "b4c7f0a3-b997-557b-874e-d2ce707ca9e1",
+          "text": "Basket",
+          "type": "istar.Resource",
+          "x": 702,
+          "y": 2609
+        },
+        {
+          "id": "83603a69-3f10-580d-97ae-cc1a20a79e58",
+          "text": "Review and confirm order",
+          "type": "istar.Task",
+          "x": 1102,
+          "y": 2572
+        },
+        {
+          "id": "478e4d1e-43e7-52c8-97c4-e2fa5fb98bb4",
+          "text": "Amend unavailable items",
+          "type": "istar.Task",
+          "x": 1204,
+          "y": 2180
+        }
+      ]
+    },
+    {
       "id": "05db5b6d-9981-52b4-8cd1-86dbff857d78",
       "text": "Marketplace platform",
       "type": "istar.Agent",
@@ -232,408 +634,6 @@
           "y": 2732
         }
       ]
-    },
-    {
-      "id": "379c2925-5fd5-5231-8d64-a649cff95a40",
-      "text": "Customer",
-      "type": "istar.Role",
-      "x": 60,
-      "y": 1180,
-      "nodes": [
-        {
-          "id": "023c9aeb-5bd3-57c3-b393-0602ae86c345",
-          "text": "Goods received",
-          "type": "istar.Goal",
-          "x": 465,
-          "y": 2878
-        },
-        {
-          "id": "72cf8700-8c18-5c1d-84a4-65044112e1ba",
-          "text": "Buy from farm shops and markets",
-          "type": "istar.Task",
-          "x": 84,
-          "y": 2084
-        },
-        {
-          "id": "d65b85f5-af80-512c-9af5-78b30dfb3bba",
-          "text": "Low supplier admin",
-          "type": "istar.Quality",
-          "x": 364,
-          "y": 1884
-        },
-        {
-          "id": "e51e7449-5a4c-5e1d-82a3-376b06ad1e16",
-          "text": "Reliable local supply",
-          "type": "istar.Quality",
-          "x": 412,
-          "y": 2084
-        },
-        {
-          "id": "3aada161-37bc-5206-a21d-c75c0d7369b9",
-          "text": "Convenience",
-          "type": "istar.Quality",
-          "x": 364,
-          "y": 2276
-        },
-        {
-          "id": "5948a6c3-e070-55ba-8d9a-127e768761fa",
-          "text": "Local produce bought",
-          "type": "istar.Goal",
-          "x": 380,
-          "y": 1564
-        },
-        {
-          "id": "13f28e66-f649-5386-ab9e-ae9be139552f",
-          "text": "Buy through the marketplace",
-          "type": "istar.Task",
-          "x": 740,
-          "y": 2076
-        },
-        {
-          "id": "e9a7afc6-7130-5d7e-80fc-20d3126433bc",
-          "text": "Products found",
-          "type": "istar.Goal",
-          "x": 668,
-          "y": 1708
-        },
-        {
-          "id": "cddba23d-2ec8-5908-9097-b79389ed917e",
-          "text": "Safe payment and personal data",
-          "type": "istar.Quality",
-          "x": 1036,
-          "y": 1540
-        },
-        {
-          "id": "5255569f-8a54-5555-bcd3-a042bfcea55c",
-          "text": "Give sandbox payment reference",
-          "type": "istar.Task",
-          "x": 1148,
-          "y": 1716
-        },
-        {
-          "id": "637ba513-69c6-5938-ac8e-cbff01808465",
-          "text": "Pay for the order",
-          "type": "istar.Task",
-          "x": 932,
-          "y": 1868
-        },
-        {
-          "id": "fe99ee34-1edf-5f0b-88a1-7a5ec74aebd1",
-          "text": "Retry or cancel after decline",
-          "type": "istar.Task",
-          "x": 1140,
-          "y": 2068
-        },
-        {
-          "id": "bfd4bba1-b7f8-5eec-a917-e08b58d11e9b",
-          "text": "Quick delivery",
-          "type": "istar.Quality",
-          "x": 276,
-          "y": 2604
-        },
-        {
-          "id": "bef23b13-5f1f-55dd-b39b-9d5e7018bbe7",
-          "text": "Check out the order",
-          "type": "istar.Task",
-          "x": 890,
-          "y": 2322
-        },
-        {
-          "id": "b4c7f0a3-b997-557b-874e-d2ce707ca9e1",
-          "text": "Basket",
-          "type": "istar.Resource",
-          "x": 702,
-          "y": 2609
-        },
-        {
-          "id": "83603a69-3f10-580d-97ae-cc1a20a79e58",
-          "text": "Review and confirm order",
-          "type": "istar.Task",
-          "x": 1102,
-          "y": 2572
-        },
-        {
-          "id": "478e4d1e-43e7-52c8-97c4-e2fa5fb98bb4",
-          "text": "Amend unavailable items",
-          "type": "istar.Task",
-          "x": 1204,
-          "y": 2180
-        }
-      ]
-    },
-    {
-      "id": "3488dfe6-c2f1-58d2-a71f-13842b59a26a",
-      "text": "Producer",
-      "type": "istar.Role",
-      "x": 4280,
-      "y": 1201,
-      "nodes": [
-        {
-          "id": "703cbf7d-c77b-5078-9aa6-5a67450ab1a6",
-          "text": "Weekly settlement received",
-          "type": "istar.Goal",
-          "x": 4472,
-          "y": 1268
-        },
-        {
-          "id": "b0d36146-3e0f-539c-804c-ce5b6ef30ac0",
-          "text": "Tax-ready accounts",
-          "type": "istar.Quality",
-          "x": 4663,
-          "y": 1258
-        },
-        {
-          "id": "6e4a2770-30ee-5018-8790-7c0b1088468b",
-          "text": "Prepare and hand over orders",
-          "type": "istar.Task",
-          "x": 4360,
-          "y": 2222
-        },
-        {
-          "id": "b0cef074-c29a-502f-8fcd-5703e6f48a99",
-          "text": "Products sold to more customers",
-          "type": "istar.Goal",
-          "x": 4706,
-          "y": 1665
-        },
-        {
-          "id": "27dbdb3a-1bb1-569b-91d6-b246366f3f14",
-          "text": "New order notification",
-          "type": "istar.Resource",
-          "x": 4304,
-          "y": 2021
-        },
-        {
-          "id": "ce153a62-82ef-5b11-91a9-f1e678376fae",
-          "text": "Enough time to prepare",
-          "type": "istar.Quality",
-          "x": 4310,
-          "y": 1875
-        },
-        {
-          "id": "5427fdb9-c214-5a6b-899f-8bfd7a0161c3",
-          "text": "Set delivery or collection arrangements",
-          "type": "istar.Task",
-          "x": 4521,
-          "y": 2396
-        },
-        {
-          "id": "64216571-77e9-5aa4-b695-71de03a46c8c",
-          "text": "Fair income per sale",
-          "type": "istar.Quality",
-          "x": 4830,
-          "y": 1477
-        },
-        {
-          "id": "7ac99284-035b-564a-893d-4b56a260d749",
-          "text": "Sell by email, telephone and markets",
-          "type": "istar.Task",
-          "x": 4912,
-          "y": 1752
-        },
-        {
-          "id": "7e1f2312-2862-5027-ad3f-ba31d8536cca",
-          "text": "Accept 5% commission",
-          "type": "istar.Task",
-          "x": 4660,
-          "y": 1486
-        },
-        {
-          "id": "1f261b50-524c-5dfb-98f2-a3c9e1c7afdd",
-          "text": "Sell through the marketplace",
-          "type": "istar.Task",
-          "x": 4516,
-          "y": 1738
-        },
-        {
-          "id": "f99fbc28-1236-5690-a3d8-b4111c246b05",
-          "text": "Low effort (limited time and skills)",
-          "type": "istar.Quality",
-          "x": 4681,
-          "y": 1830
-        },
-        {
-          "id": "3eaaa293-bdd6-5cb5-bc21-d7a6ba1f61f3",
-          "text": "List and update products",
-          "type": "istar.Task",
-          "x": 4619,
-          "y": 1948
-        },
-        {
-          "id": "5ec43d24-303f-5685-abe5-5580a1492144",
-          "text": "Keep stock levels accurate",
-          "type": "istar.Task",
-          "x": 4843,
-          "y": 2084
-        }
-      ]
-    },
-    {
-      "id": "dbea0e75-7fd1-5b56-b867-6f444ff8a455",
-      "text": "BRF Network",
-      "type": "istar.Agent",
-      "x": 1806,
-      "y": 239,
-      "nodes": [
-        {
-          "id": "05a906ea-4406-59c3-8b80-0ed4e3eecc3a",
-          "text": "Local food network sustained",
-          "type": "istar.Goal",
-          "x": 2769,
-          "y": 275
-        },
-        {
-          "id": "f4fd24bb-f587-5001-9db6-86171821c905",
-          "text": "Run the digital marketplace",
-          "type": "istar.Task",
-          "x": 2771,
-          "y": 465
-        },
-        {
-          "id": "1cf58a64-9ed4-50b5-9dbf-a6be98982385",
-          "text": "Set business rules",
-          "type": "istar.Task",
-          "x": 2977,
-          "y": 805
-        },
-        {
-          "id": "015007c9-0565-5f54-adf2-67616e19c9d6",
-          "text": "Regulations complied with",
-          "type": "istar.Goal",
-          "x": 2772,
-          "y": 688
-        },
-        {
-          "id": "72bdb52a-d146-5ffd-ab9b-6abde922c51b",
-          "text": "Customer and producer trust",
-          "type": "istar.Quality",
-          "x": 3353,
-          "y": 686
-        },
-        {
-          "id": "07876635-bb5b-5b5f-ae5e-ac538d7d568c",
-          "text": "Handle quality incidents",
-          "type": "istar.Task",
-          "x": 3350,
-          "y": 542
-        },
-        {
-          "id": "1eadc149-82ca-5b98-a8f5-e336a53cd3c2",
-          "text": "Promote surplus offers, food miles and education",
-          "type": "istar.Task",
-          "x": 2000,
-          "y": 468
-        },
-        {
-          "id": "418350f8-90b5-535b-a617-eae57ddd1526",
-          "text": "Sustainability (fewer food miles, less waste)",
-          "type": "istar.Quality",
-          "x": 2004,
-          "y": 928
-        },
-        {
-          "id": "77c4c39d-01e7-5a6c-952c-d09337b4b1e9",
-          "text": "Community connections",
-          "type": "istar.Quality",
-          "x": 2230,
-          "y": 936
-        },
-        {
-          "id": "f8debb17-c037-5f90-b61b-c1a7519909e8",
-          "text": "Commission income earned",
-          "type": "istar.Goal",
-          "x": 3026,
-          "y": 573
-        },
-        {
-          "id": "597149ed-775f-5ca1-b0a2-8e096b8f7342",
-          "text": "Financial viability",
-          "type": "istar.Quality",
-          "x": 2775,
-          "y": 931
-        },
-        {
-          "id": "07731792-7213-5380-ad27-76054dc4d2ea",
-          "text": "Charge 5% commission on each order",
-          "type": "istar.Task",
-          "x": 3251,
-          "y": 928
-        },
-        {
-          "id": "ebaee70d-d08d-530c-9ff6-5a6be043bdea",
-          "text": "Settle producers weekly",
-          "type": "istar.Task",
-          "x": 3785,
-          "y": 472
-        },
-        {
-          "id": "2a3f4a34-4f7a-5188-aa2a-4871a4e68c4a",
-          "text": "Producers attracted and kept",
-          "type": "istar.Quality",
-          "x": 3787,
-          "y": 931
-        },
-        {
-          "id": "d0f1fcec-eb08-54b8-873c-784f83a886d5",
-          "text": "Offer surplus produce",
-          "type": "istar.Task",
-          "x": 1819,
-          "y": 695,
-          "customProperties": {
-            "Change": "BRF Network refinement, 3 Nov 2026",
-            "Reason": "P10. Splits \"Promote surplus offers, food miles and education\""
-          }
-        },
-        {
-          "id": "675714fc-fef0-59cd-a7bc-117f7f7f378a",
-          "text": "Report food miles",
-          "type": "istar.Task",
-          "x": 2018,
-          "y": 694,
-          "customProperties": {
-            "Change": "BRF Network refinement, 3 Nov 2026",
-            "Reason": "P09. Splits \"Promote surplus offers, food miles and education\""
-          }
-        },
-        {
-          "id": "e4408c35-c97e-54d3-b2ef-bf65d1ae9b93",
-          "text": "Share educational content",
-          "type": "istar.Task",
-          "x": 2228,
-          "y": 692,
-          "customProperties": {
-            "Change": "BRF Network refinement, 3 Nov 2026",
-            "Reason": "P11. Splits \"Promote surplus offers, food miles and education\""
-          }
-        },
-        {
-          "id": "1b05eb19-d18c-5dae-ab1f-547aa469fb74",
-          "text": "Protect personal data and keep financial audit trail",
-          "type": "istar.Task",
-          "x": 2488,
-          "y": 685,
-          "customProperties": {
-            "Change": "BRF Network refinement, 3 Nov 2026",
-            "Reason": "Means for \"Regulations complied with\" (NFR01, NFR08)"
-          }
-        }
-      ]
-    },
-    {
-      "id": "2497f8d9-3be8-50ad-83c5-4a0001f8f529",
-      "text": "Payment service",
-      "type": "istar.Agent",
-      "x": 1548,
-      "y": 1132,
-      "nodes": []
-    },
-    {
-      "id": "0b2721ac-387d-54fd-ba63-fd75a14e70e3",
-      "text": "Notification service",
-      "type": "istar.Agent",
-      "x": 4054,
-      "y": 1162,
-      "nodes": []
     }
   ],
   "orphans": [],
@@ -880,9 +880,33 @@
       },
       "source": "d00a033d-e8f5-558e-be8d-d64994afb06e",
       "target": "2497f8d9-3be8-50ad-83c5-4a0001f8f529"
+    },
+    {
+      "id": "11dbb3c8-cde0-4d88-9448-3c051eb85bea",
+      "text": "Transparent auidit trail",
+      "type": "istar.Quality",
+      "x": 4004,
+      "y": 964,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "3488dfe6-c2f1-58d2-a71f-13842b59a26a",
+      "target": "ebaee70d-d08d-530c-9ff6-5a6be043bdea"
     }
   ],
   "links": [
+    {
+      "id": "25d4a507-2229-4ee8-87f0-3660eaaed27f",
+      "type": "istar.DependencyLink",
+      "source": "11dbb3c8-cde0-4d88-9448-3c051eb85bea",
+      "target": "ebaee70d-d08d-530c-9ff6-5a6be043bdea"
+    },
+    {
+      "id": "a19f95f7-2fd7-46fc-97f3-2ef8df1e1936",
+      "type": "istar.DependencyLink",
+      "source": "3488dfe6-c2f1-58d2-a71f-13842b59a26a",
+      "target": "11dbb3c8-cde0-4d88-9448-3c051eb85bea"
+    },
     {
       "id": "c16c0b44-5bac-4743-b235-0c19aec9f279",
       "type": "istar.DependencyLink",
@@ -1708,6 +1732,260 @@
     }
   ],
   "display": {
+    "dbea0e75-7fd1-5b56-b867-6f444ff8a455": {
+      "backgroundColor": "#A6E3DC"
+    },
+    "05a906ea-4406-59c3-8b80-0ed4e3eecc3a": {
+      "backgroundColor": "#FFE29A",
+      "width": 110,
+      "height": 44
+    },
+    "f4fd24bb-f587-5001-9db6-86171821c905": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "1cf58a64-9ed4-50b5-9dbf-a6be98982385": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "015007c9-0565-5f54-adf2-67616e19c9d6": {
+      "backgroundColor": "#FFE29A",
+      "width": 110,
+      "height": 44
+    },
+    "72bdb52a-d146-5ffd-ab9b-6abde922c51b": {
+      "backgroundColor": "#F9C6D7",
+      "width": 110,
+      "height": 44
+    },
+    "07876635-bb5b-5b5f-ae5e-ac538d7d568c": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "1eadc149-82ca-5b98-a8f5-e336a53cd3c2": {
+      "backgroundColor": "#B9DCFA",
+      "width": 140,
+      "height": 52
+    },
+    "418350f8-90b5-535b-a617-eae57ddd1526": {
+      "backgroundColor": "#F9C6D7",
+      "width": 140,
+      "height": 52
+    },
+    "77c4c39d-01e7-5a6c-952c-d09337b4b1e9": {
+      "backgroundColor": "#F9C6D7",
+      "width": 110,
+      "height": 44
+    },
+    "f8debb17-c037-5f90-b61b-c1a7519909e8": {
+      "backgroundColor": "#FFE29A",
+      "width": 110,
+      "height": 44
+    },
+    "597149ed-775f-5ca1-b0a2-8e096b8f7342": {
+      "backgroundColor": "#F9C6D7",
+      "width": 110,
+      "height": 44
+    },
+    "07731792-7213-5380-ad27-76054dc4d2ea": {
+      "backgroundColor": "#B9DCFA",
+      "width": 140,
+      "height": 52
+    },
+    "ebaee70d-d08d-530c-9ff6-5a6be043bdea": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "2a3f4a34-4f7a-5188-aa2a-4871a4e68c4a": {
+      "backgroundColor": "#F9C6D7",
+      "width": 110,
+      "height": 44
+    },
+    "d0f1fcec-eb08-54b8-873c-784f83a886d5": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "675714fc-fef0-59cd-a7bc-117f7f7f378a": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "e4408c35-c97e-54d3-b2ef-bf65d1ae9b93": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "1b05eb19-d18c-5dae-ab1f-547aa469fb74": {
+      "backgroundColor": "#B9DCFA",
+      "width": 140,
+      "height": 52
+    },
+    "3488dfe6-c2f1-58d2-a71f-13842b59a26a": {
+      "backgroundColor": "#C9F2CF"
+    },
+    "703cbf7d-c77b-5078-9aa6-5a67450ab1a6": {
+      "backgroundColor": "#FFE29A",
+      "width": 110,
+      "height": 44
+    },
+    "b0d36146-3e0f-539c-804c-ce5b6ef30ac0": {
+      "backgroundColor": "#F9C6D7",
+      "width": 110,
+      "height": 44
+    },
+    "6e4a2770-30ee-5018-8790-7c0b1088468b": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "b0cef074-c29a-502f-8fcd-5703e6f48a99": {
+      "backgroundColor": "#FFE29A",
+      "width": 140,
+      "height": 52
+    },
+    "27dbdb3a-1bb1-569b-91d6-b246366f3f14": {
+      "backgroundColor": "#D9CCF2",
+      "width": 110,
+      "height": 44
+    },
+    "ce153a62-82ef-5b11-91a9-f1e678376fae": {
+      "backgroundColor": "#F9C6D7",
+      "width": 110,
+      "height": 44
+    },
+    "5427fdb9-c214-5a6b-899f-8bfd7a0161c3": {
+      "backgroundColor": "#B9DCFA",
+      "width": 140,
+      "height": 52
+    },
+    "64216571-77e9-5aa4-b695-71de03a46c8c": {
+      "backgroundColor": "#F9C6D7",
+      "width": 110,
+      "height": 44
+    },
+    "7ac99284-035b-564a-893d-4b56a260d749": {
+      "backgroundColor": "#B9DCFA",
+      "width": 140,
+      "height": 52
+    },
+    "7e1f2312-2862-5027-ad3f-ba31d8536cca": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "1f261b50-524c-5dfb-98f2-a3c9e1c7afdd": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "f99fbc28-1236-5690-a3d8-b4111c246b05": {
+      "backgroundColor": "#F9C6D7",
+      "width": 140,
+      "height": 52
+    },
+    "3eaaa293-bdd6-5cb5-bc21-d7a6ba1f61f3": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "5ec43d24-303f-5685-abe5-5580a1492144": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "379c2925-5fd5-5231-8d64-a649cff95a40": {
+      "backgroundColor": "#C9F2CF"
+    },
+    "023c9aeb-5bd3-57c3-b393-0602ae86c345": {
+      "backgroundColor": "#FFE29A",
+      "width": 110,
+      "height": 44
+    },
+    "72cf8700-8c18-5c1d-84a4-65044112e1ba": {
+      "backgroundColor": "#B9DCFA",
+      "width": 140,
+      "height": 52
+    },
+    "d65b85f5-af80-512c-9af5-78b30dfb3bba": {
+      "backgroundColor": "#F9C6D7",
+      "width": 110,
+      "height": 44
+    },
+    "e51e7449-5a4c-5e1d-82a3-376b06ad1e16": {
+      "backgroundColor": "#F9C6D7",
+      "width": 110,
+      "height": 44
+    },
+    "3aada161-37bc-5206-a21d-c75c0d7369b9": {
+      "backgroundColor": "#F9C6D7",
+      "width": 110,
+      "height": 44
+    },
+    "5948a6c3-e070-55ba-8d9a-127e768761fa": {
+      "backgroundColor": "#FFE29A",
+      "width": 110,
+      "height": 44
+    },
+    "13f28e66-f649-5386-ab9e-ae9be139552f": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "e9a7afc6-7130-5d7e-80fc-20d3126433bc": {
+      "backgroundColor": "#FFE29A",
+      "width": 110,
+      "height": 44
+    },
+    "cddba23d-2ec8-5908-9097-b79389ed917e": {
+      "backgroundColor": "#F9C6D7",
+      "width": 140,
+      "height": 52
+    },
+    "5255569f-8a54-5555-bcd3-a042bfcea55c": {
+      "backgroundColor": "#B9DCFA",
+      "width": 140,
+      "height": 52
+    },
+    "637ba513-69c6-5938-ac8e-cbff01808465": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "fe99ee34-1edf-5f0b-88a1-7a5ec74aebd1": {
+      "backgroundColor": "#B9DCFA",
+      "width": 140,
+      "height": 52
+    },
+    "bfd4bba1-b7f8-5eec-a917-e08b58d11e9b": {
+      "backgroundColor": "#F9C6D7",
+      "width": 110,
+      "height": 44
+    },
+    "bef23b13-5f1f-55dd-b39b-9d5e7018bbe7": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "b4c7f0a3-b997-557b-874e-d2ce707ca9e1": {
+      "backgroundColor": "#D9CCF2",
+      "width": 110,
+      "height": 44
+    },
+    "83603a69-3f10-580d-97ae-cc1a20a79e58": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
+    "478e4d1e-43e7-52c8-97c4-e2fa5fb98bb4": {
+      "backgroundColor": "#B9DCFA",
+      "width": 110,
+      "height": 44
+    },
     "05db5b6d-9981-52b4-8cd1-86dbff857d78": {
       "backgroundColor": "#A6E3DC"
     },
@@ -1871,260 +2149,6 @@
       "width": 140,
       "height": 52
     },
-    "379c2925-5fd5-5231-8d64-a649cff95a40": {
-      "backgroundColor": "#C9F2CF"
-    },
-    "023c9aeb-5bd3-57c3-b393-0602ae86c345": {
-      "backgroundColor": "#FFE29A",
-      "width": 110,
-      "height": 44
-    },
-    "72cf8700-8c18-5c1d-84a4-65044112e1ba": {
-      "backgroundColor": "#B9DCFA",
-      "width": 140,
-      "height": 52
-    },
-    "d65b85f5-af80-512c-9af5-78b30dfb3bba": {
-      "backgroundColor": "#F9C6D7",
-      "width": 110,
-      "height": 44
-    },
-    "e51e7449-5a4c-5e1d-82a3-376b06ad1e16": {
-      "backgroundColor": "#F9C6D7",
-      "width": 110,
-      "height": 44
-    },
-    "3aada161-37bc-5206-a21d-c75c0d7369b9": {
-      "backgroundColor": "#F9C6D7",
-      "width": 110,
-      "height": 44
-    },
-    "5948a6c3-e070-55ba-8d9a-127e768761fa": {
-      "backgroundColor": "#FFE29A",
-      "width": 110,
-      "height": 44
-    },
-    "13f28e66-f649-5386-ab9e-ae9be139552f": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "e9a7afc6-7130-5d7e-80fc-20d3126433bc": {
-      "backgroundColor": "#FFE29A",
-      "width": 110,
-      "height": 44
-    },
-    "cddba23d-2ec8-5908-9097-b79389ed917e": {
-      "backgroundColor": "#F9C6D7",
-      "width": 140,
-      "height": 52
-    },
-    "5255569f-8a54-5555-bcd3-a042bfcea55c": {
-      "backgroundColor": "#B9DCFA",
-      "width": 140,
-      "height": 52
-    },
-    "637ba513-69c6-5938-ac8e-cbff01808465": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "fe99ee34-1edf-5f0b-88a1-7a5ec74aebd1": {
-      "backgroundColor": "#B9DCFA",
-      "width": 140,
-      "height": 52
-    },
-    "bfd4bba1-b7f8-5eec-a917-e08b58d11e9b": {
-      "backgroundColor": "#F9C6D7",
-      "width": 110,
-      "height": 44
-    },
-    "bef23b13-5f1f-55dd-b39b-9d5e7018bbe7": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "b4c7f0a3-b997-557b-874e-d2ce707ca9e1": {
-      "backgroundColor": "#D9CCF2",
-      "width": 110,
-      "height": 44
-    },
-    "83603a69-3f10-580d-97ae-cc1a20a79e58": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "478e4d1e-43e7-52c8-97c4-e2fa5fb98bb4": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "3488dfe6-c2f1-58d2-a71f-13842b59a26a": {
-      "backgroundColor": "#C9F2CF"
-    },
-    "703cbf7d-c77b-5078-9aa6-5a67450ab1a6": {
-      "backgroundColor": "#FFE29A",
-      "width": 110,
-      "height": 44
-    },
-    "b0d36146-3e0f-539c-804c-ce5b6ef30ac0": {
-      "backgroundColor": "#F9C6D7",
-      "width": 110,
-      "height": 44
-    },
-    "6e4a2770-30ee-5018-8790-7c0b1088468b": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "b0cef074-c29a-502f-8fcd-5703e6f48a99": {
-      "backgroundColor": "#FFE29A",
-      "width": 140,
-      "height": 52
-    },
-    "27dbdb3a-1bb1-569b-91d6-b246366f3f14": {
-      "backgroundColor": "#D9CCF2",
-      "width": 110,
-      "height": 44
-    },
-    "ce153a62-82ef-5b11-91a9-f1e678376fae": {
-      "backgroundColor": "#F9C6D7",
-      "width": 110,
-      "height": 44
-    },
-    "5427fdb9-c214-5a6b-899f-8bfd7a0161c3": {
-      "backgroundColor": "#B9DCFA",
-      "width": 140,
-      "height": 52
-    },
-    "64216571-77e9-5aa4-b695-71de03a46c8c": {
-      "backgroundColor": "#F9C6D7",
-      "width": 110,
-      "height": 44
-    },
-    "7ac99284-035b-564a-893d-4b56a260d749": {
-      "backgroundColor": "#B9DCFA",
-      "width": 140,
-      "height": 52
-    },
-    "7e1f2312-2862-5027-ad3f-ba31d8536cca": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "1f261b50-524c-5dfb-98f2-a3c9e1c7afdd": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "f99fbc28-1236-5690-a3d8-b4111c246b05": {
-      "backgroundColor": "#F9C6D7",
-      "width": 140,
-      "height": 52
-    },
-    "3eaaa293-bdd6-5cb5-bc21-d7a6ba1f61f3": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "5ec43d24-303f-5685-abe5-5580a1492144": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "dbea0e75-7fd1-5b56-b867-6f444ff8a455": {
-      "backgroundColor": "#A6E3DC"
-    },
-    "05a906ea-4406-59c3-8b80-0ed4e3eecc3a": {
-      "backgroundColor": "#FFE29A",
-      "width": 110,
-      "height": 44
-    },
-    "f4fd24bb-f587-5001-9db6-86171821c905": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "1cf58a64-9ed4-50b5-9dbf-a6be98982385": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "015007c9-0565-5f54-adf2-67616e19c9d6": {
-      "backgroundColor": "#FFE29A",
-      "width": 110,
-      "height": 44
-    },
-    "72bdb52a-d146-5ffd-ab9b-6abde922c51b": {
-      "backgroundColor": "#F9C6D7",
-      "width": 110,
-      "height": 44
-    },
-    "07876635-bb5b-5b5f-ae5e-ac538d7d568c": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "1eadc149-82ca-5b98-a8f5-e336a53cd3c2": {
-      "backgroundColor": "#B9DCFA",
-      "width": 140,
-      "height": 52
-    },
-    "418350f8-90b5-535b-a617-eae57ddd1526": {
-      "backgroundColor": "#F9C6D7",
-      "width": 140,
-      "height": 52
-    },
-    "77c4c39d-01e7-5a6c-952c-d09337b4b1e9": {
-      "backgroundColor": "#F9C6D7",
-      "width": 110,
-      "height": 44
-    },
-    "f8debb17-c037-5f90-b61b-c1a7519909e8": {
-      "backgroundColor": "#FFE29A",
-      "width": 110,
-      "height": 44
-    },
-    "597149ed-775f-5ca1-b0a2-8e096b8f7342": {
-      "backgroundColor": "#F9C6D7",
-      "width": 110,
-      "height": 44
-    },
-    "07731792-7213-5380-ad27-76054dc4d2ea": {
-      "backgroundColor": "#B9DCFA",
-      "width": 140,
-      "height": 52
-    },
-    "ebaee70d-d08d-530c-9ff6-5a6be043bdea": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "2a3f4a34-4f7a-5188-aa2a-4871a4e68c4a": {
-      "backgroundColor": "#F9C6D7",
-      "width": 110,
-      "height": 44
-    },
-    "d0f1fcec-eb08-54b8-873c-784f83a886d5": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "675714fc-fef0-59cd-a7bc-117f7f7f378a": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "e4408c35-c97e-54d3-b2ef-bf65d1ae9b93": {
-      "backgroundColor": "#B9DCFA",
-      "width": 110,
-      "height": 44
-    },
-    "1b05eb19-d18c-5dae-ab1f-547aa469fb74": {
-      "backgroundColor": "#B9DCFA",
-      "width": 140,
-      "height": 52
-    },
     "8c835423-1e1b-5fa5-9e64-dcf15878c53c": {
       "backgroundColor": "#F9C6D7",
       "width": 110,
@@ -2220,6 +2244,9 @@
       "width": 110,
       "height": 44
     },
+    "11dbb3c8-cde0-4d88-9448-3c051eb85bea": {
+      "backgroundColor": "#F9C6D7"
+    },
     "54712f79-b956-4593-9779-b38482cfbdbb": {
       "vertices": [
         {
@@ -2296,16 +2323,16 @@
         }
       ]
     },
-    "2497f8d9-3be8-50ad-83c5-4a0001f8f529": {
+    "0b2721ac-387d-54fd-ba63-fd75a14e70e3": {
       "collapsed": true
     },
-    "0b2721ac-387d-54fd-ba63-fd75a14e70e3": {
+    "2497f8d9-3be8-50ad-83c5-4a0001f8f529": {
       "collapsed": true
     }
   },
   "tool": "pistar.2.1.0",
   "istar": "2.0",
-  "saveDate": "Tue, 03 Nov 2026 23:26:36 GMT",
+  "saveDate": "Wed, 04 Nov 2026 14:43:34 GMT",
   "diagram": {
     "width": 6268,
     "height": 3420,
