@@ -94,7 +94,7 @@
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_BRF_32</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_33</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="Def_Event_AmendOrder" messageRef="Message_AmendOrder" />
+      <bpmn:messageEventDefinition id="Def_Event_AmendOrder" />
     </bpmn:intermediateThrowEvent>
     <bpmn:task id="P03" name="Browse and search catalogue">
       <bpmn:documentation>P03. Owner: F01 Catalogue management. Use Case 2 starts here. See requirements/strategic/processes.md, section 3. i*: CU02, CU04, SD02.</bpmn:documentation>
@@ -330,7 +330,6 @@
   <bpmn:message id="Message_SurplusReported" name="surplus-produce-reported" />
   <bpmn:message id="Message_ContentSubmitted" name="content-submitted" />
   <bpmn:message id="Message_ProducerOrder" name="producer-order-received" />
-  <bpmn:message id="Message_AmendOrder" name="amend-order" />
   <bpmndi:BPMNDiagram id="Diagram_Strategic">
     <bpmndi:BPMNPlane id="Plane_Strategic" bpmnElement="Collaboration_Strategic">
       <bpmndi:BPMNShape id="Participant_Customer_di" bpmnElement="Participant_Customer" isHorizontal="true">
