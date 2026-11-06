@@ -335,17 +335,19 @@ The operational models are not built yet. The last two columns use the planned e
 | i* element | Strategic BPMN (Figure 1) | Operational BPMN (planned) | Stories |
 |---|---|---|---|
 | CU07 Review and confirm order | Customer pool, Order message (M04) | `process_order`: user task with a Camunda Form | B05 |
-| CU08 Amend unavailable items | Customer pool (O01, O02) | `process_order`: user task and a loop back to the stock check | B02 |
+| CU08 Amend unavailable items | Items in stock? gateway, Amend order message (M23) | `process_order`: user task and a loop back to the stock check | B02 |
 | CU10 Give sandbox payment reference | Customer pool | `process_payment`: user task with a Camunda Form | B10 |
 | CU11 Retry or cancel after decline | Customer pool (O03, O04) | `process_payment`: user task after `PAYMENT_DECLINED` | B11 |
-| MP06 Check stock | Process order (Orders lane) | Service task `check-stock` | B01, B21 |
+| MP06 Check stock | Items in stock? gateway (Product listing lane), before Process order | Service task `check-stock` | B01, B21 |
+| MP07 Ask customer to amend order | Customer asked to amend order event, Amend order message (M23) | `process_order`: user task after the stock check | B02 |
+| MP11 Product catalogue and stock | Product catalogue data object (DS1) | Product service (W1) | B01 |
 | MP13 Reserve stock for a time limit | Process order (Orders lane) | Reservation, with a timer boundary event on the review task | B07, B08 |
 | MP08 Identify producers and arrangements | Process order (Orders lane) | Service task `identify-producers` | B03, B04 |
 | MP10 Create and split marketplace order | Process order (Orders lane) | Service tasks `create-order` and `split-order` | B06 |
 | MP16 Submit payment | Process payment (Finance lane), Payment service (M05, M06) | Service task `submit-payment` | B10, B20 |
 | MP17 Calculate producer amounts and 5% commission | Process payment (Finance lane) | FEEL expressions in output mappings | B13 |
-| MP18 Confirm order and update stock | Update stock (Product listing lane), Order confirmation (M07) | Service tasks `confirm-order` and `update-stock` | B14, B15 |
-| MP19 Notify each producer | Notify producers (Orders lane), Notification service (M08, M09) | Multi-instance service task `notify-producer` | B16, B23 |
+| MP18 Confirm order and update stock | Process payment (Finance lane), Order confirmation (M07) | Service tasks `confirm-order` and `update-stock` | B14, B15 |
+| MP19 Notify each producer | Process payment (Finance lane), Notification service (M08, M09) | Multi-instance service task `notify-producer` | B16, B23 |
 | MP22 Let customer retry or cancel | Payment successful? gateway | Error boundary event `PAYMENT_DECLINED` | B11 |
 | MP24 Retry, then cancel and release stock | Payment not completed end event | Retry loop, then cancellation (`PAYMENT_SERVICE_UNAVAILABLE`) | B12, B17 |
 | PR07 Prepare and hand over orders | Fulfil order (Producer pool) | Out of scope | None |
