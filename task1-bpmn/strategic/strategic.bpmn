@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_Strategic" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="5acd1b5" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
   <bpmn:collaboration id="Collaboration_Strategic">
-    <bpmn:documentation>Figure 1: strategic BPMN model of the Bristol Regional Food Network marketplace. Pools from requirements/strategic/actors.md, lanes and processes from requirements/strategic/processes.md. The message flows are added in issue #83.</bpmn:documentation>
+    <bpmn:documentation>Figure 1: strategic BPMN model of the Bristol Regional Food Network marketplace. Pools from requirements/strategic/actors.md, lanes and processes from requirements/strategic/processes.md, message flows M01 to M23 from interactions.md section 3.1. The four data objects are the logical information groups DS1 to DS4 of interactions.md section 4.1; their associations draw the process relationships R02 to R04, R07 and R09 to R17. Each element cites its i* elements (task1-bpmn/istar/model-content.md) after "i*:".</bpmn:documentation>
     <bpmn:participant id="Participant_Customer" name="Customer" />
     <bpmn:participant id="Participant_BRFNetwork" name="BRF Network" processRef="Process_BRFNetwork" />
     <bpmn:participant id="Participant_Producer" name="Producer" processRef="Process_Producer" />
@@ -16,7 +16,7 @@
     <bpmn:messageFlow id="M05" name="Payment request" sourceRef="P05" targetRef="Participant_PaymentService" />
     <bpmn:messageFlow id="M06" name="Payment response" sourceRef="Participant_PaymentService" targetRef="P05" />
     <bpmn:messageFlow id="M07" name="Order confirmation" sourceRef="P05" targetRef="Participant_Customer" />
-    <bpmn:messageFlow id="M08" name="New order notification request" sourceRef="Task_NotifyProducers" targetRef="Participant_NotificationService" />
+    <bpmn:messageFlow id="M08" name="New order notification request" sourceRef="P05" targetRef="Participant_NotificationService" />
     <bpmn:messageFlow id="M09" name="New order notification" sourceRef="Participant_NotificationService" targetRef="Start_P06" />
     <bpmn:messageFlow id="M10" name="Weekly settlement" sourceRef="P07" targetRef="Participant_Producer" />
     <bpmn:messageFlow id="M11" name="Quality concern report" sourceRef="Participant_Customer" targetRef="Start_P08" />
@@ -31,6 +31,7 @@
     <bpmn:messageFlow id="M20" name="Surplus offer notification request" sourceRef="P10" targetRef="Participant_NotificationService" />
     <bpmn:messageFlow id="M21" name="Surplus offer" sourceRef="Participant_NotificationService" targetRef="Participant_Customer" />
     <bpmn:messageFlow id="M22" name="Educational content" sourceRef="Participant_Producer" targetRef="Start_P11" />
+    <bpmn:messageFlow id="M23" name="Amend order" sourceRef="Event_AmendOrder" targetRef="Participant_Customer" />
   </bpmn:collaboration>
   <bpmn:process id="Process_BRFNetwork" name="BRF Network" isExecutable="false">
     <bpmn:laneSet id="LaneSet_BRFNetwork">
@@ -54,6 +55,7 @@
         <bpmn:flowNodeRef>End_P08</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_F03" name="Finance">
+        <bpmn:flowNodeRef>End_UC2</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Start_P07</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P07</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_P07</bpmn:flowNodeRef>
@@ -62,52 +64,66 @@
         <bpmn:flowNodeRef>P05</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_F02" name="Orders">
-        <bpmn:flowNodeRef>Task_NotifyProducers</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>End_UC2</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_PaymentSplit</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_PaymentJoin</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P04</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_F01" name="Product listing">
         <bpmn:flowNodeRef>Start_UC2</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P03</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_UpdateStock</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_ItemsInStock</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_AmendOrder</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Start_P01</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P01</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_OrganicClaim</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_OrganicMerge</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_P01</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="Start_UC2" name="Customer opens the marketplace">
+      <bpmn:documentation>A none start event: the customer visits the marketplace on their own initiative, which is not a message to the network. P04 receives the order (M04) when the customer proceeds to checkout (R05). i*: CU02.</bpmn:documentation>
       <bpmn:outgoing>Flow_BRF_01</bpmn:outgoing>
     </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="Gateway_ItemsInStock" name="Items in stock?" default="Flow_BRF_32">
+      <bpmn:documentation>B01, R04. The stock kept by F01 (DS1) is checked before the marketplace order is created in P04. When an item is unavailable the customer is asked to amend the basket (O01, O02) and continues browsing. Operational detail: process_order, check-stock. i*: MP06, CU08.</bpmn:documentation>
+      <bpmn:incoming>Flow_BRF_02</bpmn:incoming>
+      <bpmn:outgoing>Flow_BRF_31</bpmn:outgoing>
+      <bpmn:outgoing>Flow_BRF_32</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:intermediateThrowEvent id="Event_AmendOrder" name="Customer asked to amend order">
+      <bpmn:documentation>Sends M23 "Amend order" to the customer (O01). The customer amends the basket (O02) and continues browsing (CU08). i*: MP07, CU08.</bpmn:documentation>
+      <bpmn:incoming>Flow_BRF_32</bpmn:incoming>
+      <bpmn:outgoing>Flow_BRF_33</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="Def_Event_AmendOrder" messageRef="Message_AmendOrder" />
+    </bpmn:intermediateThrowEvent>
     <bpmn:task id="P03" name="Browse and search catalogue">
-      <bpmn:documentation>P03. Owner: F01 Product listing. Use Case 2 starts here. See requirements/strategic/processes.md, section 3.</bpmn:documentation>
+      <bpmn:documentation>P03. Owner: F01 Product listing. Use Case 2 starts here. See requirements/strategic/processes.md, section 3. i*: CU02, CU04, SD02.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_01</bpmn:incoming>
+      <bpmn:incoming>Flow_BRF_33</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_02</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="Task_UpdateStock" name="Update stock">
-      <bpmn:documentation>Triggered by P05, performed by F01, which keeps the stock. See the Decisions in section 4 of processes.md.</bpmn:documentation>
-      <bpmn:incoming>Flow_BRF_09</bpmn:incoming>
-      <bpmn:outgoing>Flow_BRF_25</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="Task_NotifyProducers" name="Notify producers">
-      <bpmn:documentation>Triggered by P05, performed by F02, which owns the producer order elements. See the Decisions in section 4 of processes.md.</bpmn:documentation>
-      <bpmn:incoming>Flow_BRF_24</bpmn:incoming>
-      <bpmn:outgoing>Flow_BRF_08</bpmn:outgoing>
+      <bpmn:property id="Property_P03_DS1" name="__targetRef_placeholder" />
+      <bpmn:property id="Property_P03_DS4" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="Assoc_DS1_P03">
+        <bpmn:sourceRef>Data_DS1</bpmn:sourceRef>
+        <bpmn:targetRef>Property_P03_DS1</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataInputAssociation id="Assoc_DS4_P03">
+        <bpmn:sourceRef>Data_DS4</bpmn:sourceRef>
+        <bpmn:targetRef>Property_P03_DS4</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
     </bpmn:task>
     <bpmn:endEvent id="End_UC2" name="Order confirmed">
-      <bpmn:incoming>Flow_BRF_26</bpmn:incoming>
+      <bpmn:documentation>The payment succeeded and the order is confirmed to the customer (M07). The stock update by F01 and the producer notifications by F02 (M08, M09) happen inside P05; see processes.md, section 4. i*: MP18, MP19.</bpmn:documentation>
+      <bpmn:incoming>Flow_BRF_06</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:startEvent id="Start_P01" name="Product details received">
       <bpmn:outgoing>Flow_BRF_10</bpmn:outgoing>
       <bpmn:messageEventDefinition id="Def_Start_P01" messageRef="Message_ProductDetails" />
     </bpmn:startEvent>
     <bpmn:task id="P01" name="Manage products">
-      <bpmn:documentation>P01. Owner: F01 Product listing. See requirements/strategic/processes.md, section 3.</bpmn:documentation>
+      <bpmn:documentation>P01. Owner: F01 Product listing. See requirements/strategic/processes.md, section 3. i*: PR04, SD11.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_10</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_11</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="Assoc_P01_DS1">
+        <bpmn:targetRef>Data_DS1</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
     </bpmn:task>
     <bpmn:exclusiveGateway id="Gateway_OrganicClaim" name="Organic claim?" default="Flow_BRF_27">
       <bpmn:documentation>R01 and R02. A listing that claims organic certification goes to P02 for verification before it is published. See requirements/strategic/interactions.md, section 4.2.</bpmn:documentation>
@@ -115,13 +131,9 @@
       <bpmn:outgoing>Flow_BRF_14</bpmn:outgoing>
       <bpmn:outgoing>Flow_BRF_27</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:exclusiveGateway id="Gateway_OrganicMerge">
+    <bpmn:endEvent id="End_P01" name="Listing published">
       <bpmn:incoming>Flow_BRF_27</bpmn:incoming>
       <bpmn:incoming>Flow_BRF_29</bpmn:incoming>
-      <bpmn:outgoing>Flow_BRF_28</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="End_P01" name="Listing published">
-      <bpmn:incoming>Flow_BRF_28</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:startEvent id="Start_P07" name="Weekly settlement date">
       <bpmn:outgoing>Flow_BRF_12</bpmn:outgoing>
@@ -130,17 +142,25 @@
       </bpmn:timerEventDefinition>
     </bpmn:startEvent>
     <bpmn:task id="P07" name="Settle producer payments">
-      <bpmn:documentation>P07. Owner: F03 Finance. Amount of each producer less the 5% commission, with an audit trail. See requirements/strategic/processes.md, section 3.</bpmn:documentation>
+      <bpmn:documentation>P07. Owner: F03 Finance. Amount of each producer less the 5% commission, with an audit trail. See requirements/strategic/processes.md, section 3. i*: NW06, PR09, SD17, SD32.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_12</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_13</bpmn:outgoing>
+      <bpmn:property id="Property_P07_DS3" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="Assoc_DS3_P07">
+        <bpmn:sourceRef>Data_DS3</bpmn:sourceRef>
+        <bpmn:targetRef>Property_P07_DS3</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
     </bpmn:task>
     <bpmn:endEvent id="End_P07" name="Producers settled">
       <bpmn:incoming>Flow_BRF_13</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:task id="P02" name="Verify organic certification">
-      <bpmn:documentation>P02. Owner: F04 Quality and traceability. Open question T3 in processes.md. See requirements/strategic/processes.md, section 3.</bpmn:documentation>
+      <bpmn:documentation>P02. Owner: F04 Quality and traceability. Open question T3 in processes.md. See requirements/strategic/processes.md, section 3. i*: SD25.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_14</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_15</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="Assoc_P02_DS1">
+        <bpmn:targetRef>Data_DS1</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
     </bpmn:task>
     <bpmn:exclusiveGateway id="Gateway_CertificationVerified" name="Certification verified?" default="Flow_BRF_30">
       <bpmn:documentation>R02. Where certification is claimed, the listing is published only if the verification succeeds. See requirements/strategic/interactions.md, section 4.2.</bpmn:documentation>
@@ -156,9 +176,22 @@
       <bpmn:messageEventDefinition id="Def_Start_P08" messageRef="Message_QualityConcern" />
     </bpmn:startEvent>
     <bpmn:task id="P08" name="Handle quality incident">
-      <bpmn:documentation>P08. Owner: F04 Quality and traceability. Roles A06 and A07 work here (Use Case 3). See requirements/strategic/processes.md, section 3.</bpmn:documentation>
+      <bpmn:documentation>P08. Owner: F04 Quality and traceability. Roles A06 and A07 work here (Use Case 3). See requirements/strategic/processes.md, section 3. i*: NW07.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_16</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_17</bpmn:outgoing>
+      <bpmn:property id="Property_P08_DS1" name="__targetRef_placeholder" />
+      <bpmn:property id="Property_P08_DS2" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="Assoc_DS1_P08">
+        <bpmn:sourceRef>Data_DS1</bpmn:sourceRef>
+        <bpmn:targetRef>Property_P08_DS1</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataInputAssociation id="Assoc_DS2_P08">
+        <bpmn:sourceRef>Data_DS2</bpmn:sourceRef>
+        <bpmn:targetRef>Property_P08_DS2</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataOutputAssociation id="Assoc_P08_DS1">
+        <bpmn:targetRef>Data_DS1</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
     </bpmn:task>
     <bpmn:endEvent id="End_P08" name="Incident closed">
       <bpmn:incoming>Flow_BRF_17</bpmn:incoming>
@@ -168,9 +201,17 @@
       <bpmn:messageEventDefinition id="Def_Start_P09" messageRef="Message_Postcode" />
     </bpmn:startEvent>
     <bpmn:task id="P09" name="Report food miles">
-      <bpmn:documentation>P09. Owner: F05. See requirements/strategic/processes.md, section 3.</bpmn:documentation>
+      <bpmn:documentation>P09. Owner: F05. See requirements/strategic/processes.md, section 3. i*: SD26, SD40.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_18</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_19</bpmn:outgoing>
+      <bpmn:property id="Property_P09_DS1" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="Assoc_DS1_P09">
+        <bpmn:sourceRef>Data_DS1</bpmn:sourceRef>
+        <bpmn:targetRef>Property_P09_DS1</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataOutputAssociation id="Assoc_P09_DS4">
+        <bpmn:targetRef>Data_DS4</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
     </bpmn:task>
     <bpmn:endEvent id="End_P09" name="Food miles shown">
       <bpmn:incoming>Flow_BRF_19</bpmn:incoming>
@@ -180,9 +221,12 @@
       <bpmn:messageEventDefinition id="Def_Start_P10" messageRef="Message_SurplusReported" />
     </bpmn:startEvent>
     <bpmn:task id="P10" name="Offer surplus produce">
-      <bpmn:documentation>P10. Owner: F05. See requirements/strategic/processes.md, section 3.</bpmn:documentation>
+      <bpmn:documentation>P10. Owner: F05. See requirements/strategic/processes.md, section 3. i*: SD38.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_20</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_21</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="Assoc_P10_DS4">
+        <bpmn:targetRef>Data_DS4</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
     </bpmn:task>
     <bpmn:endEvent id="End_P10" name="Surplus offer published">
       <bpmn:incoming>Flow_BRF_21</bpmn:incoming>
@@ -192,65 +236,93 @@
       <bpmn:messageEventDefinition id="Def_Start_P11" messageRef="Message_ContentSubmitted" />
     </bpmn:startEvent>
     <bpmn:task id="P11" name="Share educational content">
-      <bpmn:documentation>P11. Owner: F05. See requirements/strategic/processes.md, section 3.</bpmn:documentation>
+      <bpmn:documentation>P11. Owner: F05. See requirements/strategic/processes.md, section 3. i*: SD39.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_22</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_23</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="Assoc_P11_DS4">
+        <bpmn:targetRef>Data_DS4</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
     </bpmn:task>
     <bpmn:endEvent id="End_P11" name="Content published">
       <bpmn:incoming>Flow_BRF_23</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="Gateway_PaymentSucceeded" name="Payment successful?" default="Flow_BRF_04">
+      <bpmn:documentation>i*: MP22.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_05</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_06</bpmn:outgoing>
       <bpmn:outgoing>Flow_BRF_04</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:endEvent id="End_PaymentNotCompleted" name="Payment not completed">
-      <bpmn:documentation>The payment failed after the retries in P05. The operational model of P05 shows the decline, retry and service unavailable paths.</bpmn:documentation>
+      <bpmn:documentation>The payment failed after the retries in P05. The operational model of P05 shows the decline, retry and service unavailable paths. i*: MP24.</bpmn:documentation>
       <bpmn:incoming>Flow_BRF_04</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:parallelGateway id="Gateway_PaymentSplit">
-      <bpmn:incoming>Flow_BRF_06</bpmn:incoming>
-      <bpmn:outgoing>Flow_BRF_09</bpmn:outgoing>
-      <bpmn:outgoing>Flow_BRF_24</bpmn:outgoing>
-    </bpmn:parallelGateway>
-    <bpmn:parallelGateway id="Gateway_PaymentJoin">
-      <bpmn:incoming>Flow_BRF_25</bpmn:incoming>
-      <bpmn:incoming>Flow_BRF_08</bpmn:incoming>
-      <bpmn:outgoing>Flow_BRF_26</bpmn:outgoing>
-    </bpmn:parallelGateway>
     <bpmn:callActivity id="P04" name="Process order">
-      <bpmn:documentation>P04. Owner: F02 Orders. Stock check, delivery or collection, order split by producer (Use Case 2). See requirements/strategic/processes.md, section 3.</bpmn:documentation>
+      <bpmn:documentation>P04. Owner: F02 Orders. Stock check, delivery or collection, order split by producer (Use Case 2). See requirements/strategic/processes.md, section 3. i*: SD01, MP03, MP05, SD12, SD13.</bpmn:documentation>
       <bpmn:extensionElements>
         <zeebe:calledElement processId="process_order" propagateAllChildVariables="false" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_BRF_02</bpmn:incoming>
+      <bpmn:incoming>Flow_BRF_31</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_03</bpmn:outgoing>
+      <bpmn:property id="Property_P04_DS1" name="__targetRef_placeholder" />
+      <bpmn:property id="Property_P04_DS4" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="Assoc_DS1_P04">
+        <bpmn:sourceRef>Data_DS1</bpmn:sourceRef>
+        <bpmn:targetRef>Property_P04_DS1</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataInputAssociation id="Assoc_DS4_P04">
+        <bpmn:sourceRef>Data_DS4</bpmn:sourceRef>
+        <bpmn:targetRef>Property_P04_DS4</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataOutputAssociation id="Assoc_P04_DS2">
+        <bpmn:targetRef>Data_DS2</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
     </bpmn:callActivity>
     <bpmn:callActivity id="P05" name="Process payment">
-      <bpmn:documentation>P05. Owner: F03 Finance. Sandbox payment, decline and retry, service unavailable path, 5% commission (Use Case 2). See requirements/strategic/processes.md, section 3.</bpmn:documentation>
+      <bpmn:documentation>P05. Owner: F03 Finance. Sandbox payment, decline and retry, service unavailable path, 5% commission (Use Case 2). On success it confirms the order (M07), F01 updates the stock (R07) and F02 asks E03 to notify the producers (M08, M09, R08); see processes.md, section 4. See requirements/strategic/processes.md, section 3. i*: MP04, MP15, MP16, MP17, MP18, MP19, SD19.</bpmn:documentation>
       <bpmn:extensionElements>
         <zeebe:calledElement processId="process_payment" propagateAllChildVariables="false" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_BRF_03</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_05</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="Assoc_P05_DS1">
+        <bpmn:targetRef>Data_DS1</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+      <bpmn:dataOutputAssociation id="Assoc_P05_DS3">
+        <bpmn:targetRef>Data_DS3</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
     </bpmn:callActivity>
     <bpmn:sequenceFlow id="Flow_BRF_01" sourceRef="Start_UC2" targetRef="P03" />
-    <bpmn:sequenceFlow id="Flow_BRF_02" sourceRef="P03" targetRef="P04" />
-    <bpmn:sequenceFlow id="Flow_BRF_09" sourceRef="Gateway_PaymentSplit" targetRef="Task_UpdateStock" />
-    <bpmn:sequenceFlow id="Flow_BRF_25" sourceRef="Task_UpdateStock" targetRef="Gateway_PaymentJoin" />
-    <bpmn:sequenceFlow id="Flow_BRF_24" sourceRef="Gateway_PaymentSplit" targetRef="Task_NotifyProducers" />
-    <bpmn:sequenceFlow id="Flow_BRF_08" sourceRef="Task_NotifyProducers" targetRef="Gateway_PaymentJoin" />
-    <bpmn:sequenceFlow id="Flow_BRF_26" sourceRef="Gateway_PaymentJoin" targetRef="End_UC2" />
+    <bpmn:dataObjectReference id="Data_DS1" name="Product catalogue" dataObjectRef="DataObject_DS1">
+      <bpmn:documentation>DS1. Product listings, stock, categories, certification status and traceability fields. Written by P01, P02, P05 and P08; read by P03, P04, P08 and P09 (R02, R03, R04, R07, R11, R12, R17). Responsible function F01. i*: MP11.</bpmn:documentation>
+    </bpmn:dataObjectReference>
+    <bpmn:dataObject id="DataObject_DS1" />
+    <bpmn:dataObjectReference id="Data_DS2" name="Order records" dataObjectRef="DataObject_DS2">
+      <bpmn:documentation>DS2. Marketplace orders and producer order elements that link customers, products and producers. Written by P04; read by P08 for traceability (R10). Responsible function F02.</bpmn:documentation>
+    </bpmn:dataObjectReference>
+    <bpmn:dataObject id="DataObject_DS2" />
+    <bpmn:dataObjectReference id="Data_DS3" name="Payment and settlement records" dataObjectRef="DataObject_DS3">
+      <bpmn:documentation>DS3. Payment responses, producer allocations, the 5% commission and the settlement audit trail. Written by P05; read by P07 (R09). Responsible function F03.</bpmn:documentation>
+    </bpmn:dataObjectReference>
+    <bpmn:dataObject id="DataObject_DS3" />
+    <bpmn:dataObjectReference id="Data_DS4" name="Community information and content" dataObjectRef="DataObject_DS4">
+      <bpmn:documentation>DS4. Food miles, surplus offers with discounts, and educational content. Written by P09, P10 and P11; read by P03 and P04 (R13 to R16). Responsible function F05.</bpmn:documentation>
+    </bpmn:dataObjectReference>
+    <bpmn:dataObject id="DataObject_DS4" />
+    <bpmn:sequenceFlow id="Flow_BRF_31" name="Yes" sourceRef="Gateway_ItemsInStock" targetRef="P04">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">items in stock</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_BRF_32" name="No" sourceRef="Gateway_ItemsInStock" targetRef="Event_AmendOrder" />
+    <bpmn:sequenceFlow id="Flow_BRF_33" sourceRef="Event_AmendOrder" targetRef="P03" />
+    <bpmn:sequenceFlow id="Flow_BRF_02" sourceRef="P03" targetRef="Gateway_ItemsInStock" />
     <bpmn:sequenceFlow id="Flow_BRF_10" sourceRef="Start_P01" targetRef="P01" />
     <bpmn:sequenceFlow id="Flow_BRF_11" sourceRef="P01" targetRef="Gateway_OrganicClaim" />
     <bpmn:sequenceFlow id="Flow_BRF_14" name="Yes" sourceRef="Gateway_OrganicClaim" targetRef="P02">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">organic certification claimed</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_BRF_27" name="No" sourceRef="Gateway_OrganicClaim" targetRef="Gateway_OrganicMerge" />
-    <bpmn:sequenceFlow id="Flow_BRF_29" name="Yes" sourceRef="Gateway_CertificationVerified" targetRef="Gateway_OrganicMerge">
+    <bpmn:sequenceFlow id="Flow_BRF_27" name="No" sourceRef="Gateway_OrganicClaim" targetRef="End_P01" />
+    <bpmn:sequenceFlow id="Flow_BRF_29" name="Yes" sourceRef="Gateway_CertificationVerified" targetRef="End_P01">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">certification verified</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_BRF_28" sourceRef="Gateway_OrganicMerge" targetRef="End_P01" />
     <bpmn:sequenceFlow id="Flow_BRF_12" sourceRef="Start_P07" targetRef="P07" />
     <bpmn:sequenceFlow id="Flow_BRF_13" sourceRef="P07" targetRef="End_P07" />
     <bpmn:sequenceFlow id="Flow_BRF_15" sourceRef="P02" targetRef="Gateway_CertificationVerified" />
@@ -264,7 +336,7 @@
     <bpmn:sequenceFlow id="Flow_BRF_22" sourceRef="Start_P11" targetRef="P11" />
     <bpmn:sequenceFlow id="Flow_BRF_23" sourceRef="P11" targetRef="End_P11" />
     <bpmn:sequenceFlow id="Flow_BRF_05" sourceRef="P05" targetRef="Gateway_PaymentSucceeded" />
-    <bpmn:sequenceFlow id="Flow_BRF_06" name="Yes" sourceRef="Gateway_PaymentSucceeded" targetRef="Gateway_PaymentSplit">
+    <bpmn:sequenceFlow id="Flow_BRF_06" name="Yes" sourceRef="Gateway_PaymentSucceeded" targetRef="End_UC2">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">payment succeeded</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_BRF_04" name="No" sourceRef="Gateway_PaymentSucceeded" targetRef="End_PaymentNotCompleted" />
@@ -276,7 +348,7 @@
       <bpmn:messageEventDefinition id="Def_Start_P06" messageRef="Message_ProducerOrder" />
     </bpmn:startEvent>
     <bpmn:task id="P06" name="Fulfil order">
-      <bpmn:documentation>P06. Owner: the producer (A04). Prepares the goods for the agreed delivery or collection. Producers require visibility of incoming orders with at least 48 hours' lead time for preparation. See requirements/strategic/processes.md, section 3.</bpmn:documentation>
+      <bpmn:documentation>P06. Owner: the producer (A04). Prepares the goods for the agreed delivery or collection. Producers require visibility of incoming orders with at least 48 hours' lead time for preparation. See requirements/strategic/processes.md, section 3. i*: PR07, SD10, CU12.</bpmn:documentation>
       <bpmn:incoming>Flow_Producer_01</bpmn:incoming>
       <bpmn:outgoing>Flow_Producer_02</bpmn:outgoing>
     </bpmn:task>
@@ -292,6 +364,7 @@
   <bpmn:message id="Message_SurplusReported" name="surplus-produce-reported" />
   <bpmn:message id="Message_ContentSubmitted" name="content-submitted" />
   <bpmn:message id="Message_ProducerOrder" name="producer-order-received" />
+  <bpmn:message id="Message_AmendOrder" name="amend-order" />
   <bpmndi:BPMNDiagram id="Diagram_Strategic">
     <bpmndi:BPMNPlane id="Plane_Strategic" bpmnElement="Collaboration_Strategic">
       <bpmndi:BPMNShape id="Participant_Customer_di" bpmnElement="Participant_Customer" isHorizontal="true">
@@ -331,16 +404,22 @@
       <bpmndi:BPMNShape id="P03_di" bpmnElement="P03">
         <dc:Bounds x="430" y="200" width="140" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_UpdateStock_di" bpmnElement="Task_UpdateStock">
-        <dc:Bounds x="1210" y="200" width="140" height="80" />
+      <bpmndi:BPMNShape id="Gateway_ItemsInStock_di" bpmnElement="Gateway_ItemsInStock" isMarkerVisible="true">
+        <dc:Bounds x="475" y="325" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="380" y="343" width="80" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_NotifyProducers_di" bpmnElement="Task_NotifyProducers">
-        <dc:Bounds x="1210" y="460" width="140" height="80" />
+      <bpmndi:BPMNShape id="Event_AmendOrder_di" bpmnElement="Event_AmendOrder">
+        <dc:Bounds x="582" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="560" y="412" width="80" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_UC2_di" bpmnElement="End_UC2">
-        <dc:Bounds x="1502" y="482" width="36" height="36" />
+        <dc:Bounds x="1032" y="732" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1480" y="518" width="80" height="14" />
+          <dc:Bounds x="1075" y="743" width="80" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_P01_di" bpmnElement="Start_P01">
@@ -358,13 +437,10 @@
           <dc:Bounds x="2428" y="310" width="74" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_OrganicMerge_di" bpmnElement="Gateway_OrganicMerge" isMarkerVisible="true">
-        <dc:Bounds x="2680" y="335" width="50" height="50" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_P01_di" bpmnElement="End_P01">
         <dc:Bounds x="2780" y="342" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2757" y="378" width="82" height="14" />
+          <dc:Bounds x="2757" y="315" width="82" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_P07_di" bpmnElement="Start_P07">
@@ -460,7 +536,7 @@
       <bpmndi:BPMNShape id="Gateway_PaymentSucceeded_di" bpmnElement="Gateway_PaymentSucceeded" isMarkerVisible="true">
         <dc:Bounds x="1025" y="655" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1021" y="712" width="58" height="27" />
+          <dc:Bounds x="1021" y="623" width="58" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_PaymentNotCompleted_di" bpmnElement="End_PaymentNotCompleted">
@@ -468,12 +544,6 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1129" y="705" width="62" height="27" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_PaymentSplit_di" bpmnElement="Gateway_PaymentSplit">
-        <dc:Bounds x="1125" y="475" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_PaymentJoin_di" bpmnElement="Gateway_PaymentJoin">
-        <dc:Bounds x="1400" y="475" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0icbn18_di" bpmnElement="P04">
         <dc:Bounds x="630" y="460" width="100" height="80" />
@@ -486,31 +556,38 @@
         <di:waypoint x="430" y="240" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_02_di" bpmnElement="Flow_BRF_02">
-        <di:waypoint x="570" y="240" />
-        <di:waypoint x="700" y="240" />
+        <di:waypoint x="500" y="280" />
+        <di:waypoint x="500" y="325" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_BRF_31_di" bpmnElement="Flow_BRF_31">
+        <di:waypoint x="500" y="375" />
+        <di:waypoint x="500" y="400" />
+        <di:waypoint x="700" y="400" />
         <di:waypoint x="700" y="460" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="506" y="380" width="18" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_09_di" bpmnElement="Flow_BRF_09">
-        <di:waypoint x="1150" y="475" />
-        <di:waypoint x="1150" y="240" />
-        <di:waypoint x="1210" y="240" />
+      <bpmndi:BPMNEdge id="Flow_BRF_32_di" bpmnElement="Flow_BRF_32">
+        <di:waypoint x="525" y="350" />
+        <di:waypoint x="582" y="350" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="546" y="332" width="15" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_25_di" bpmnElement="Flow_BRF_25">
-        <di:waypoint x="1350" y="240" />
-        <di:waypoint x="1425" y="240" />
-        <di:waypoint x="1425" y="475" />
+      <bpmndi:BPMNEdge id="Flow_BRF_33_di" bpmnElement="Flow_BRF_33">
+        <di:waypoint x="600" y="332" />
+        <di:waypoint x="600" y="300" />
+        <di:waypoint x="540" y="300" />
+        <di:waypoint x="540" y="280" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_24_di" bpmnElement="Flow_BRF_24">
-        <di:waypoint x="1175" y="500" />
-        <di:waypoint x="1210" y="500" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_08_di" bpmnElement="Flow_BRF_08">
-        <di:waypoint x="1350" y="500" />
-        <di:waypoint x="1400" y="500" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_26_di" bpmnElement="Flow_BRF_26">
-        <di:waypoint x="1450" y="500" />
-        <di:waypoint x="1502" y="500" />
+      <bpmndi:BPMNEdge id="M23_di" bpmnElement="M23">
+        <di:waypoint x="618" y="350" />
+        <di:waypoint x="680" y="350" />
+        <di:waypoint x="680" y="140" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="600" y="200" width="60" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_10_di" bpmnElement="Flow_BRF_10">
         <di:waypoint x="2218" y="360" />
@@ -530,21 +607,19 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_27_di" bpmnElement="Flow_BRF_27">
         <di:waypoint x="2490" y="360" />
-        <di:waypoint x="2680" y="360" />
+        <di:waypoint x="2780" y="360" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2522" y="342" width="15" height="14" />
+          <dc:Bounds x="2600" y="342" width="15" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_29_di" bpmnElement="Flow_BRF_29">
         <di:waypoint x="2705" y="835" />
-        <di:waypoint x="2705" y="385" />
+        <di:waypoint x="2705" y="440" />
+        <di:waypoint x="2798" y="440" />
+        <di:waypoint x="2798" y="378" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2712" y="800" width="18" height="14" />
+          <dc:Bounds x="2712" y="600" width="18" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_BRF_28_di" bpmnElement="Flow_BRF_28">
-        <di:waypoint x="2730" y="360" />
-        <di:waypoint x="2780" y="360" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_12_di" bpmnElement="Flow_BRF_12">
         <di:waypoint x="1286" y="680" />
@@ -602,11 +677,10 @@
         <di:waypoint x="1025" y="680" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_06_di" bpmnElement="Flow_BRF_06">
-        <di:waypoint x="1050" y="655" />
-        <di:waypoint x="1050" y="500" />
-        <di:waypoint x="1125" y="500" />
+        <di:waypoint x="1050" y="705" />
+        <di:waypoint x="1050" y="732" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1061" y="545" width="18" height="14" />
+          <dc:Bounds x="1056" y="710" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_BRF_04_di" bpmnElement="Flow_BRF_04">
@@ -714,12 +788,12 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M08_di" bpmnElement="M08">
-        <di:waypoint x="1340" y="540" />
-        <di:waypoint x="1340" y="563" />
-        <di:waypoint x="1730" y="563" />
+        <di:waypoint x="930" y="640" />
+        <di:waypoint x="930" y="600" />
+        <di:waypoint x="1730" y="600" />
         <di:waypoint x="1730" y="140" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1654" y="300" width="53" height="40" />
+          <dc:Bounds x="1655" y="300" width="90" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="M09_di" bpmnElement="M09">
@@ -825,6 +899,100 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1107" y="1108" width="58" height="27" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Data_DS1_di" bpmnElement="Data_DS1">
+        <dc:Bounds x="1282" y="215" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1255" y="272" width="90" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_DS2_di" bpmnElement="Data_DS2">
+        <dc:Bounds x="1282" y="475" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1255" y="532" width="90" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_DS3_di" bpmnElement="Data_DS3">
+        <dc:Bounds x="1232" y="725" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1275" y="743" width="120" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_DS4_di" bpmnElement="Data_DS4">
+        <dc:Bounds x="782" y="975" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="745" y="1032" width="110" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Assoc_P01_DS1_di" bpmnElement="Assoc_P01_DS1">
+        <di:waypoint x="2260" y="340" />
+        <di:waypoint x="1318" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_P02_DS1_di" bpmnElement="Assoc_P02_DS1">
+        <di:waypoint x="2500" y="830" />
+        <di:waypoint x="1318" y="265" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_P05_DS1_di" bpmnElement="Assoc_P05_DS1">
+        <di:waypoint x="950" y="650" />
+        <di:waypoint x="1282" y="265" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_P08_DS1_di" bpmnElement="Assoc_P08_DS1">
+        <di:waypoint x="1670" y="830" />
+        <di:waypoint x="1318" y="265" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_P04_DS2_di" bpmnElement="Assoc_P04_DS2">
+        <di:waypoint x="730" y="500" />
+        <di:waypoint x="1282" y="500" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_P05_DS3_di" bpmnElement="Assoc_P05_DS3">
+        <di:waypoint x="950" y="710" />
+        <di:waypoint x="1232" y="750" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_P09_DS4_di" bpmnElement="Assoc_P09_DS4">
+        <di:waypoint x="570" y="1000" />
+        <di:waypoint x="782" y="1000" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_P10_DS4_di" bpmnElement="Assoc_P10_DS4">
+        <di:waypoint x="1990" y="1060" />
+        <di:waypoint x="1990" y="1085" />
+        <di:waypoint x="800" y="1085" />
+        <di:waypoint x="800" y="1025" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_P11_DS4_di" bpmnElement="Assoc_P11_DS4">
+        <di:waypoint x="1140" y="1000" />
+        <di:waypoint x="818" y="1000" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_DS1_P03_di" bpmnElement="Assoc_DS1_P03">
+        <di:waypoint x="1282" y="225" />
+        <di:waypoint x="570" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_DS1_P04_di" bpmnElement="Assoc_DS1_P04">
+        <di:waypoint x="1282" y="260" />
+        <di:waypoint x="730" y="480" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_DS1_P09_di" bpmnElement="Assoc_DS1_P09">
+        <di:waypoint x="1282" y="265" />
+        <di:waypoint x="570" y="990" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_DS1_P08_di" bpmnElement="Assoc_DS1_P08">
+        <di:waypoint x="1318" y="265" />
+        <di:waypoint x="1670" y="840" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_DS2_P08_di" bpmnElement="Assoc_DS2_P08">
+        <di:waypoint x="1318" y="525" />
+        <di:waypoint x="1670" y="830" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_DS3_P07_di" bpmnElement="Assoc_DS3_P07">
+        <di:waypoint x="1268" y="750" />
+        <di:waypoint x="1330" y="710" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_DS4_P03_di" bpmnElement="Assoc_DS4_P03">
+        <di:waypoint x="800" y="975" />
+        <di:waypoint x="560" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_DS4_P04_di" bpmnElement="Assoc_DS4_P04">
+        <di:waypoint x="818" y="985" />
+        <di:waypoint x="720" y="540" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
