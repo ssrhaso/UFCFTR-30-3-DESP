@@ -261,6 +261,34 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_BRF_04" name="No" sourceRef="Gateway_PaymentSucceeded" targetRef="End_PaymentNotCompleted" />
     <bpmn:sequenceFlow id="Flow_BRF_03" sourceRef="P04" targetRef="P05" />
+    <bpmn:textAnnotation id="Annotation_P07">
+      <bpmn:text>Weekly, less the 5% commission, with an audit trail for tax reporting (CS p. 2)</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Annotation_P07" sourceRef="Annotation_P07" targetRef="P07" />
+    <bpmn:textAnnotation id="Annotation_P05">
+      <bpmn:text>Single and multi-vendor payments; the 5% commission is calculated here (CS p. 2)</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Annotation_P05" sourceRef="Annotation_P05" targetRef="P05" />
+    <bpmn:textAnnotation id="Annotation_P09">
+      <bpmn:text>Postcode distance from farm to delivery or collection point; shown in P03 and P04 (R13, R14)</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Annotation_P09" sourceRef="Annotation_P09" targetRef="P09" />
+    <bpmn:textAnnotation id="Annotation_P08">
+      <bpmn:text>Uses the order records of P04 to find who is affected (R10); may suspend the listing in P01 (R11)</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Annotation_P08" sourceRef="Annotation_P08" targetRef="P08" />
+    <bpmn:textAnnotation id="Annotation_P11">
+      <bpmn:text>Published next to the producer&#39;s products in P03 (R16)</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Annotation_P11" sourceRef="Annotation_P11" targetRef="P11" />
+    <bpmn:textAnnotation id="Annotation_P10">
+      <bpmn:text>Discount applied to the order in P04 (R15)</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Annotation_P10" sourceRef="Annotation_P10" targetRef="P10" />
+    <bpmn:textAnnotation id="Annotation_P04">
+      <bpmn:text>Checks the stock and the delivery arrangements kept through P01 (R04)</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Annotation_P04" sourceRef="Annotation_P04" targetRef="P04" />
   </bpmn:process>
   <bpmn:process id="Process_Producer" name="Producer" isExecutable="false">
     <bpmn:startEvent id="Start_P06" name="Producer order received">
@@ -277,6 +305,10 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_Producer_01" sourceRef="Start_P06" targetRef="P06" />
     <bpmn:sequenceFlow id="Flow_Producer_02" sourceRef="P06" targetRef="End_P06" />
+    <bpmn:textAnnotation id="Annotation_P06">
+      <bpmn:text>Orders visible to the producer at least 48 hours before preparation (CS p. 2)</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Annotation_P06" sourceRef="Annotation_P06" targetRef="P06" />
   </bpmn:process>
   <bpmn:message id="Message_ProductDetails" name="product-details-received" />
   <bpmn:message id="Message_QualityConcern" name="quality-concern-received" />
@@ -803,6 +835,62 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="664" y="250" width="60" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Annotation_P06_di" bpmnElement="Annotation_P06">
+        <dc:Bounds x="1460" y="92" width="200" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Assoc_Annotation_P06_di" bpmnElement="Assoc_Annotation_P06">
+        <di:waypoint x="1460" y="100" />
+        <di:waypoint x="1330" y="106" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Annotation_P07_di" bpmnElement="Annotation_P07">
+        <dc:Bounds x="1700" y="742" width="230" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Assoc_Annotation_P07_di" bpmnElement="Assoc_Annotation_P07">
+        <di:waypoint x="1845" y="742" />
+        <di:waypoint x="1860" y="730" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Annotation_P05_di" bpmnElement="Annotation_P05">
+        <dc:Bounds x="520" y="735" width="210" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Assoc_Annotation_P05_di" bpmnElement="Assoc_Annotation_P05">
+        <di:waypoint x="730" y="745" />
+        <di:waypoint x="760" y="730" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Annotation_P09_di" bpmnElement="Annotation_P09">
+        <dc:Bounds x="600" y="975" width="160" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Assoc_Annotation_P09_di" bpmnElement="Assoc_Annotation_P09">
+        <di:waypoint x="600" y="1000" />
+        <di:waypoint x="510" y="1008" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Annotation_P08_di" bpmnElement="Annotation_P08">
+        <dc:Bounds x="1260" y="820" width="170" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Assoc_Annotation_P08_di" bpmnElement="Assoc_Annotation_P08">
+        <di:waypoint x="1270" y="820" />
+        <di:waypoint x="1180" y="830" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Annotation_P11_di" bpmnElement="Annotation_P11">
+        <dc:Bounds x="1210" y="1078" width="210" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Assoc_Annotation_P11_di" bpmnElement="Assoc_Annotation_P11">
+        <di:waypoint x="1290" y="1079" />
+        <di:waypoint x="1290" y="1070" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Annotation_P10_di" bpmnElement="Annotation_P10">
+        <dc:Bounds x="1470" y="955" width="150" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Assoc_Annotation_P10_di" bpmnElement="Assoc_Annotation_P10">
+        <di:waypoint x="1530" y="985" />
+        <di:waypoint x="1530" y="990" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Annotation_P04_di" bpmnElement="Annotation_P04">
+        <dc:Bounds x="470" y="520" width="160" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Assoc_Annotation_P04_di" bpmnElement="Assoc_Annotation_P04">
+        <di:waypoint x="630" y="535" />
+        <di:waypoint x="640" y="530" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
