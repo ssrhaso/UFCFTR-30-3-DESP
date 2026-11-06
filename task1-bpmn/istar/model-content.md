@@ -339,7 +339,7 @@ The operational models are not built yet. The last two columns use the planned e
 | CU10 Give sandbox payment reference | Customer pool | `process_payment`: user task with a Camunda Form | B10 |
 | CU11 Retry or cancel after decline | Customer pool (O03, O04) | `process_payment`: user task after `PAYMENT_DECLINED` | B11 |
 | MP06 Check stock | Items in stock? gateway (Catalogue management lane), before Process order | Service task `check-stock` | B01, B21 |
-| MP07 Ask customer to amend order | Customer asked to amend order event, Amend order message (M23) | `process_order`: user task after the stock check | B02 |
+| MP07 Ask customer to amend order | Amend order requested event, Amend order message (M23) | `process_order`: user task after the stock check | B02 |
 | MP11 Product catalogue and stock | Product catalogue data object (DS1) | Product service (W1) | B01 |
 | MP13 Reserve stock for a time limit | Process order (Order management lane) | Reservation, with a timer boundary event on the review task | B07, B08 |
 | MP08 Identify producers and arrangements | Process order (Order management lane) | Service task `identify-producers` | B03, B04 |
