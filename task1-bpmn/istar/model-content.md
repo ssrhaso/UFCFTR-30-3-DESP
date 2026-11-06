@@ -338,20 +338,20 @@ The operational models are not built yet. The last two columns use the planned e
 | CU08 Amend unavailable items | Items in stock? gateway, Amend order message (M23) | `process_order`: user task and a loop back to the stock check | B02 |
 | CU10 Give sandbox payment reference | Customer pool | `process_payment`: user task with a Camunda Form | B10 |
 | CU11 Retry or cancel after decline | Customer pool (O03, O04) | `process_payment`: user task after `PAYMENT_DECLINED` | B11 |
-| MP06 Check stock | Items in stock? gateway (Product listing lane), before Process order | Service task `check-stock` | B01, B21 |
+| MP06 Check stock | Items in stock? gateway (Catalogue management lane), before Process order | Service task `check-stock` | B01, B21 |
 | MP07 Ask customer to amend order | Customer asked to amend order event, Amend order message (M23) | `process_order`: user task after the stock check | B02 |
 | MP11 Product catalogue and stock | Product catalogue data object (DS1) | Product service (W1) | B01 |
-| MP13 Reserve stock for a time limit | Process order (Orders lane) | Reservation, with a timer boundary event on the review task | B07, B08 |
-| MP08 Identify producers and arrangements | Process order (Orders lane) | Service task `identify-producers` | B03, B04 |
-| MP10 Create and split marketplace order | Process order (Orders lane) | Service tasks `create-order` and `split-order` | B06 |
-| MP16 Submit payment | Process payment (Finance lane), Payment service (M05, M06) | Service task `submit-payment` | B10, B20 |
-| MP17 Calculate producer amounts and 5% commission | Process payment (Finance lane) | FEEL expressions in output mappings | B13 |
-| MP18 Confirm order and update stock | Process payment (Finance lane), Order confirmation (M07) | Service tasks `confirm-order` and `update-stock` | B14, B15 |
-| MP19 Notify each producer | Process payment (Finance lane), Notification service (M08, M09) | Multi-instance service task `notify-producer` | B16, B23 |
+| MP13 Reserve stock for a time limit | Process order (Order management lane) | Reservation, with a timer boundary event on the review task | B07, B08 |
+| MP08 Identify producers and arrangements | Process order (Order management lane) | Service task `identify-producers` | B03, B04 |
+| MP10 Create and split marketplace order | Process order (Order management lane) | Service tasks `create-order` and `split-order` | B06 |
+| MP16 Submit payment | Process payment (Finance and settlements lane), Payment service (M05, M06) | Service task `submit-payment` | B10, B20 |
+| MP17 Calculate producer amounts and 5% commission | Process payment (Finance and settlements lane) | FEEL expressions in output mappings | B13 |
+| MP18 Confirm order and update stock | Process payment (Finance and settlements lane), Order confirmation (M07) | Service tasks `confirm-order` and `update-stock` | B14, B15 |
+| MP19 Notify each producer | Process payment (Finance and settlements lane), Notification service (M08, M09) | Multi-instance service task `notify-producer` | B16, B23 |
 | MP22 Let customer retry or cancel | Payment successful? gateway | Error boundary event `PAYMENT_DECLINED` | B11 |
 | MP24 Retry, then cancel and release stock | Payment not completed end event | Retry loop, then cancellation (`PAYMENT_SERVICE_UNAVAILABLE`) | B12, B17 |
 | PR07 Prepare and hand over orders | Fulfil order (Producer pool) | Out of scope | None |
-| NW06 Settle producers weekly | Settle producer payments (Finance lane) | Out of scope | None |
+| NW06 Settle producers weekly | Settle producer payments (Finance and settlements lane) | Out of scope | None |
 | NW07 Handle quality incidents | Handle quality incident (Quality and traceability lane) | Out of scope | None |
 
 ### 7.2 From the softgoals to the requirements
