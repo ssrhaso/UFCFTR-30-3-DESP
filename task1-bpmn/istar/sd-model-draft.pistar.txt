@@ -163,8 +163,8 @@
       "id": "3eca9559-08aa-5402-aef2-b4fdf16546f9",
       "text": "Goods delivered or collected",
       "type": "istar.Goal",
-      "x": 1308,
-      "y": 1468,
+      "x": 1408,
+      "y": 1558,
       "customProperties": {
         "OpenOME source": "sd-model-draft.ood"
       },
@@ -247,8 +247,8 @@
       "id": "8ac0fe0b-dae4-518e-9482-dc3c5c8d7dc8",
       "text": "5% commission calculated",
       "type": "istar.Goal",
-      "x": 1156,
-      "y": 508,
+      "x": 1176,
+      "y": 498,
       "customProperties": {
         "OpenOME source": "sd-model-draft.ood"
       },
@@ -307,8 +307,8 @@
       "id": "00140c2f-4bfe-5fbe-adb5-9c0fd5c61a3b",
       "text": "Delivery or collection arrangements",
       "type": "istar.Resource",
-      "x": 1732,
-      "y": 796,
+      "x": 1742,
+      "y": 766,
       "customProperties": {
         "OpenOME source": "sd-model-draft.ood"
       },
@@ -319,8 +319,8 @@
       "id": "b2a3e224-06cf-5fbd-8e05-40b83507276a",
       "text": "New order notification",
       "type": "istar.Resource",
-      "x": 1732,
-      "y": 892,
+      "x": 1832,
+      "y": 862,
       "customProperties": {
         "OpenOME source": "sd-model-draft.ood"
       },
@@ -451,8 +451,8 @@
       "id": "56a42d16-3a1e-5885-89d7-5b59158f3af8",
       "text": "Sandbox payment reference",
       "type": "istar.Resource",
-      "x": 916,
-      "y": 588,
+      "x": 886,
+      "y": 678,
       "customProperties": {
         "OpenOME source": "sd-model-draft.ood"
       },
@@ -463,7 +463,7 @@
       "id": "056c619f-f5da-5a26-be81-fdc529031ad6",
       "text": "Multi-vendor order processed",
       "type": "istar.Goal",
-      "x": 668,
+      "x": 738,
       "y": 636,
       "customProperties": {
         "OpenOME source": "sd-model-draft.ood"
@@ -475,7 +475,7 @@
       "id": "a5d3827c-f045-5e58-988a-d55c13e235e0",
       "text": "Product information",
       "type": "istar.Resource",
-      "x": 668,
+      "x": 738,
       "y": 740,
       "customProperties": {
         "OpenOME source": "sd-model-draft.ood"
@@ -487,7 +487,7 @@
       "id": "ec23a818-acdd-5ab1-97ba-8db147cb3ec4",
       "text": "Accurate availability",
       "type": "istar.Quality",
-      "x": 668,
+      "x": 738,
       "y": 836,
       "customProperties": {
         "OpenOME source": "sd-model-draft.ood"
@@ -499,7 +499,7 @@
       "id": "fbfd205f-b5de-53bd-8773-3bad19f495ca",
       "text": "Order confirmation",
       "type": "istar.Resource",
-      "x": 668,
+      "x": 738,
       "y": 940,
       "customProperties": {
         "OpenOME source": "sd-model-draft.ood"
@@ -511,8 +511,8 @@
       "id": "c8ee09de-7272-527f-8f8e-59cae34e14ca",
       "text": "Clear supplier responsibilities",
       "type": "istar.Quality",
-      "x": 668,
-      "y": 1036,
+      "x": 558,
+      "y": 1156,
       "customProperties": {
         "OpenOME source": "sd-model-draft.ood"
       },
@@ -523,7 +523,7 @@
       "id": "1d327277-df27-58c0-9217-4295f27f8cdb",
       "text": "Secure payment",
       "type": "istar.Quality",
-      "x": 668,
+      "x": 738,
       "y": 1132,
       "customProperties": {
         "OpenOME source": "sd-model-draft.ood"
@@ -535,8 +535,8 @@
       "id": "12c543fc-89c9-5d90-9992-5f4415eddb99",
       "text": "Food miles information",
       "type": "istar.Resource",
-      "x": 668,
-      "y": 1228,
+      "x": 758,
+      "y": 1288,
       "customProperties": {
         "OpenOME source": "sd-model-draft.ood"
       },
