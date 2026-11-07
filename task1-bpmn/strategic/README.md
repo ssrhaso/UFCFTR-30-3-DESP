@@ -12,11 +12,11 @@ The figure is one collaboration diagram of the whole marketplace, at the level t
 
 | Element of the brief | In the figure | Defined in |
 |---|---|---|
-| Major business processes | The eleven processes P01 to P11, one activity each | [processes.md](../../requirements/strategic/processes.md), section 3 |
+| Major business processes | The twelve processes P01 to P12, one activity each | [processes.md](../../requirements/strategic/processes.md), section 3 |
 | Organisational functions and responsibilities | The five lanes F01 to F05 of the BRF Network pool | processes.md, sections 2 and 4 |
 | Key actors | The Customer pool (A01 to A03), the Producer pool (A04) and the BRF Network pool (A05, with the roles A06 and A07 inside F04) | [actors.md](../../requirements/strategic/actors.md), section 2 |
 | External organisations and services | The four collapsed pools E01 to E04 | actors.md, section 3 |
-| Interactions | The 23 message flows M01 to M23 | [interactions.md](../../requirements/strategic/interactions.md), section 3.1 |
+| Interactions | The 25 message flows M01 to M25 | [interactions.md](../../requirements/strategic/interactions.md), section 3.1 |
 | Relationships between the processes | The sequence flows inside the pool (R01, R05, R06), the notification to the producer (R08) and eight text annotations; the data relationships R02 to R04, R07 and R09 to R17 are in the register only | interactions.md, section 4 |
 
 ## 2. How to read it
@@ -43,6 +43,7 @@ The figure is one collaboration diagram of the whole marketplace, at the level t
 | P09 Report food miles | F05 Community and sustainability | A customer postcode (M16) | Food miles shown (M17, M18) | SD26, SD40 |
 | P10 Offer surplus produce | F05 Community and sustainability | A surplus produce report (M19) | Surplus offer published (M20, M21) | SD38 |
 | P11 Share educational content | F05 Community and sustainability | Content submitted (M22) | Content published | SD39 |
+| P12 Handle order issue | F02 Order management | A delivery problem or a refund request after the order (M24) | Issue resolved (M25) | CU18, SD41, NW15, MP33 |
 
 The i* elements are in [model-content.md](../istar/model-content.md); its section 7.1 maps them to the figure. Each element of the model repeats its IDs in its documentation field, after "i*:".
 
@@ -55,7 +56,8 @@ The full decisions D1 to D7 and their reasons are in interactions.md, section 8.
 3. Producers are settled when the payment succeeds, not when the goods are delivered; the tutor is asked to confirm (D4).
 4. The data stores DS1 to DS4 are not drawn. Data objects were tried on 6 Nov 2026 and removed again: the brief does not ask for them and they overloaded the figure (D7).
 5. The lanes are named as organisational functions (Catalogue management, Order management, Finance and settlements, Quality and traceability, Community and sustainability); the IDs F01 to F05 are unchanged (processes.md, section 2).
-6. The BRF Network process is marked executable, its conditions are FEEL expressions and the amend-order event carries a job type only because Camunda Web Modeler requires one executable process per diagram. The strategic model is not deployed.
+6. P12 Handle order issue is a group design decision: the sources cover cancellation before payment and food safety only, but a marketplace that takes payment for delivered goods needs a post-sale path, and consumer law gives a refund right in distance sales (D8).
+7. The BRF Network process is marked executable, its conditions are FEEL expressions and the amend-order event carries a job type only because Camunda Web Modeler requires one executable process per diagram. The strategic model is not deployed.
 
 ## 5. Checks
 
@@ -71,6 +73,7 @@ The full decisions D1 to D7 and their reasons are in interactions.md, section 8.
 | Q2 | Who pays the weekly settlements to the producers? | actors.md, section 5 |
 | Q3 | Are the notification service (E03) and the postcode distance service (E04) internal or external? | actors.md, section 5 |
 | D4 | Does settlement wait for fulfilment? | interactions.md, section 8 |
+| G2 | Is the post-sale process P12 accepted? | processes.md, section 6 |
 
 ## 7. Editing the model
 

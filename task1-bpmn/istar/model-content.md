@@ -131,6 +131,7 @@ These show why the three segments are separate in actors.md: each one has a diff
 | SD38 | BRF Network | Surplus produce report | Resource | Producer | M19, P10 | Wider |
 | SD39 | BRF Network | Educational content | Resource | Producer | M22, P11 | Wider |
 | SD40 | Customer | Food miles information | Resource | Marketplace platform | M16, P09, B09 | Wider |
+| SD41 | Customer | Order issue resolved (redelivery or refund) | Goal | Marketplace platform | P12, M24, M25, D8 | Wider |
 
 ## 5. Strategic Rationale model
 
@@ -157,6 +158,7 @@ The SR model opens Customer, Producer, BRF Network and Marketplace platform. The
 | CU15 | Low supplier admin | Softgoal | Mainly A03 | CS p. 1 |
 | CU16 | Quick delivery | Softgoal | All segments | Assumption (TN4) |
 | CU17 | Safe payment and personal data | Softgoal | All segments | NFR01, NFR03 |
+| CU18 | Order problems put right | Goal | Decomposes CU02 | P12, D8 |
 
 **Contributions:**
 
@@ -214,6 +216,7 @@ The SR model opens Customer, Producer, BRF Network and Marketplace platform. The
 | NW07 | Handle quality incidents | Task | Decomposes NW02 | P08, A06, A07 |
 | NW08 | Promote surplus offers, food miles and education | Task | Decomposes NW02 | P09, P10, P11 |
 | NW09 | Regulations complied with | Goal | Decomposes NW02 | NFR01, E05 |
+| NW15 | Resolve order issues after the sale | Task | Decomposes NW02 | P12, D8 |
 | NW10 | Financial viability | Softgoal | | CS p. 2 |
 | NW11 | Producers attracted and kept | Softgoal | | CS p. 1 |
 | NW12 | Sustainability (fewer food miles, less waste) | Softgoal | | CS p. 2 |
@@ -267,6 +270,7 @@ This actor holds the two functionalities. Its tasks name the planned job types o
 | MP27 | Stock open to other buyers | Softgoal | | W3 |
 | MP28 | Reliable checkout | Softgoal | | NFR04 |
 | MP29 | Quick checkout | Softgoal | | NFR10 |
+| MP33 | Handle order issue | Task | Decomposes MP01 (after the order) | P12, D8 |
 | MP30 | Secure payment | Softgoal | | NFR03 |
 | MP31 | Accurate amounts | Softgoal | | NFR05 |
 | MP32 | Auditability | Softgoal | | NFR08 |
@@ -353,6 +357,7 @@ The operational models are not built yet. The last two columns use the planned e
 | PR07 Prepare and hand over orders | Fulfil order (Producer pool) | Out of scope | None |
 | NW06 Settle producers weekly | Settle producer payments (Finance and settlements lane) | Out of scope | None |
 | NW07 Handle quality incidents | Handle quality incident (Quality and traceability lane) | Out of scope | None |
+| CU18 Order problems put right, NW15, MP33 | Handle order issue (Order management lane), M24, M25 | Out of scope (Task 2, FR21) | None |
 
 ### 7.2 From the softgoals to the requirements
 

@@ -68,6 +68,7 @@ The list covers the whole case study, so that the Task 1 scope is visible agains
 | FR18 | The system shows food miles from postcode-based distances | CS p. 2 (Environmental reporting) | P09 | FN1, optional (Could) | B09 |
 | FR19 | A producer publishes a surplus produce offer with a last-minute discount, and the interested customers are told | CS p. 2 (Community features) | P10 | Task 2 | None |
 | FR20 | A producer shares seasonal recipes, storage guidance and farm stories next to its products | CS p. 2 (Educational components) | P11 | Task 2 | None |
+| FR21 | After the order is confirmed, a customer can report a delivery problem or ask for a refund, and order management resolves it | **Proposal** (D8 in interactions.md); consumer law for distance sales | P12 | Task 2 | None |
 
 FR15 states the visibility. The 48 hours are NFR07, because they are a measurable constraint on FR13 and FR15 and not a behaviour of their own.
 
@@ -409,7 +410,7 @@ The Stories column of section 3 and the Applies to column of section 4 give the 
 
 - Every functional requirement in Task 1 scope (FR06 to FR15, FR17 and FR18) has at least one story.
 - Every functional story (B01 to B19) realises at least one functional requirement. Every enabler story (B20 to B24) supports at least one.
-- Eight functional requirements have no Task 1 story. FR03, FR04 and FR05 are B18 and B19, which the group does not plan. FR01, FR02, FR16, FR19 and FR20 are Task 2, and each names its process and is marked Task 2. None is lost.
+- Nine functional requirements have no Task 1 story. FR03, FR04 and FR05 are B18 and B19, which the group does not plan. FR01, FR02, FR16, FR19, FR20 and FR21 are Task 2, and each names its process and is marked Task 2. None is lost.
 - Every non-functional requirement applies to at least one story, or to the definition of done (NFR09, NFR11 and NFR12).
 - Every strategic element of UC2 (M04 to M09, O01 to O04 and R04 to R09) appears in the Traces to of at least one story.
 

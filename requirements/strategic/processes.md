@@ -21,7 +21,7 @@ A function is an area of the enterprise with its own responsibility. The functio
 | ID | Function | Pool | Purpose | Used by | Takes part in |
 |---|---|---|---|---|---|
 | F01 | Catalogue management | BRF Network (A05) | Keeps the product listings, the stock and the categories that the customers browse, and shows the content of the other lanes next to the products | P01, P03 | P05, P09, P11 |
-| F02 | Order management | BRF Network (A05) | Turns a basket into a confirmed marketplace order, splits it by producer, and keeps each producer informed of its orders | P04 | P05, P06, P10 |
+| F02 | Order management | BRF Network (A05) | Turns a basket into a confirmed marketplace order, splits it by producer, keeps each producer informed of its orders, and handles delivery problems and refund requests after the order | P04, P12 | P05, P06, P10 |
 | F03 | Finance and settlements | BRF Network (A05) | Takes the customer payments, calculates the 5% commission and settles the producers each week with an audit trail | P05, P07 | None |
 | F04 | Quality and traceability | BRF Network (A05) | Keeps the certification, allergen and best-before information, the records that link customers, products and producers, and the incident process | P02, P08 | P01 |
 | F05 | Community and sustainability | BRF Network (A05) | Reports food miles and runs the community features of the case study: surplus produce offers and the educational content that connects customers to the farms. Named for the sustainability (food miles, surplus produce) and community (education) features of the case study (CS p. 2) | P09, P10, P11 | None |
@@ -51,6 +51,7 @@ Each process has a verb-noun name. The owning function is the lane that holds th
 | P09 | Report food miles | F05 Community and sustainability | F01 Catalogue management, E04 Postcode distance service | A product is shown, or an order is placed, with a customer postcode | The customer sees the distance between the farm and the delivery or collection point, from the postcodes | CS p. 2 | No |
 | P10 | Offer surplus produce | F05 Community and sustainability | F02 Order management, Producer (A04), E03 Notification service | A producer has surplus produce | A last-minute discount is published and the interested customers are told | CS p. 2 | No |
 | P11 | Share educational content | F05 Community and sustainability | F01 Catalogue management, Producer (A04) | A producer writes a seasonal recipe, storage guidance or a farm story | The content is published next to the products of the producer | CS p. 2 | No |
+| P12 | Handle order issue | F02 Order management | Customer (A01 to A03), Producer (A04), F03 Finance and settlements, E01 Payment service, E03 Notification service | A customer reports a late or missing delivery, wrong or damaged goods, or asks for a refund after the order is confirmed | The case is resolved: a redelivery or collection is arranged with the producer, or F03 refunds the customer through E01, and the customer is told | Group design decision D8 (interactions.md, section 8); the sources are silent | No (follows UC2) |
 
 **Notes:**
 
@@ -76,6 +77,7 @@ One row for each process. Each cell gives the part of the actor in the process, 
 | P09 | Report food miles | Gives a postcode and reads the food miles | Gives the postcode of the farm (through P01) | F05 calculates the distance and F01 shows it | E04 gives the distance between the postcodes |
 | P10 | Offer surplus produce | Receives the offer and orders through P04 | Reports the surplus and sets the discount | F05 publishes the offer. F02 applies the discount to the order | E03 tells the customers |
 | P11 | Share educational content | Reads the content | Writes the recipes, the storage guidance and the farm stories | F05 collects the content and F01 publishes it with the products | None |
+| P12 | Handle order issue | Reports the problem or asks for the refund. Receives the resolution | Answers the enquiry and redelivers, or accepts the return, if asked | F02 owns the case, checks the order records and decides. F03 executes the refund | E01 processes the refund. E03 carries the notices to the producer |
 
 **Decisions:**
 
@@ -118,7 +120,8 @@ The group settles the first question itself. The tutor answers the other three, 
 
 | No. | Question | Reason |
 |---|---|---|
-| G1 | Does the model need a producer onboarding process? The case study says that forty SMEs are in the network, but it does not say how a producer joins or how its account is set up | It decides if the list has a twelfth process and if the strategic model has an activity for it |
+| G1 | Does the model need a producer onboarding process? The case study says that forty SMEs are in the network, but it does not say how a producer joins or how its account is set up | It decides if the list has a thirteenth process and if the strategic model has an activity for it |
+| G2 | Does the model need a post-sale process for delivery problems and refunds? The sources are silent | Settled on 7 Nov 2026: P12 Handle order issue is added under F02 (D8 in interactions.md). The group tells the tutor at the next stand-up |
 
 ### Questions for the tutor
 

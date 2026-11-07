@@ -77,6 +77,8 @@ Under D3, the notification service (E03) delivers the notifications M09, M15 and
 | M21 | Notification service (E03) | Customer | Surplus offer | P10 | CS p. 2 |
 | M22 | Producer | BRF Network (F05) | Educational content (recipe, storage guidance or farm story) | P11 | CS p. 2 |
 | M23 | BRF Network (F01) | Customer | Amend order (an item in the basket is out of stock; the customer amends the basket and continues browsing) | P03 | UC2, B01, B02 |
+| M24 | Customer | BRF Network (F02) | Order issue report (a late or missing delivery, wrong or damaged goods, or a refund request, with the order reference) | P12 | D8 |
+| M25 | BRF Network (F02) | Customer | Issue resolution (the redelivery or collection arranged, or the refund made) | P12 | D8 |
 
 Notes:
 
@@ -128,7 +130,7 @@ This section summarises how the process responsibilities in the 1.2 draft have b
 
 ### 3.4 Changes after the review of 22 Oct 2026
 
-The review of Thu 22 Oct 2026 changed D1 to D7. Figure 1 then had 22 messages instead of 26. The review estimated about 15 messages. The strategic refresh of 6 Nov 2026 (checked against the BPMN 2.0 specification and Real-Life BPMN, chapter 3) added M23 and the stock check gateway (data objects for DS1 to DS4 were tried and removed again, because the brief does not ask for them and they cluttered the figure), removed the merge gateway before "Listing published" and the update-stock and notify-producers tasks with their parallel gateways (now inside P05), recorded the i* element IDs in the documentation of each element, and renamed the functions F01, F02, F03 and F05 (processes.md, section 2). Figure 1 now has 23 messages. D1 and D7 are reworded below. The BRF Network process is marked executable, its conditions are FEEL expressions and the amend-order event carries a job type only because Camunda Web Modeler requires one executable process per diagram; the strategic model is not deployed. This register keeps both messages of each exchange with an external service, because the strategic model must show the external organisations and services and their interactions (UWE Bristol, 2026c, p. 3).
+The review of Thu 22 Oct 2026 changed D1 to D7. Figure 1 then had 22 messages instead of 26. The review estimated about 15 messages. The strategic refresh of 6 Nov 2026 (checked against the BPMN 2.0 specification and Real-Life BPMN, chapter 3) added M23 and the stock check gateway (data objects for DS1 to DS4 were tried and removed again, because the brief does not ask for them and they cluttered the figure), removed the merge gateway before "Listing published" and the update-stock and notify-producers tasks with their parallel gateways (now inside P05), recorded the i* element IDs in the documentation of each element, and renamed the functions F01, F02, F03 and F05 (processes.md, section 2). D1 and D7 are reworded below. On 7 Nov 2026 the group added P12 Handle order issue with M24 and M25 (D8), so Figure 1 now has twelve processes and 25 messages. The BRF Network process is marked executable, its conditions are FEEL expressions and the amend-order event carries a job type only because Camunda Web Modeler requires one executable process per diagram; the strategic model is not deployed. This register keeps both messages of each exchange with an external service, because the strategic model must show the external organisations and services and their interactions (UWE Bristol, 2026c, p. 3).
 
 The table maps the earlier IDs to the new IDs.
 
@@ -208,6 +210,8 @@ The "Via" column identifies the relevant message or proposed shared data store. 
 | R15 | P10 Offer surplus produce | Provides data to | P04 Process order | DS4 | Surplus-offer information supplies the applicable discount when the customer orders the offered products | CS p. 2 |
 | R16 | P11 Share educational content | Provides data to | P03 Browse and search catalogue | DS4 | Published educational content may be presented alongside the producer's products | CS p. 2 |
 | R17 | P01 Manage products | Provides data to | P08 Handle quality incident | DS1 | Product and producer information helps P08 identify the affected product and responsible producer | UC3 |
+| R18 | P04 Process order | Provides data to | P12 Handle order issue | DS2 | The order records identify the order, the producer and the payment that an issue concerns | D8 |
+| R19 | P12 Handle order issue | Updates records used by | P07 Settle producer payments | DS3 | A refund made by F03 through E01 is recorded against the producer allocation before the weekly settlement | D8 |
 
 Notes:
 
@@ -229,7 +233,7 @@ Each matrix entry identifies an interaction from the row function to the column 
 | From \ To | F01 | F02 | F03 | F04 | F05 |
 |---|---|---|---|---|---|
 | F01 | - | R04, R05 | - | R01, R17 | R12 |
-| F02 | - | - | R06 | R10 | - |
+| F02 | - | - | R06, R19 | R10 | - |
 | F03 | R07 | Successful-payment handover for producer notification (see R08, M08 and M09) | - | - | - |
 | F04 | R02, R11 | - | - | - | - |
 | F05 | R13, R16 | R14, R15 | - | - | - |
@@ -359,6 +363,7 @@ The following decisions explain the scope, abstraction and design choices used i
 | D5 | One incident notice (M13) goes from the network to the producer. It contains the enquiry and the outcome, for example a suspension or a request to withdraw the product. The producer sends its concern or its incident information in M12. | UC3 describes contacting the responsible producer for further information. processes.md has the producer withdraw the product if asked, so the outcome must reach the producer. M15 separately represents notifying affected customers. |
 | D6 | The network sends the payment request (M05) and receives the payment response where one is returned (M06). Figure 1 does not show how the customer enters the payment details. #49 and Task 2 decide this. | UC2 states that "Payment is submitted to an external or simulated payment service". The group uses a simulated service, so the capture of the payment details is an implementation choice. Whether payment details pass through the network is a point for the critical evaluation (#51). |
 | D7 | DS1 to DS4 are logical groups of information. They show which process writes each group and which process reads it. Figure 1 does not show them: the data relationships are recorded in section 4.2 only, so that the figure stays readable and contains only the elements the brief names. | They are not databases, and they do not set the Task 2 schema. Figure 1 stays at enterprise level, and section 4.2 records the data dependencies. Data relationships do not automatically imply execution order. Real-Life BPMN allows data objects at the strategic level but warns that they quickly overload the figure (Freund and Rücker, 2019, section 3.3.5); the brief does not ask for them. |
+| D8 | Figure 1 has a twelfth process, P12 Handle order issue, owned by F02 Order management: a customer reports a delivery problem or asks for a refund after the order is confirmed (M24) and is told the resolution (M25). The producer contact (through E03) and the refund (by F03 through E01) are in the operational model, not in Figure 1. | The case study and the use cases cover cancellation before payment and food safety concerns only. A marketplace that takes payment for goods that forty producers deliver needs a post-sale path, and consumer law gives customers a refund right in distance sales (a point for the critical evaluation, #51). Group design decision of 7 Nov 2026; the tutor is told at the next stand-up (G2 in processes.md). |
 
 ## 9. Open questions
 
