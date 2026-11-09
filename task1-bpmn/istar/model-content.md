@@ -17,6 +17,8 @@ The IDs of the other documents are used throughout: A01 to A07 and E01 to E06 ([
 
 OpenOME uses the original i* notation. This document uses its names. The iStar 2.0 names are in brackets, for anyone who reads the models in another tool.
 
+The current models are in piStar, which uses iStar 2.0. Section 3 of the [README](README.md) records the differences between the two notations, as the Week 12 lab sheet requires.
+
 | Element or link | Meaning in these models |
 |---|---|
 | Goal | A state that the actor wants. The actor does not say how to reach it |
@@ -27,7 +29,7 @@ OpenOME uses the original i* notation. This document uses its names. The iStar 2
 | Means-end (OR-refinement) | A task is one way to reach a goal. Two means for one end are alternatives |
 | Decomposition (AND-refinement) | A task needs all its parts: subgoals, subtasks, resources and softgoals |
 | Contribution | The effect of an element on a softgoal: Make, Help, Hurt or Break |
-| Is-a, is-part-of | Specialisation of an actor, and an actor inside another actor |
+| Is-a, is-part-of (participates-in) | Specialisation of an actor, and an actor inside another actor |
 
 ## 3. Actors
 
@@ -39,8 +41,8 @@ OpenOME uses the original i* notation. This document uses its names. The iStar 2
 | A03 | Restaurant or café buyer | Role, is-a Customer | Customer pool | Independent restaurants and cafés (CS p. 1) |
 | A04 | Producer | Role | Producer pool | One of 40 SMEs. Delivers or hands over its part of the order (assumption, Q1) |
 | A05 | BRF Network | Agent | BRF Network pool | The organisation: its business goals, rules and decisions |
-| A06 | Marketplace administrator | Role, is-part-of BRF Network | Quality and traceability lane (F04) | UC3 only |
-| A07 | Authorised marketplace representative | Role, is-part-of BRF Network | Quality and traceability lane (F04) | UC3 only |
+| A06 | Marketplace administrator | Role, participates-in BRF Network | Quality and traceability lane (F04) | UC3 only |
+| A07 | Authorised marketplace representative | Role, participates-in BRF Network | Quality and traceability lane (F04) | UC3 only |
 | SYS | Marketplace platform | Agent | The automated activities in the lanes F01 to F05 | The system to be built. Its tasks become the service tasks of the operational models and the Task 2 services (decision DI2) |
 | E01 | Payment service | Agent | Payment service pool | Sandbox or mock only (NFR02) |
 | E02 | Organic certification verification service | Agent | Organic certification verification service pool | UC1 |
