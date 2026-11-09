@@ -76,7 +76,7 @@ Under D3, the notification service (E03) delivers the notifications M09, M15 and
 | M20 | BRF Network (F05) | Notification service (E03) | Notification request (surplus offer) | P10 | CS p. 2 |
 | M21 | Notification service (E03) | Customer | Surplus offer | P10 | CS p. 2 |
 | M22 | Producer | BRF Network (F05) | Educational content (recipe, storage guidance or farm story) | P11 | CS p. 2 |
-| M23 | BRF Network (F01) | Customer | Amend order (an item in the basket is out of stock; the customer amends the basket and continues browsing) | P03 | UC2, B01, B02 |
+| M23 | Withdrawn on 9 Nov 2026 | | The amend-order exchange is O01 and O02 in section 3.2; Figure 1 is the happy path and does not show it | P03 | UC2, B01, B02 |
 | M24 | Customer | BRF Network (F02) | Order issue report (a late or missing delivery, wrong or damaged goods, or a refund request, with the order reference) | P12 | D8 |
 | M25 | BRF Network (F02) | Customer | Issue resolution (the redelivery or collection arranged, or the refund made) | P12 | D8 |
 
@@ -89,11 +89,11 @@ Notes:
 - Incident handling and review occur internally within F04, involving A06 and A07. These internal interactions are not represented as message flows between separate pools.
 - M10 represents the business-level settlement interaction between the network and the producer. The payment provider and any additional payment instructions or confirmations remain subject to Q2 in actors.md.
 - The lane annotations identify responsibility for the external interactions. In particular, M08 is sent by F02 following successful payment handled by F03. The corresponding internal relationship is addressed in section 4. In Figure 1, M08 leaves from Process payment (P05): the stock update and the producer notifications are inside P05 since the refresh of 6 Nov 2026 (section 3.4).
-- M23 is the one operational exchange that Figure 1 shows (D1): the gateway "Items in stock?" before Process order sends it when an item is unavailable. O01 and O02 keep the detail of the exchange for the operational model.
+- Figure 1 is the happy path (tutor feedback, 9 Nov 2026): it has no gateways, and the stock check, the organic claim and certification decisions and the payment decision are in the operational models. M23 is withdrawn; O01 and O02 cover the amend-order exchange.
 
 ### 3.2 Messages for the operational models
 
-These messages support the alternative and exception paths associated with P04 and P05. Figure 1 shows the stock check as the gateway "Items in stock?" and the message M23; the detail of O01 to O04 stays here under D1. They stay here until Sprint 2 starts, and then move into the operational model of Use Case 2 ([#49](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/49)).
+These messages support the alternative and exception paths associated with P04 and P05. Figure 1 omits them: it is the happy path (D1). They stay here until Sprint 2 starts, and then move into the operational model of Use Case 2 ([#49](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/49)).
 
 | No. | Sender | Receiver | Message | Process | Source |
 |---|---|---|---|---|---|
@@ -110,7 +110,7 @@ This table currently covers UC2. UC1 and UC3 remain relevant to the enterprise-w
 
 This section summarises how the process responsibilities in the 1.2 draft have been developed into the interaction register, including refinements made during review.
 
-- Strategic and operational separation: O01 to O04 record the stock-amendment and payment-retry exchanges for operational modelling. Figure 1 shows the stock check and M23; the other exchanges are omitted under D1.
+- Strategic and operational separation: O01 to O04 record the stock-amendment and payment-retry exchanges for operational modelling. They are omitted from Figure 1 under D1 (happy path).
 
 - Lane responsibilities: messages involving the BRF Network identify the responsible function, F01 to F05, without treating those lanes as separate participants.
 
@@ -130,7 +130,7 @@ This section summarises how the process responsibilities in the 1.2 draft have b
 
 ### 3.4 Changes after the review of 22 Oct 2026
 
-The review of Thu 22 Oct 2026 changed D1 to D7. Figure 1 then had 22 messages instead of 26. The review estimated about 15 messages. The strategic refresh of 6 Nov 2026 (checked against the BPMN 2.0 specification and Real-Life BPMN, chapter 3) added M23 and the stock check gateway (data objects for DS1 to DS4 were tried and removed again, because the brief does not ask for them and they cluttered the figure), removed the merge gateway before "Listing published" and the update-stock and notify-producers tasks with their parallel gateways (now inside P05), recorded the i* element IDs in the documentation of each element, and renamed the functions F01, F02, F03 and F05 (processes.md, section 2). D1 and D7 are reworded below. On 7 Nov 2026 the group added P12 Handle order issue with M24 and M25 (D8), so Figure 1 now has twelve processes and 25 messages. The BRF Network process is marked executable, its conditions are FEEL expressions and the amend-order event carries a job type only because Camunda Web Modeler requires one executable process per diagram; the strategic model is not deployed. This register keeps both messages of each exchange with an external service, because the strategic model must show the external organisations and services and their interactions (UWE Bristol, 2026c, p. 3).
+The review of Thu 22 Oct 2026 changed D1 to D7. Figure 1 then had 22 messages instead of 26. The review estimated about 15 messages. The strategic refresh of 6 Nov 2026 (checked against the BPMN 2.0 specification and Real-Life BPMN, chapter 3) added M23 and the stock check gateway (data objects for DS1 to DS4 were tried and removed again, because the brief does not ask for them and they cluttered the figure), removed the merge gateway before "Listing published" and the update-stock and notify-producers tasks with their parallel gateways (now inside P05), recorded the i* element IDs in the documentation of each element, and renamed the functions F01, F02, F03 and F05 (processes.md, section 2). D1 and D7 are reworded below. On 7 Nov 2026 the group added P12 Handle order issue with M24 and M25 (D8), so Figure 1 then had twelve processes and 25 messages. On 9 Nov 2026 the four gateways, the amend-order loop and the two failure end events were removed after tutor feedback (happy path); M23 is withdrawn, so Figure 1 has 24 messages. The BRF Network process is marked executable, its conditions are FEEL expressions and the amend-order event carries a job type only because Camunda Web Modeler requires one executable process per diagram; the strategic model is not deployed. This register keeps both messages of each exchange with an external service, because the strategic model must show the external organisations and services and their interactions (UWE Bristol, 2026c, p. 3).
 
 The table maps the earlier IDs to the new IDs.
 
@@ -277,7 +277,7 @@ This section groups the messages in section 3 into business-level interfaces bet
 
 I1 and I2 group the business interactions with customers and producers. They do not assume that every interaction uses a single screen or communication channel.
 
-The associated operational exchanges O01 to O04 also belong to I1. Figure 1 shows the stock check and M23; the rest are omitted under D1 and retained in section 3.2 for detailed modelling.
+The associated operational exchanges O01 to O04 also belong to I1. They are omitted from Figure 1 under D1 (happy path) and retained in section 3.2 for detailed modelling.
 
 I3 connects the BRF Network with E01 through M05 and M06. The customer's entry of the payment details is not a message in Figure 1 (D6).
 
@@ -356,7 +356,7 @@ The following decisions explain the scope, abstraction and design choices used i
 
 | No. | Decision | Reason |
 |---|---|---|
-| D1 | Figure 1 shows one message for each business document that passes between organisations. Request and response pairs between a person and the network, and screen steps, are left to the operational models. A request to an external service and its result are two separate documents, so Figure 1 shows both. The stock check before the order is a principal business rule, so Figure 1 shows it as the gateway "Items in stock?" with one message, M23 "Amend order". The detail of the stock-amendment and payment-retry exchanges O01 to O04 stays in section 3.2 and moves into #49 when Sprint 2 starts. | Figure 1 is for business stakeholders. The brief requires an appropriate high-level abstraction of the organisation and marks the business decisions and the relationships between the principal processes (UWE Bristol, 2026c, p. 3). Detailed alternative and exception flows are addressed in the operational models (UWE Bristol, 2026c, pp. 3-4). |
+| D1 | Figure 1 shows one message for each business document that passes between organisations. Request and response pairs between a person and the network, and screen steps, are left to the operational models. A request to an external service and its result are two separate documents, so Figure 1 shows both. Figure 1 is the happy path with no gateways (tutor feedback at the stand-up of 9 Nov 2026): every process runs through to its outcome, and the stock check, the organic claim and certification decisions and the payment decision are in the operational models. The stock-amendment and payment-retry exchanges O01 to O04 stay in section 3.2 and move into #49 when Sprint 2 starts. | Figure 1 is for business stakeholders. The brief requires an appropriate high-level abstraction of the organisation and marks the business decisions and the relationships between the principal processes (UWE Bristol, 2026c, p. 3). Detailed alternative and exception flows are addressed in the operational models (UWE Bristol, 2026c, pp. 3-4). |
 | D2 | The order summary and the purchase confirmation are not separate messages in Figure 1. M04 is the order that the customer confirms. M07 gives the producers, the delivery or collection arrangements and the totals. #49 models the review step. | The case study requires the checkout to communicate the supplier responsibilities, the delivery arrangements and the collection procedures (CS p. 2). M07 carries this information. |
 | D3 | Figure 1 shows the notification service (E03) as a collapsed pool. The network sends a notification request to E03 (M08, M14 and M20), and E03 delivers the notifications to the recipients (M09, M15 and M21). | UC3 requires the outcomes of the notifications to be recorded and the failures to be followed up, so the delivery channel is visible in Figure 1. actors.md lists E03 as an external participant. If the tutor says that E03 is internal (Q3), the network sends M09, M15 and M21 directly. |
 | D4 | No separate fulfilment-confirmation message or fulfilment-to-settlement dependency is included in this register. Producers are settled for an order when its payment succeeds, not when the goods are delivered. | The supplied case study and use cases do not explicitly require either. M09 initiates producer fulfilment, while P07 follows the weekly settlement schedule using the relevant financial records. The settlement rule is a business assumption. The group asks the tutor to confirm it. |

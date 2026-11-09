@@ -170,7 +170,7 @@ The SR model opens Customer, Producer, BRF Network and Marketplace platform. The
 | CU03 Buy from farm shops and markets | CU13 | Hurt | Restricted opening hours (CS p. 1) |
 | CU03 | CU14 | Hurt | Hard to find reliable sources (CS p. 1) |
 | CU03 | CU15 | Break | Admin of many small suppliers is "prohibitively time-consuming" (CS p. 1) |
-| CU08 Amend unavailable items | CU13 | Hurt | Extra effort when stock runs out |
+| CU08 Amend unavailable items | Customer pool; not in Figure 1 (happy path, D1) | Hurt | Extra effort when stock runs out |
 | CU10 Give sandbox payment reference | CU17 | Help | No card data in the forms (NFR03) |
 
 ### 5.2 Producer
@@ -283,14 +283,14 @@ This actor holds the two functionalities. Its tasks name the planned job types o
 | MP13 | MP27 Stock open to other buyers | Hurt | Abandoned checkouts hold stock until the time limit (TN3) |
 | MP14 Check stock only at payment | MP26 | Hurt | Two customers can buy the last unit |
 | MP14 | MP27 | Help | No stock is held |
-| MP24 Retry, then cancel and release stock | MP28 Reliable checkout | Help | Every failure ends in a modelled state (NFR04) |
+| MP24 Retry, then cancel and release stock | Not in Figure 1 (happy path, D1) | Help | Every failure ends in a modelled state (NFR04) |
 | MP24 | MP29 Quick checkout | Hurt | The customer waits during the retries (TN5) |
 | MP25 End the process at once | MP28 | Break | Against UC2 |
 | MP25 | MP29 | Help | No wait |
 | MP16 Submit payment | MP30 Secure payment | Help | Sandbox reference only, no card data (NFR03) |
 | MP17 Calculate producer amounts and 5% commission | MP31 Accurate amounts | Make | Amounts plus commission equal the total (NFR05) |
 | MP20 Record every payment attempt | MP32 Auditability | Make | NFR08 |
-| MP22 Let customer retry or cancel | MP28 | Help | A decline does not lose the order |
+| MP22 Let customer retry or cancel | Not in Figure 1 (happy path, D1) | Help | A decline does not lose the order |
 
 ### 5.5 Dependencies in the SR model
 
@@ -303,11 +303,11 @@ In the SR model, each UC2 dependency of section 4 starts and ends at an element 
 | SD04 Order confirmation | CU09 Pay for the order | MP18 Confirm order and update stock |
 | SD06 Secure payment | CU17 Safe payment and personal data | MP16 Submit payment |
 | SD07 Review and confirm order | MP09 Get customer confirmation | CU07 Review and confirm order |
-| SD08 Amend unavailable items | MP07 Ask customer to amend order | CU08 Amend unavailable items |
+| SD08 Amend unavailable items | MP07 Ask customer to amend order | Not in Figure 1 (happy path, D1) |
 | SD09 Sandbox payment reference | MP16 Submit payment | CU10 Give sandbox payment reference |
 | SD10 Goods delivered or collected | CU12 Goods received | PR07 Prepare and hand over orders |
 | SD11 Product listing and updates | MP11 Product catalogue and stock | PR04 List and update products |
-| SD12 Accurate stock levels | MP06 Check stock | PR05 Keep stock levels accurate |
+| SD12 Accurate stock levels | MP06 Check stock | Process order (Order management lane); the check is inside it |
 | SD13 Delivery or collection arrangements | MP08 Identify producers and arrangements | PR06 Set delivery or collection arrangements |
 | SD14 New order notification | PR08 New order notification | MP19 Notify each producer |
 | SD15 Adequate lead time | PR13 Enough time to prepare | MP08 Identify producers and arrangements |

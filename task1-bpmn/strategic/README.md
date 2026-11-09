@@ -16,15 +16,15 @@ The figure is one collaboration diagram of the whole marketplace, at the level t
 | Organisational functions and responsibilities | The five lanes F01 to F05 of the BRF Network pool | processes.md, sections 2 and 4 |
 | Key actors | The Customer pool (A01 to A03), the Producer pool (A04) and the BRF Network pool (A05, with the roles A06 and A07 inside F04) | [actors.md](../../requirements/strategic/actors.md), section 2 |
 | External organisations and services | The four collapsed pools E01 to E04 | actors.md, section 3 |
-| Interactions | The 25 message flows M01 to M25 | [interactions.md](../../requirements/strategic/interactions.md), section 3.1 |
-| Relationships between the processes | The sequence flows inside the pool (R01, R05, R06), the notification to the producer (R08) and eight text annotations; the data relationships R02 to R04, R07 and R09 to R17 are in the register only | interactions.md, section 4 |
+| Interactions | The 24 message flows M01 to M25 (M23 withdrawn) | [interactions.md](../../requirements/strategic/interactions.md), section 3.1 |
+| Relationships between the processes | The sequence flows inside the pool (R01, R05, R06), the notification to the producer (R08) and seven text annotations; the data relationships R02 to R04, R07 and R09 to R17 are in the register only | interactions.md, section 4 |
 
 ## 2. How to read it
 
 - A rounded box is a process. The two boxes with a plus sign, Process order (P04) and Process payment (P05), are call activities: they stand for the operational models FN1 and FN2 of [functionalities.md](../../requirements/scope/functionalities.md).
 - A thin circle starts a process. An envelope in it means a message starts it, a clock means a schedule (the weekly settlement). The plain start of P03 is the customer's own visit to the marketplace.
 - A thick circle ends a process. Its name is the outcome.
-- A diamond with a cross is a business decision. The figure shows four: items in stock, organic claim, certification verified and payment successful. Every other alternative and exception path belongs to the operational models (decision D1).
+- There are no decisions in the figure: it is the happy path (decision D1, tutor feedback of 9 Nov 2026). The stock check, the organic claim, the certification result and the payment result are decided in the operational models.
 - A dashed arrow is a message between the network and an outside party. Solid arrows never cross a pool.
 - A dotted line joins a note to the process it explains. The notes give the business rules of the case study (48 hours, weekly settlement, 5% commission, postcode distance) and the links between processes that the arrows cannot show.
 
@@ -32,11 +32,11 @@ The figure is one collaboration diagram of the whole marketplace, at the level t
 
 | Process | Lane (function) | Trigger | Outcome | i* elements |
 |---|---|---|---|---|
-| P01 Manage products | F01 Catalogue management | Product details received from a producer (M01) | Listing published, or not published after a failed verification | PR04, SD11 |
+| P01 Manage products | F01 Catalogue management | Product details received from a producer (M01) | Listing published, after P02 where organic certification is claimed | PR04, SD11 |
 | P02 Verify organic certification | F04 Quality and traceability | An organic claim in P01 | Verified or rejected (M02, M03) | SD25 |
-| P03 Browse and search catalogue | F01 Catalogue management | The customer opens the marketplace | The basket is checked against the stock; the customer amends it (M23) or proceeds | CU02, CU04, SD02 |
+| P03 Browse and search catalogue | F01 Catalogue management | The customer opens the marketplace | The customer proceeds to checkout (the stock check is in the operational model) | CU02, CU04, SD02 |
 | P04 Process order | F02 Order management | The customer orders (M04) | The marketplace order, split by producer | SD01, MP03, MP05, SD12, SD13 |
-| P05 Process payment | F03 Finance and settlements | The order from P04 | Order confirmed (M07) with the stock updated and the producers notified (M08, M09), or payment not completed | MP04, MP15 to MP19, SD19 |
+| P05 Process payment | F03 Finance and settlements | The order from P04 | Order confirmed (M07) with the stock updated and the producers notified (M08, M09); the declined and retry paths are in the operational model | MP04, MP15 to MP19, SD19 |
 | P06 Fulfil order | Producer pool | New order notification (M09) | Goods delivered or collected | PR07, SD10, CU12 |
 | P07 Settle producer payments | F03 Finance and settlements | The weekly settlement date | Producers settled (M10) | NW06, PR09, SD17, SD32 |
 | P08 Handle quality incident | F04 Quality and traceability | A quality concern (M11, M12) | Incident closed (M13, M14, M15) | NW07 |
@@ -51,7 +51,7 @@ The i* elements are in [model-content.md](../istar/model-content.md); its sectio
 
 The full decisions D1 to D7 and their reasons are in interactions.md, section 8. In short:
 
-1. One message for each business document that passes between organisations; screen steps and request-response pairs between a person and the network stay in the operational models. The stock check before an order is the one exception, because it is a principal business rule (D1).
+1. One message for each business document that passes between organisations; screen steps and request-response pairs between a person and the network stay in the operational models. The figure is the happy path with no gateways; every decision is in the operational models (D1, tutor feedback of 9 Nov 2026).
 2. The notification service is a separate pool, so the delivery channel is visible (D3).
 3. Producers are settled when the payment succeeds, not when the goods are delivered; the tutor is asked to confirm (D4).
 4. The data stores DS1 to DS4 are not drawn. Data objects were tried on 6 Nov 2026 and removed again: the brief does not ask for them and they overloaded the figure (D7).
@@ -62,8 +62,8 @@ The full decisions D1 to D7 and their reasons are in interactions.md, section 8.
 ## 5. Checks
 
 - bpmnlint with the `bpmnlint:recommended` rules (the repository's `.bpmnlintrc`, run by the BPMN lint workflow after each merge into main).
-- The connection rules of the specification: sequence flows stay inside a pool, message flows cross pools, every gateway splits or merges, the exclusive gateways all show their marker (Object Management Group, 2011, sections 7.5 and 10.5).
-- The strategic conventions of Real-Life BPMN, chapter 3: happy path with few decisions, no task typing, typed start events, outcomes as end events, one white-box pool for the enterprise and collapsed pools for the outside parties, at most eight artifacts (Freund and Rücker, 2019, section 3.3).
+- The connection rules of the specification: sequence flows stay inside a pool, message flows cross pools, every flow node has a start and an end (Object Management Group, 2011, sections 7.5 and 10.4).
+- The strategic conventions of Real-Life BPMN, chapter 3: happy path with no decisions, no task typing, typed start events, outcomes as end events, one white-box pool for the enterprise and collapsed pools for the outside parties, at most eight artifacts (Freund and Rücker, 2019, section 3.3).
 
 ## 6. Open questions
 
