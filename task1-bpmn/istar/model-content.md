@@ -170,7 +170,7 @@ The SR model opens Customer, Producer, BRF Network and Marketplace platform. The
 | CU03 Buy from farm shops and markets | CU13 | Hurt | Restricted opening hours (CS p. 1) |
 | CU03 | CU14 | Hurt | Hard to find reliable sources (CS p. 1) |
 | CU03 | CU15 | Break | Admin of many small suppliers is "prohibitively time-consuming" (CS p. 1) |
-| CU08 Amend unavailable items | Customer pool; not in Figure 1 (happy path, D1) | Hurt | Extra effort when stock runs out |
+| CU08 Amend unavailable items | Customer lane; not in Figure 1 (happy path, D1) | Hurt | Extra effort when stock runs out |
 | CU10 Give sandbox payment reference | CU17 | Help | No card data in the forms (NFR03) |
 
 ### 5.2 Producer
@@ -338,10 +338,10 @@ The operational models are not built yet. The last two columns use the planned e
 
 | i* element | Strategic BPMN (Figure 1) | Operational BPMN (planned) | Stories |
 |---|---|---|---|
-| CU07 Review and confirm order | Customer pool, Order message (M04) | `process_order`: user task with a Camunda Form | B05 |
+| CU07 Review and confirm order | Place order (Customer lane) | `process_order`: user task with a Camunda Form | B05 |
 | CU08 Amend unavailable items | Items in stock? gateway, Amend order message (M23) | `process_order`: user task and a loop back to the stock check | B02 |
-| CU10 Give sandbox payment reference | Customer pool | `process_payment`: user task with a Camunda Form | B10 |
-| CU11 Retry or cancel after decline | Customer pool (O03, O04) | `process_payment`: user task after `PAYMENT_DECLINED` | B11 |
+| CU10 Give sandbox payment reference | Customer lane | `process_payment`: user task with a Camunda Form | B10 |
+| CU11 Retry or cancel after decline | Customer lane (O03, O04) | `process_payment`: user task after `PAYMENT_DECLINED` | B11 |
 | MP06 Check stock | Items in stock? gateway (Catalogue management lane), before Process order | Service task `check-stock` | B01, B21 |
 | MP07 Ask customer to amend order | Amend order requested event, Amend order message (M23) | `process_order`: user task after the stock check | B02 |
 | MP11 Product catalogue and stock | Not drawn; DS1 in interactions.md section 4.1 | Product service (W1) | B01 |
@@ -350,11 +350,11 @@ The operational models are not built yet. The last two columns use the planned e
 | MP10 Create and split marketplace order | Process order (Order management lane) | Service tasks `create-order` and `split-order` | B06 |
 | MP16 Submit payment | Process payment (Finance and settlements lane), Payment service (M05, M06) | Service task `submit-payment` | B10, B20 |
 | MP17 Calculate producer amounts and 5% commission | Process payment (Finance and settlements lane) | FEEL expressions in output mappings | B13 |
-| MP18 Confirm order and update stock | Process payment (Finance and settlements lane), Order confirmation (M07) | Service tasks `confirm-order` and `update-stock` | B14, B15 |
+| MP18 Confirm order and update stock | Process payment (Finance and settlements lane); the confirmation is the hand-over to the Customer lane | Service tasks `confirm-order` and `update-stock` | B14, B15 |
 | MP19 Notify each producer | Process payment (Finance and settlements lane), Notification service (M08, M09) | Multi-instance service task `notify-producer` | B16, B23 |
 | MP22 Let customer retry or cancel | Payment successful? gateway | Error boundary event `PAYMENT_DECLINED` | B11 |
 | MP24 Retry, then cancel and release stock | Payment not completed end event | Retry loop, then cancellation (`PAYMENT_SERVICE_UNAVAILABLE`) | B12, B17 |
-| PR07 Prepare and hand over orders | Fulfil order (Producer pool) | Out of scope | None |
+| PR07 Prepare and hand over orders | Fulfil order (Producer lane) | Out of scope | None |
 | NW06 Settle producers weekly | Settle producer payments (Finance and settlements lane) | Out of scope | None |
 | NW07 Handle quality incidents | Handle quality incident (Quality and traceability lane) | Out of scope | None |
 | CU18 Order problems put right, NW15, MP33 | Handle order issue (Order management lane), M24, M25 | Out of scope (Task 2, FR21) | None |
