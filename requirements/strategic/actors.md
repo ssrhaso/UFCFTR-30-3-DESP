@@ -10,7 +10,7 @@ This document identifies the actors, the external organisations and the services
 
 The scope is the whole marketplace, because the strategic model shows the full enterprise. The chosen use case is Use Case 2: Customer Multi-Vendor Order, Checkout and Payment ([use-case.md](../scope/use-case.md)). The "In UC2" column shows the entries that it needs.
 
-The "BPMN element" column gives the place of each entry in the strategic model: a lane of the marketplace pool, an external participant (a collapsed pool) or not in BPMN. Since 9 Nov 2026 the figure is one pool with a lane for each party, as Real-Life BPMN draws a strategic model (D9 in interactions.md). The brief requires "key actors", "external organisations and services" and "interactions between different areas of the enterprise" (UWE Bristol, 2026c, p. 3).
+The "BPMN element" column gives the place of each entry in the strategic model: the Customer pool, a lane of the network pool, an external participant (a collapsed pool) or not in BPMN. Since 9 Nov 2026 the network pool has a lane for each of its parties, the functions and the producers, and the customer is a separate pool because customers are not members of the network (D9 in interactions.md). The brief requires "key actors", "external organisations and services" and "interactions between different areas of the enterprise" (UWE Bristol, 2026c, p. 3).
 
 Source keys: CS is the case study (UWE Bristol, 2026a), with the page number. UC1, UC2 and UC3 are the three use cases (UWE Bristol, 2026b).
 
@@ -18,9 +18,9 @@ Source keys: CS is the case study (UWE Bristol, 2026a), with the page number. UC
 
 | ID | Actor | Role | Main need | Source | In UC2 | BPMN element |
 |---|---|---|---|---|---|---|
-| A01 | Household customer | Young professionals and families who buy local produce for the home | Buy from many producers without visits to farm shops in their restricted opening hours | CS p. 1 | Yes | Customer lane, shared with A02 and A03 (one pool with a lane for each party, D9) |
-| A02 | Community group buyer | Buys local food for the catering of an educational institution, a care facility or a voluntary organisation | Find reliable and consistent local suppliers | CS p. 1 | Yes | Customer lane (shared) |
-| A03 | Restaurant or café buyer | Buys ingredients for an independent restaurant or café | Buy locally without the administration of many small suppliers | CS p. 1 | Yes | Customer lane (shared) |
+| A01 | Household customer | Young professionals and families who buy local produce for the home | Buy from many producers without visits to farm shops in their restricted opening hours | CS p. 1 | Yes | Customer pool (a separate pool above the network, with the order steps), shared with A02 and A03 (D9) |
+| A02 | Community group buyer | Buys local food for the catering of an educational institution, a care facility or a voluntary organisation | Find reliable and consistent local suppliers | CS p. 1 | Yes | Customer pool (shared) |
+| A03 | Restaurant or café buyer | Buys ingredients for an independent restaurant or café | Buy locally without the administration of many small suppliers | CS p. 1 | Yes | Customer pool (shared) |
 | A04 | Producer | One of 40 local SMEs. Lists products, updates stock and prepares orders for delivery or collection (see section 4) | Reach customers beyond farmers' markets and farm gate sales. Simple tools for mixed technical skills: some producers use only email and telephone, for about 15 hours each week. Order visibility at least 48 hours ahead. Weekly settlements with an audit trail | CS pp. 1–2, UC1, UC2 | Yes | Producer lane |
 | A05 | Bristol Regional Food Network | The community initiative that runs the marketplace. Connects producers with customers within 20 miles of Bristol city centre. Takes a 5% commission on each order | Income from the commission. Sustainability: food miles and less food waste. Community connections and local food education | CS pp. 1–2, UC2 | Yes | The pool (the marketplace), with the lanes F01 to F05 |
 | A06 | Marketplace administrator | A role in the network. Can report a food quality or safety issue | Not stated | UC3 | No | Lane in A05 |
