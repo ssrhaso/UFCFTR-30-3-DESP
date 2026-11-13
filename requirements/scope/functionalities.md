@@ -36,13 +36,13 @@ Each candidate is one process of processes.md, or a set of processes that work t
 
 | ID | Candidate | Processes | Owning function | Actors and services | Use case | Trigger | Outcome |
 |---|---|---|---|---|---|---|---|
-| C1 | Process order | [P04](../strategic/processes.md#3-major-processes) | F02 Orders | Customer (A01 to A03). Producer (A04), through its stock and its delivery or collection arrangements | [UC2](use-case.md#comparison) | The customer proceeds to checkout (M04) | The marketplace order exists and is split into producer order elements (R06) |
-| C2 | Process payment | [P05](../strategic/processes.md#3-major-processes) | F03 Finance, with F01 and F02 | Customer, Producer, E01 Payment service, E03 Notification service | [UC2](use-case.md#comparison) | A confirmed order needs payment (R06) | The order is confirmed, the stock is updated and the producers are notified (M07, M08, M09, R07). Or the decline and unavailable paths apply |
+| C1 | Process order | [P04](../strategic/processes.md#3-major-processes) | F02 Order management | Customer (A01 to A03). Producer (A04), through its stock and its delivery or collection arrangements | [UC2](use-case.md#comparison) | The customer proceeds to checkout (M04) | The marketplace order exists and is split into producer order elements (R06) |
+| C2 | Process payment | [P05](../strategic/processes.md#3-major-processes) | F03 Finance and settlements, with F01 and F02 | Customer, Producer, E01 Payment service, E03 Notification service | [UC2](use-case.md#comparison) | A confirmed order needs payment (R06) | The order is confirmed, the stock is updated and the producers are notified (M07, M08, M09, R07). Or the decline and unavailable paths apply |
 | C3 | Checkout and payment (all of UC2) | [P04 and P05](../strategic/processes.md#3-major-processes) | F02 and F03 | As C1 and C2 | [UC2](use-case.md#comparison) | The customer proceeds to checkout (M04) | As C2 |
 | C4 | Product listing and certification | [P01 and P02](../strategic/processes.md#3-major-processes) | F01 and F04 | Producer, E02 Certification service | [UC1](use-case.md#comparison) (not chosen) | A producer has a new product, or a change to a product | The product is listed with a verified organic status, or the claim is rejected |
-| C5 | Settle producer payments | [P07](../strategic/processes.md#3-major-processes) | F03 Finance | Producer, E06 Tax authority. The payer is open (Q2 in actors.md) | None (CS p. 2) | The weekly settlement date | Each producer receives its amount less the 5% commission, with an audit trail |
+| C5 | Settle producer payments | [P07](../strategic/processes.md#3-major-processes) | F03 Finance and settlements | Producer, E06 Tax authority. The payer is open (Q2 in actors.md) | None (CS p. 2) | The weekly settlement date | Each producer receives its amount less the 5% commission, with an audit trail |
 | C6 | Handle quality incident | [P08](../strategic/processes.md#3-major-processes) | F04 Quality and traceability | Customer, Producer, A06, A07, E03, E05 | [UC3](use-case.md#comparison) (not chosen) | A customer, a producer or the administrator reports a concern | The incident is closed, or further action is requested |
-| C7 | Offer surplus produce | [P10](../strategic/processes.md#3-major-processes) | F05 Quality assurance and community features | Producer, Customer, E03 | None (CS p. 2) | A producer has surplus produce | A discount is published and the interested customers are told |
+| C7 | Offer surplus produce | [P10](../strategic/processes.md#3-major-processes) | F05 Community and sustainability | Producer, Customer, E03 | None (CS p. 2) | A producer has surplus produce | A discount is published and the interested customers are told |
 
 These processes are not candidates:
 
@@ -73,8 +73,8 @@ The group chose C1 and C2 at [stand-up 2](../../sprints/task1-sprint1/standups.m
 
 | ID | Functionality | Process | Owning function | Candidate |
 |---|---|---|---|---|
-| FN1 | Process order | P04 | F02 Orders | C1 |
-| FN2 | Process payment | P05 | F03 Finance | C2 |
+| FN1 | Process order | P04 | F02 Order management | C1 |
+| FN2 | Process payment | P05 | F03 Finance and settlements | C2 |
 
 ### 3.2 Reasons
 
@@ -107,8 +107,8 @@ The group chose C1 and C2 at [stand-up 2](../../sprints/task1-sprint1/standups.m
 | | FN1 Process order | FN2 Process payment |
 |---|---|---|
 | Process | P04 | P05 |
-| Owning lane | F02 Orders | F03 Finance |
-| Other lanes | F01 Product listing (the stock) | F01 (the stock update) and F02 (the producer notifications) |
+| Owning lane | F02 Order management | F03 Finance and settlements |
+| Other lanes | F01 Catalogue management (the stock) | F01 (the stock update) and F02 (the producer notifications) |
 | Participants | Customer, BRF Network, stock service (proposal, W1) | Customer, BRF Network, Producer, E01 Payment service, E03 Notification service (Q3) |
 | Start | The customer proceeds to checkout with the basket (M04) | FN1 gives a confirmed order that needs payment (R06) |
 | Normal end | The marketplace order and the producer order elements exist. The stock is reserved (proposal, W3) | The order is confirmed (M07). The stock is updated (R07). Each producer is notified (M08, M09) |
