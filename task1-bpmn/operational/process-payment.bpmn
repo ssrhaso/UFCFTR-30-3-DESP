@@ -319,7 +319,7 @@
       <bpmn:outgoing>Flow_Record_Join</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:endEvent id="EndEvent_OrderConfirmed" name="Order confirmed">
-      <bpmn:documentation>The same end as Order confirmed in the strategic model.</bpmn:documentation>
+      <bpmn:documentation>The success path of P05. In the strategic model, P05 continues to P06 Fulfil order (M08, M09).</bpmn:documentation>
       <bpmn:incoming>Flow_Join_Confirmed</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:parallelGateway id="Gateway_JoinSuccess">
@@ -329,7 +329,7 @@
       <bpmn:outgoing>Flow_Join_Confirmed</bpmn:outgoing>
     </bpmn:parallelGateway>
     <bpmn:exclusiveGateway id="Gateway_PaymentSuccessful" name="Payment successful?" default="Flow_PaymentSuccessful_Release">
-      <bpmn:documentation>The same decision as the Payment successful? gateway of the strategic model.</bpmn:documentation>
+      <bpmn:documentation>The outcome of P05 Process payment. The strategic model shows only the success path (D1 of the strategic README).</bpmn:documentation>
       <bpmn:incoming>Flow_Sub_PaymentSuccessful</bpmn:incoming>
       <bpmn:outgoing>Flow_PaymentSuccessful_Confirm</bpmn:outgoing>
       <bpmn:outgoing>Flow_PaymentSuccessful_Release</bpmn:outgoing>
@@ -442,7 +442,7 @@
       <bpmn:outgoing>Flow_Notify_Cancelled</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:endEvent id="EndEvent_OrderCancelled" name="Order cancelled">
-      <bpmn:documentation>The same end as Payment not completed in the strategic model. The stock is released.</bpmn:documentation>
+      <bpmn:documentation>The order is cancelled and the stock is released. The strategic model does not show this path, because it shows only the happy path (D1).</bpmn:documentation>
       <bpmn:incoming>Flow_Notify_Cancelled</bpmn:incoming>
     </bpmn:endEvent>
   </bpmn:process>
