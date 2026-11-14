@@ -1,0 +1,39 @@
+{
+  "components": [
+    {
+      "text": "## Pay for your order\n\nOrder **{{orderId}}**. Total: **£{{orderTotal}}**.\n\nThis is a sandbox payment. Do not enter real card details.",
+      "type": "text",
+      "layout": {
+        "row": "Row_intro"
+      },
+      "id": "Field_intro"
+    },
+    {
+      "values": [
+        {
+          "label": "Sandbox card: the payment succeeds",
+          "value": "pm_card_visa"
+        },
+        {
+          "label": "Sandbox card: the payment is declined",
+          "value": "pm_card_chargeDeclined"
+        }
+      ],
+      "label": "Sandbox payment method",
+      "type": "radio",
+      "layout": {
+        "row": "Row_method"
+      },
+      "id": "Field_paymentMethod",
+      "key": "paymentMethod",
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "type": "default",
+  "id": "payment-details",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 16
+}
