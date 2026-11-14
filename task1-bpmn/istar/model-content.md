@@ -219,6 +219,10 @@ The SR model opens Customer, Producer, BRF Network and Marketplace platform. The
 | NW08 | Promote surplus offers, food miles and education | Task | Decomposes NW02 | P09, P10, P11 |
 | NW09 | Regulations complied with | Goal | Decomposes NW02 | NFR01, E05 |
 | NW15 | Resolve order issues after the sale | Task | Decomposes NW02 | P12, D8 |
+| NW16 | Offer surplus produce | Task | Decomposes NW08 | P10 |
+| NW17 | Report food miles | Task | Decomposes NW08 | P09 |
+| NW18 | Share educational content | Task | Decomposes NW08 | P11 |
+| NW19 | Protect personal data and keep financial audit trail | Task | Means-end to NW09 | NFR01, NFR08 |
 | NW10 | Financial viability | Softgoal | | CS p. 2 |
 | NW11 | Producers attracted and kept | Softgoal | | CS p. 1 |
 | NW12 | Sustainability (fewer food miles, less waste) | Softgoal | | CS p. 2 |
@@ -232,10 +236,16 @@ The SR model opens Customer, Producer, BRF Network and Marketplace platform. The
 | NW04 Charge 5% commission | NW10 Financial viability | Help | The only income in the case study |
 | NW04 | NW11 Producers attracted and kept | Hurt | Lower producer income (TN1) |
 | NW06 Settle producers weekly | NW11 | Help | Regular, transparent payment |
+| NW06 | NW14 Trust | Help | Each settlement has a statement and an audit trail (SD17, SD18) |
 | NW07 Handle quality incidents | NW14 Trust | Help | Rapid contact when food safety is at risk (CS p. 2) |
-| NW08 Promote surplus offers, food miles and education | NW12 Sustainability | Help | CS p. 2 |
-| NW08 | NW13 Community connections | Help | CS p. 2 |
+| NW07 | NW11 | Hurt | Incident requests and product suspensions put a load on producers (TN8) |
+| NW16 Offer surplus produce | NW12 Sustainability | Help | Less food waste (CS p. 2) |
+| NW17 Report food miles | NW12 | Help | Fewer food miles (CS p. 2) |
+| NW18 Share educational content | NW13 Community connections | Help | CS p. 2 |
 | NW09 Regulations complied with | NW14 | Help | NFR01 |
+| NW09 | NW10 | Hurt | Compliance work adds cost (TN9) |
+
+NW08 has no direct contributions. Each of its three parts (NW16 to NW18) has its own contribution.
 
 ### 5.4 Marketplace platform
 
@@ -314,6 +324,7 @@ In the SR model, each UC2 dependency of section 4 starts and ends at an element 
 | SD14 New order notification | PR08 New order notification | MP19 Notify each producer |
 | SD15 Adequate lead time | PR13 Enough time to prepare | MP08 Identify producers and arrangements |
 | SD17 Weekly settlement with statement | PR09 Weekly settlement received | NW06 Settle producers weekly |
+| SD18 Transparent audit trail | PR14 Tax-ready accounts | NW06 Settle producers weekly |
 | SD19 5% commission calculated | NW04 Charge 5% commission | MP17 Calculate producer amounts and 5% commission |
 | SD21 Business rules | MP13 and MP24 | NW05 Set business rules |
 | SD22 Payment processed | MP16 Submit payment | Payment service (closed) |
@@ -331,6 +342,8 @@ In the SR model, each UC2 dependency of section 4 starts and ends at an element 
 | TN5 | Retrying a failed payment keeps the sale, but the customer waits | MP24 against MP28 and MP29 | A limited retry policy, then cancellation and stock release (B12, B17). The limits are open (S3) |
 | TN6 | Payment must be secure and compliant, but easy for customers | SD06, MP16, MP30, SD31 | A sandbox payment reference, with no card data in forms or variables (NFR02, NFR03) |
 | TN7 | One checkout for many producers is convenient, but each producer keeps its own delivery or collection responsibilities | SD05, SD13, CU15 | The order is split by producer, and the confirmation lists each producer's arrangement (B03, B06, M07) |
+| TN8 | Quality incident handling protects customers, but incident requests and product suspensions put a load on producers | NW07 helps NW14 and hurts NW11 | None in FN1 or FN2. P08 belongs to Use Case 3, which the group did not choose |
+| TN9 | The network must comply with data protection and financial regulations, but compliance adds cost | NW19 is the means for NW09. NW09 helps NW14 and hurts NW10 | FN2 keeps no card data and records each payment attempt (NFR03, NFR08) |
 
 ## 7. Traceability
 
