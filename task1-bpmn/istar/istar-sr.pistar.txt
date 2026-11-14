@@ -649,7 +649,7 @@
         "OpenOME depender element": "Safe payment and personal data",
         "Conversion note": "piStar does not allow a depender element that is contributed to. The depender is now the actor."
       },
-      "source": "379c2925-5fd5-5231-8d64-a649cff95a40",
+      "source": "cddba23d-2ec8-5908-9097-b79389ed917e",
       "target": "d00a033d-e8f5-558e-be8d-d64994afb06e"
     },
     {
@@ -675,7 +675,7 @@
         "OpenOME depender element": "Pay for the order",
         "Conversion note": "piStar does not allow a depender element that is refined. The depender is now the actor."
       },
-      "source": "379c2925-5fd5-5231-8d64-a649cff95a40",
+      "source": "637ba513-69c6-5938-ac8e-cbff01808465",
       "target": "aabed2c0-e7c2-5073-8623-5bc5c6d0718b"
     },
     {
@@ -689,7 +689,7 @@
         "OpenOME depender element": "Check out the order",
         "Conversion note": "piStar does not allow a depender element that is refined. The depender is now the actor."
       },
-      "source": "379c2925-5fd5-5231-8d64-a649cff95a40",
+      "source": "bef23b13-5f1f-55dd-b39b-9d5e7018bbe7",
       "target": "a117cbdd-d0ac-542f-8d46-c909b8ca374c"
     },
     {
@@ -720,14 +720,14 @@
       "id": "71235d77-14fa-535c-8ab0-843d6afb6919",
       "text": "Multi-vendor order processed",
       "type": "istar.Goal",
-      "x": 1540,
-      "y": 2980,
+      "x": 1548,
+      "y": 2456,
       "customProperties": {
         "OpenOME source": "sr-model-draft.ood",
         "OpenOME depender element": "Check out the order",
         "Conversion note": "piStar does not allow a depender element that is refined. The depender is now the actor."
       },
-      "source": "379c2925-5fd5-5231-8d64-a649cff95a40",
+      "source": "bef23b13-5f1f-55dd-b39b-9d5e7018bbe7",
       "target": "36da1065-c258-5e5c-856d-e9f85865ef1b"
     },
     {
@@ -753,7 +753,7 @@
         "OpenOME depender element": "Enough time to prepare",
         "Conversion note": "piStar does not allow a depender element that is contributed to. The depender is now the actor."
       },
-      "source": "3488dfe6-c2f1-58d2-a71f-13842b59a26a",
+      "source": "ce153a62-82ef-5b11-91a9-f1e678376fae",
       "target": "7371b1af-1281-54ed-a40c-19744a136721"
     },
     {
@@ -866,7 +866,7 @@
         "OpenOME depender element": "Payment service failure handled",
         "Conversion note": "piStar does not allow a depender element that is refined. The depender is now the actor."
       },
-      "source": "05db5b6d-9981-52b4-8cd1-86dbff857d78",
+      "source": "e75bbd0c-cec6-5007-8f9d-89f271580217",
       "target": "2497f8d9-3be8-50ad-83c5-4a0001f8f529"
     },
     {
@@ -888,9 +888,10 @@
       "x": 4004,
       "y": 964,
       "customProperties": {
-        "Description": ""
+        "Change": "Producer refinement (4.3), Nov 2026",
+        "Reason": "SD18. PR14 Tax-ready accounts depends on NW06 Settle producers weekly (NFR08)"
       },
-      "source": "3488dfe6-c2f1-58d2-a71f-13842b59a26a",
+      "source": "b0d36146-3e0f-539c-804c-ce5b6ef30ac0",
       "target": "ebaee70d-d08d-530c-9ff6-5a6be043bdea"
     }
   ],
@@ -904,7 +905,7 @@
     {
       "id": "a19f95f7-2fd7-46fc-97f3-2ef8df1e1936",
       "type": "istar.DependencyLink",
-      "source": "3488dfe6-c2f1-58d2-a71f-13842b59a26a",
+      "source": "b0d36146-3e0f-539c-804c-ce5b6ef30ac0",
       "target": "11dbb3c8-cde0-4d88-9448-3c051eb85bea"
     },
     {
@@ -928,7 +929,7 @@
     {
       "id": "b27f4ab8-ee7d-4c8c-80bd-1abb855320af",
       "type": "istar.DependencyLink",
-      "source": "05db5b6d-9981-52b4-8cd1-86dbff857d78",
+      "source": "e75bbd0c-cec6-5007-8f9d-89f271580217",
       "target": "1f5f99df-14f2-577c-af81-7e471aa6cac3"
     },
     {
@@ -1036,7 +1037,7 @@
     {
       "id": "e2090f01-2c7a-4440-a89f-b1b225365445",
       "type": "istar.DependencyLink",
-      "source": "3488dfe6-c2f1-58d2-a71f-13842b59a26a",
+      "source": "ce153a62-82ef-5b11-91a9-f1e678376fae",
       "target": "2e349a74-b5ea-5a16-84d9-c1531d168aa8"
     },
     {
@@ -1060,7 +1061,7 @@
     {
       "id": "eb8fd20f-f2d0-4257-ac45-2bd59ee34a2d",
       "type": "istar.DependencyLink",
-      "source": "379c2925-5fd5-5231-8d64-a649cff95a40",
+      "source": "bef23b13-5f1f-55dd-b39b-9d5e7018bbe7",
       "target": "71235d77-14fa-535c-8ab0-843d6afb6919"
     },
     {
@@ -1096,7 +1097,7 @@
     {
       "id": "ec97bbf4-d795-4bc7-99e1-1e982e4d0f6c",
       "type": "istar.DependencyLink",
-      "source": "379c2925-5fd5-5231-8d64-a649cff95a40",
+      "source": "bef23b13-5f1f-55dd-b39b-9d5e7018bbe7",
       "target": "016de832-5466-56ea-8e08-eb71491bf036"
     },
     {
@@ -1108,7 +1109,7 @@
     {
       "id": "da7cbf26-d76d-41cd-97c3-6f856f90f3f2",
       "type": "istar.DependencyLink",
-      "source": "379c2925-5fd5-5231-8d64-a649cff95a40",
+      "source": "637ba513-69c6-5938-ac8e-cbff01808465",
       "target": "d45ca71b-629e-5c42-af6e-693798cd70a8"
     },
     {
@@ -1132,7 +1133,7 @@
     {
       "id": "702d8bec-dc1d-4546-81ab-8f6669330733",
       "type": "istar.DependencyLink",
-      "source": "379c2925-5fd5-5231-8d64-a649cff95a40",
+      "source": "cddba23d-2ec8-5908-9097-b79389ed917e",
       "target": "8c835423-1e1b-5fa5-9e64-dcf15878c53c"
     },
     {
@@ -2267,76 +2268,27 @@
         }
       ]
     },
-    "bfffacaf-b2fe-4806-8d7f-24efb946fa5f": {
-      "vertices": [
-        {
-          "x": 4103,
-          "y": 2109
-        }
-      ]
-    },
-    "eb8fd20f-f2d0-4257-ac45-2bd59ee34a2d": {
-      "vertices": [
-        {
-          "x": 1340,
-          "y": 1140
-        },
-        {
-          "x": 1500,
-          "y": 2742
-        }
-      ]
-    },
-    "ec97bbf4-d795-4bc7-99e1-1e982e4d0f6c": {
-      "vertices": [
-        {
-          "x": 1340,
-          "y": 1060
-        },
-        {
-          "x": 1500,
-          "y": 2118
-        }
-      ]
-    },
-    "da7cbf26-d76d-41cd-97c3-6f856f90f3f2": {
-      "vertices": [
-        {
-          "x": 1340,
-          "y": 1040
-        },
-        {
-          "x": 1500,
-          "y": 1894
-        }
-      ]
-    },
-    "702d8bec-dc1d-4546-81ab-8f6669330733": {
-      "vertices": [
-        {
-          "x": 1340,
-          "y": 1140
-        },
-        {
-          "x": 1500,
-          "y": 1438
-        }
-      ]
-    },
+    "bfffacaf-b2fe-4806-8d7f-24efb946fa5f": {},
+    "eb8fd20f-f2d0-4257-ac45-2bd59ee34a2d": {},
+    "ec97bbf4-d795-4bc7-99e1-1e982e4d0f6c": {},
+    "da7cbf26-d76d-41cd-97c3-6f856f90f3f2": {},
+    "702d8bec-dc1d-4546-81ab-8f6669330733": {},
     "0b2721ac-387d-54fd-ba63-fd75a14e70e3": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#A6E3DC"
     },
     "2497f8d9-3be8-50ad-83c5-4a0001f8f529": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#A6E3DC"
     }
   },
   "tool": "pistar.2.1.0",
   "istar": "2.0",
-  "saveDate": "Wed, 04 Nov 2026 14:43:34 GMT",
+  "saveDate": "Sat, 14 Nov 2026 13:51:33 GMT",
   "diagram": {
     "width": 6268,
     "height": 3420,
-    "name": "sr-model-draft.ood (converted from OpenOME)",
+    "name": "istar-sr",
     "customProperties": {
       "Description": "Converted from the OpenOME draft sr-model-draft.ood by Royden Dias. iStar 2.0. Each changed dependency has a Conversion note property. BRF Network refined on 3 Nov 2026: P09 to P11 split out, a means for \"Regulations complied with\", one new help and two new hurt contributions. New elements have a Change property.",
       "Colour key": "Goal: amber (#FFE29A). Quality: pink (#F9C6D7). Task: blue (#B9DCFA). Resource: lilac (#D9CCF2). Role: green (#C9F2CF). Agent: teal (#A6E3DC). Actor: grey (#E2E2E2)."

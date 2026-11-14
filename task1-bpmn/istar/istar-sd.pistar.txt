@@ -1119,163 +1119,203 @@
   "display": {
     "35e71986-5291-5399-a37e-e7077314f817": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     },
     "4f3d0842-a4ac-5732-a19b-1d29b09c7533": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     },
     "f1e6a577-fde5-50d4-aacc-36e502cf8614": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     },
     "3eca9559-08aa-5402-aef2-b4fdf16546f9": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#FFE29A"
     },
     "058ba7d9-23ce-5b60-b46b-053b2edd9dd4": {
       "width": 140,
-      "height": 52
+      "height": 52,
+      "backgroundColor": "#D9CCF2"
     },
     "099bccf0-3ec3-5dd7-86d3-56b691060f44": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     },
     "70b739bd-6692-50b5-945f-8c890e9c572c": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     },
     "579ad839-311a-5a0f-81f7-c95fd332ea58": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#F9C6D7"
     },
     "f7a53d25-b0c4-5eb1-adb6-86b040173288": {
       "width": 140,
-      "height": 52
+      "height": 52,
+      "backgroundColor": "#D9CCF2"
     },
     "a6829337-3869-5974-a14a-abc19fa0e57b": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     },
     "8ac0fe0b-dae4-518e-9482-dc3c5c8d7dc8": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#FFE29A"
     },
     "5daa5a1d-cc56-5838-9f0b-e4839cf1f4b4": {
       "width": 140,
-      "height": 52
+      "height": 52,
+      "backgroundColor": "#D9CCF2"
     },
     "e9cc803b-b2af-5db4-9f72-36d940545ece": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     },
     "1820cb01-0200-5fb7-87f9-f4927851e132": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     },
     "2fbd94e6-92bd-59b9-b519-10723e339d86": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#F9C6D7"
     },
     "00140c2f-4bfe-5fbe-adb5-9c0fd5c61a3b": {
       "width": 140,
-      "height": 52
+      "height": 52,
+      "backgroundColor": "#D9CCF2"
     },
     "b2a3e224-06cf-5fbd-8e05-40b83507276a": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     },
     "fd176b98-5672-537b-9aff-948d9b514d68": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#F9C6D7"
     },
     "4c82d349-e216-5a77-9f72-ef54cf9d5cd3": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#F9C6D7"
     },
     "b08a7ed6-7aaf-5cbd-9f81-13c853cd1c7f": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     },
     "989315cd-3f79-59de-b29d-83d61be7033e": {
       "width": 140,
-      "height": 52
+      "height": 52,
+      "backgroundColor": "#FFE29A"
     },
     "8f693f89-02e0-55ac-9e27-6675a9cc1fd9": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#FFE29A"
     },
     "27bc92dd-22b0-52d4-a273-ee9c94a689e6": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#F9C6D7"
     },
     "b6aff8c5-75c7-5c7c-be45-f96bc1a74793": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#FFE29A"
     },
     "64fc3bb5-3262-5da0-aeb4-1d6f32cf068b": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#FFE29A"
     },
     "968e3f8b-10ac-581f-a4ab-c5cf522b1a4c": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#B9DCFA"
     },
     "0cea939e-4260-5be5-b100-177291d41d44": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#B9DCFA"
     },
     "56a42d16-3a1e-5885-89d7-5b59158f3af8": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     },
     "056c619f-f5da-5a26-be81-fdc529031ad6": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#FFE29A"
     },
     "a5d3827c-f045-5e58-988a-d55c13e235e0": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     },
     "ec23a818-acdd-5ab1-97ba-8db147cb3ec4": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#F9C6D7"
     },
     "fbfd205f-b5de-53bd-8773-3bad19f495ca": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     },
     "c8ee09de-7272-527f-8f8e-59cae34e14ca": {
       "width": 140,
-      "height": 52
+      "height": 52,
+      "backgroundColor": "#F9C6D7"
     },
     "1d327277-df27-58c0-9217-4295f27f8cdb": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#F9C6D7"
     },
     "12c543fc-89c9-5d90-9992-5f4415eddb99": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     },
     "9dffe669-102a-5298-b6c6-917592186193": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#F9C6D7"
     },
     "c2c32fc3-ccd0-5a57-be39-059fd0ed7d36": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#F9C6D7"
     },
     "99b78d73-1f45-59a3-a5c7-f1f93a30dbbd": {
       "width": 140,
-      "height": 52
+      "height": 52,
+      "backgroundColor": "#F9C6D7"
     },
     "4f716218-f955-5b76-bcdc-c0748c216a10": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     },
     "b6128707-6b31-5d8c-bda4-48b3bce18c2a": {
       "width": 110,
-      "height": 44
+      "height": 44,
+      "backgroundColor": "#F9C6D7"
     },
     "36aed65d-a89a-4ddb-a859-d6efb48f8fe3": {
       "vertices": [
@@ -1334,60 +1374,76 @@
       ]
     },
     "c85cb79a-c95b-51ef-8756-a98fb9262baa": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#A6E3DC"
     },
     "f2d99c8d-4ff8-57f9-a0c3-e4b3798a3ade": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#A6E3DC"
     },
     "7fe9035f-2e21-57f9-88e2-72d1aba5e50e": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#E2E2E2"
     },
     "4904bf32-2790-5208-8478-d10514361366": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#C9F2CF"
     },
     "2ee955bf-6012-510d-a869-d614c65fa893": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#C9F2CF"
     },
     "9245a8f9-b22c-5146-9c7c-2a2dcfe4c56b": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#C9F2CF"
     },
     "38c737c2-a652-527b-9341-001880568f19": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#E2E2E2"
     },
     "98718bae-0df1-50ce-9ef0-c403ed7fc0a0": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#A6E3DC"
     },
     "fc1f42c4-9882-5584-a78d-80f33b1602f8": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#A6E3DC"
     },
     "7c11de15-c4a2-5629-bba3-e3b8effcb53d": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#A6E3DC"
     },
     "98e6d0d4-fd57-5173-8799-3e192172c5a0": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#A6E3DC"
     },
     "de005d64-cb25-52c4-8944-b85794f4a573": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#C9F2CF"
     },
     "70dcec17-ef87-51f8-8bfe-26d5d9ff603c": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#C9F2CF"
     },
     "6351c854-7eb6-5c0a-a433-bfaa8694c24d": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#C9F2CF"
     },
     "9d9efde6-49e2-58f4-b66b-dfa7584c162c": {
-      "collapsed": true
+      "collapsed": true,
+      "backgroundColor": "#C9F2CF"
     }
   },
   "tool": "pistar.2.1.0",
   "istar": "2.0",
-  "saveDate": "Sat, 07 Nov 2026 01:46:11 GMT",
+  "saveDate": "Sat, 14 Nov 2026 13:51:33 GMT",
   "diagram": {
     "width": 3076,
     "height": 1768,
-    "name": "sd-model-draft.ood (converted from OpenOME)",
+    "name": "istar-sd",
     "customProperties": {
-      "Description": "Converted from the OpenOME draft sd-model-draft.ood by Royden Dias. iStar 2.0. Each changed dependency has a Conversion note property."
+      "Description": "Converted from the OpenOME draft sd-model-draft.ood by Royden Dias. iStar 2.0. Each changed dependency has a Conversion note property.",
+      "Colour key": "Goal: amber (#FFE29A). Quality: pink (#F9C6D7). Task: blue (#B9DCFA). Resource: lilac (#D9CCF2). Role: green (#C9F2CF). Agent: teal (#A6E3DC). Actor: grey (#E2E2E2)."
     }
   }
 }
