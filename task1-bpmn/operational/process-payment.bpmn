@@ -5,14 +5,14 @@
     <bpmn:participant id="Participant_BRFNetwork" name="Bristol Regional Food Network marketplace" processRef="process_payment">
       <bpmn:documentation>A05. The network pool (D9), with the lanes F03 Finance and settlements, F01 Catalogue management and F02 Order management. process_payment (P05) is the executable process.</bpmn:documentation>
     </bpmn:participant>
-    <bpmn:participant id="Participant_PaymentService" name="Payment service (sandbox or mock)">
+    <bpmn:participant id="Participant_PaymentService" name="Payment service">
       <bpmn:documentation>E01. Sandbox or mock only (NFR02).</bpmn:documentation>
     </bpmn:participant>
     <bpmn:participant id="Participant_NotificationService" name="Notification service">
       <bpmn:documentation>E03. External (assumption Q3, decision DI5).</bpmn:documentation>
     </bpmn:participant>
     <bpmn:participant id="Participant_Producer" name="Producer">
-      <bpmn:documentation>A04. Receives the new order notification (M09), then fulfils the order (P06).</bpmn:documentation>
+      <bpmn:documentation>A04. Receives the new order notification (M09), then fulfils the order (P06). The strategic model shows the producers as a lane of the network (D9). Here the producer is a separate pool, because Camunda runs every element of the network pool and the producer acts outside the engine.</bpmn:documentation>
     </bpmn:participant>
     <bpmn:participant id="Participant_Customer" name="Customer" processRef="Process_CustomerPayment">
       <bpmn:documentation>A01 to A03. The customer's own steps, as in FN1 and the strategic model (D9). This process is not executable: Camunda runs only process_payment. The customer does the user tasks of process_payment through Camunda Forms.</bpmn:documentation>
