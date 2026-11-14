@@ -147,10 +147,10 @@ Each dependency gives the depender a capability. It also makes the depender vuln
 
 | ID | Dependency (depender, dependum, dependee) | Supports | If it fails | How the models handle it | Status |
 |---|---|---|---|---|---|
-| E01 | SD22: Marketplace platform depends on Payment service for **Payment processed** (goal) | MP04 Payment processed | The platform cannot confirm the order, and the reserved stock stays held | FN2 decline path: `PAYMENT_DECLINED`, then retry or cancel (B11) | Required. Sandbox or mock only (NFR02) |
+| E01 | SD22: Marketplace platform depends on Payment service for **Payment processed** (goal) | MP04 Payment processed | The platform cannot confirm the order, and the reserved stock stays held | FN2 decline path: the message `payment-declined`, then retry or cancel (B11) | Required. Sandbox or mock only (NFR02) |
 | E01 | SD23: Marketplace platform depends on Payment service for **Payment service availability** (softgoal) | MP28 Reliable checkout | No answer from the service | FN2 unavailable path: retries, then cancel and release the stock (MP24, B12, B17) | As above |
 | E02 | SD25: Marketplace platform depends on Organic certification verification service for **Organic certification verified** (goal) | Trust in the listings (P02) | An organic claim stays unverified | "Listing not published" end event in the strategic model | Only if P02 stays (T3 in processes.md). Not in UC2 |
-| E03 | SD24: Marketplace platform depends on Notification service for **Notifications delivered** (goal) | PR13 Enough time to prepare, through SD14 | A producer does not learn of a paid order and misses the 48-hour lead time (NFR07) | Multi-instance `notify-producer` (B16) and a stub (B23). The failure path is open (question R2 in section 8.5) | External (assumption Q3, decision DI5) |
+| E03 | SD24: Marketplace platform depends on Notification service for **Notifications delivered** (goal) | PR13 Enough time to prepare, through SD14 | A producer does not learn of a paid order and misses the 48-hour lead time (NFR07) | Multi-instance `notify-producer` (B16) and a stub (B23). A failure is recorded, and the order stays confirmed (R2, answered in #166) | External (assumption Q3, decision DI5) |
 | E04 | SD26: Marketplace platform depends on Postcode distance service for **Postcode distance** (resource) | NW12 Sustainability (P09) | The customer does not see the food miles | Not in FN1 or FN2. B09 is a Could story | External (assumption Q3) |
 | E05 | SD31: Data protection and financial services regulators depend on BRF Network for **Regulations complied with** (goal) | NW09 Regulations complied with | The network does not comply with the regulations. Here the network is the dependee, so this is a commitment of the network (slide 24) | NFR01 and NFR03 (no card data), NFR08 (audit trail). NW19 Protect personal data and keep financial audit trail is the means for NW09 | i* only |
 | E06 | SD32: Tax authority depends on Producer for **Producer tax report** (resource) | PR14 Tax-ready accounts | The producer cannot report its tax | P07 settles each producer weekly with an audit trail (SD17, SD18) | i* only |
@@ -170,9 +170,9 @@ The table maps each task of the SR model. "Out of scope" means that the task is 
 | CU05 | Check out the order | Order message to Process order (P04, Orders lane) | `process_order`: the customer user tasks | B02, B05 |
 | CU07 | Review and confirm order | Order message to Process order | `process_order`: user task with a Camunda Form | B05 |
 | CU08 | Amend unavailable items | Customer pool (O01, O02) | `process_order`: user task and a loop back to the stock check | B02 |
-| CU09 | Pay for the order | Process payment (P05, Finance lane) | `process_payment`: the customer user tasks | B10, B11 |
-| CU10 | Give sandbox payment reference | Customer pool, Payment request through Process payment | `process_payment`: user task with a Camunda Form | B10 |
-| CU11 | Retry or cancel after decline | Customer pool (O03, O04) | `process_payment`: user task after `PAYMENT_DECLINED` | B11 |
+| CU09 | Pay for the order | P05 Process payment (F03 Finance and settlements) | `process_payment`: the user tasks "Give payment details" and "Choose to retry or cancel" | B10, B11 |
+| CU10 | Give sandbox payment reference | Customer pool, Payment request through Process payment | User task "Give payment details", form `payment-details` | B10 |
+| CU11 | Retry or cancel after decline | None (happy path, D1 of the strategic README) | User task "Choose to retry or cancel" after the message event "Payment declined", form `retry-or-cancel` | B11 |
 
 ### 8.2 Producer
 
@@ -191,7 +191,7 @@ The table maps each task of the SR model. "Out of scope" means that the task is 
 | ID | SR task | Strategic BPMN | Operational BPMN (planned) | Stories |
 |---|---|---|---|---|
 | NW02 | Run the digital marketplace | BRF Network pool, all lanes | None | None |
-| NW04 | Charge 5% commission on each order | Process payment (P05, Finance lane) | `process_payment`: the commission calculation, through SD19 | B13 |
+| NW04 | Charge 5% commission on each order | P05 Process payment (F03) | Script task "Calculate producer amounts and commission", through SD19 | B13 |
 | NW05 | Set business rules | None. The rules are inputs, not activities | The values of S1, S3 and S4 in FN1 and FN2 | B07, B12, B13 |
 | NW06 | Settle producers weekly | Settle producer payments (P07, Finance lane) | None. Out of scope | None |
 | NW07 | Handle quality incidents | Handle quality incident (P08, Quality and traceability lane) | None. Out of scope (UC3) | None |
@@ -212,16 +212,16 @@ The table maps each task of the SR model. "Out of scope" means that the task is 
 | MP08 | Identify producers and arrangements (`identify-producers`) | Process order | Service task `identify-producers` | B03, B04 |
 | MP09 | Get customer confirmation | Order message to Process order | `process_order`: the review user task | B05 |
 | MP10 | Create and split marketplace order (`create-order`, `split-order`) | Process order | Service tasks `create-order` and `split-order` | B06 |
-| MP13 | Reserve stock for a time limit | Process order | The reservation, with a timer boundary event on the review task | B07, B08 |
+| MP13 | Reserve stock for a time limit | Process order | The reservation, with a timer boundary event on the review task. In FN2, the event sub-process "Handle reservation expiry" | B07, B08 |
 | MP14 | Check stock only at payment | None. A rejected alternative (TN3) | None | None |
-| MP15 | Process payment (`process_payment`) | Process payment (P05, Finance lane) | Process ID `process_payment` | B10 to B17 |
-| MP16 | Submit payment (`submit-payment`) | Payment request and Payment response with the Payment service pool | Service task `submit-payment` | B10, B20 |
-| MP17 | Calculate producer amounts and 5% commission | Process payment | FEEL expressions in the output mappings | B13 |
-| MP18 | Confirm order and update stock (`confirm-order`, `update-stock`) | Update stock (Product listing lane), Order confirmation message | Service tasks `confirm-order` and `update-stock` | B14, B15 |
-| MP19 | Notify each producer (`notify-producer`) | Notify producers (Orders lane), New order notification request | Multi-instance service task `notify-producer` | B16, B23 |
-| MP20 | Record every payment attempt | None | No element planned yet (question R3 in section 8.5) | NFR08 |
-| MP22 | Let customer retry or cancel | "Payment successful?" gateway | Error boundary event `PAYMENT_DECLINED`, then the user task of CU11 | B11 |
-| MP24 | Retry, then cancel and release stock | "Payment not completed" end event | Retry loop, then cancellation (`PAYMENT_SERVICE_UNAVAILABLE`) | B12, B17 |
+| MP15 | Process payment (`process_payment`) | P05 Process payment (F03) | Process ID `process_payment` | B10 to B17 |
+| MP16 | Submit payment (`submit-payment`) | Payment request and Payment response with the Payment service pool | Send task "Send payment request" (`submit-payment`), then the event-based gateway "Payment result?" | B10, B20 |
+| MP17 | Calculate producer amounts and 5% commission | Process payment | FEEL script task "Calculate producer amounts and commission" | B13 |
+| MP18 | Confirm order and update stock (`confirm-order`, `update-stock`) | M07 Order confirmation. The stock update is not in the strategic model (happy path) | Service tasks `confirm-order` and `update-stock`, with "Record stock discrepancy" on a failure | B14, B15 |
+| MP19 | Notify each producer (`notify-producer`) | M08 and M09, then P06 Fulfil order (Producer lane) | Multi-instance sub-process "Notify each producer", with "Record failed notification" on a failure | B16, B23 |
+| MP20 | Record every payment attempt | None | `submit-payment` records each attempt, and "Record payment for settlement" stores the result (R3, answered in #166) | NFR08 |
+| MP22 | Let customer retry or cancel | None (happy path, D1) | Message event "Payment declined", then the user task of CU11 | B11 |
+| MP24 | Retry, then cancel and release stock | None (happy path, D1) | Retry loop with "Try again?", then "Service unavailable" (refund by compensation) and the cancellation | B12, B17 |
 | MP25 | End the process at once | None. A rejected alternative (UC2) | None | None |
 
 **Summary:** the SR model has 43 tasks. FN1 or FN2 uses 24 of them. Twelve are in the strategic model only. Four are rejected alternatives. Three are agreements or constraints, not activities.
@@ -233,13 +233,13 @@ The strategic BPMN model shows the order of the work. The i* models add the reas
 | No. | i* element or dependency | Kind (slide 24) | Requirement or question | Related BPMN stage or evidence |
 |---|---|---|---|---|
 | R1 | MP22 Let customer retry or cancel, and CU11 Retry or cancel after decline | Task | **Gap.** No dependency connects these two tasks, in the draft or in #161. The platform cannot do MP22 without a decision from the customer. Add a task dependency "Retry or cancel after decline" from the platform to the Customer, as SD07 and SD08 do | FN2 decline path (B11, U9) |
-| R2 | SD24 Notifications delivered (Marketplace platform on Notification service) | Dependency | What does FN2 do when a producer notification fails after a successful payment? The order is paid, so FN2 must not cancel it. NFR04 requires a modelled end | `notify-producer` (B16, B23) |
-| R3 | MP20 Record every payment attempt, with a Make contribution to MP32 Auditability | Task | Which element records each attempt? No operational element is planned. NFR08 requires the reference, the status, the amounts and the time | `submit-payment` (5.4) |
+| R2 | SD24 Notifications delivered (Marketplace platform on Notification service) | Dependency | What does FN2 do when a producer notification fails after a successful payment? The order is paid, so FN2 must not cancel it. NFR04 requires a modelled end | `notify-producer` (B16, B23). **Answered in #166:** "Record failed notification", and the order stays confirmed |
+| R3 | MP20 Record every payment attempt, with a Make contribution to MP32 Auditability | Task | Which element records each attempt? No operational element is planned. NFR08 requires the reference, the status, the amounts and the time | `submit-payment` (5.4). **Answered in #166:** `submit-payment` records each attempt, and `record-payment` stores the result |
 | R4 | SD13 Delivery or collection arrangements (resource from the Producer) | Resource | Who owns the arrangement data, and where does the platform keep it? `identify-producers` needs it, but no process creates it (P01 does not list it) | Process order (B03, B04) |
 | R5 | SD15 Adequate lead time (softgoal from the Producer) | Softgoal | The criterion is measurable: 48 hours (NFR07). What happens when an order cannot meet it? FN1 has no path for this case | `identify-producers` (B04) |
 | R6 | CU16 Quick delivery (softgoal) | Softgoal | The case study does not state it. Keep it as a stated assumption for TN4, or remove it (question 2 in model-content.md) | None |
 
-**One insight from the i* models:** the strategic model shows the unavailable payment service only as the "Payment not completed" end event. The SR model shows why FN2 retries: MP24 helps Reliable checkout but hurts Quick checkout (TN5). It also shows the rejected option MP25. Thus the retry limits (S3) are a trade-off between two softgoals, not only a technical setting.
+**One insight from the i* models:** the strategic model does not show the unavailable payment service, because it shows only the happy path (D1). The SR model shows why FN2 retries: MP24 helps Reliable checkout but hurts Quick checkout (TN5). It also shows the rejected option MP25. Thus the retry limits (S3) are a trade-off between two softgoals, not only a technical setting.
 
 ## 9. Open decisions for the group
 

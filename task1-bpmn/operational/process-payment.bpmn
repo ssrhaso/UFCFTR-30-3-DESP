@@ -1,0 +1,1095 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_ProcessPayment" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="64767e4" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
+  <bpmn:collaboration id="Collaboration_ProcessPayment">
+    <bpmn:documentation>FN2 Process payment (P05), task 5.4. Scope: requirements/scope/functionalities.md section 4.3.</bpmn:documentation>
+    <bpmn:participant id="Participant_BRFNetwork" name="Bristol Regional Food Network marketplace" processRef="process_payment">
+      <bpmn:documentation>A05. The network pool (D9), with the lanes F03 Finance and settlements, F01 Catalogue management and F02 Order management. process_payment (P05) is the executable process.</bpmn:documentation>
+    </bpmn:participant>
+    <bpmn:participant id="Participant_PaymentService" name="Payment service">
+      <bpmn:documentation>E01. Sandbox or mock only (NFR02).</bpmn:documentation>
+    </bpmn:participant>
+    <bpmn:participant id="Participant_NotificationService" name="Notification service">
+      <bpmn:documentation>E03. External (assumption Q3, decision DI5).</bpmn:documentation>
+    </bpmn:participant>
+    <bpmn:participant id="Participant_Producer" name="Producer">
+      <bpmn:documentation>A04. Receives the new order notification (M09), then fulfils the order (P06). The strategic model shows the producers as a lane of the network (D9). Here the producer is a separate pool, because Camunda runs every element of the network pool and the producer acts outside the engine.</bpmn:documentation>
+    </bpmn:participant>
+    <bpmn:participant id="Participant_Customer" name="Customer" processRef="Process_CustomerPayment">
+      <bpmn:documentation>A01 to A03. The customer's own steps, as in FN1 and the strategic model (D9). This process is not executable: Camunda runs only process_payment. The customer does the user tasks of process_payment through Camunda Forms.</bpmn:documentation>
+    </bpmn:participant>
+    <bpmn:messageFlow id="MessageFlow_PaymentRequest" name="Payment request (M05)" sourceRef="ServiceTask_SubmitPayment" targetRef="Participant_PaymentService" />
+    <bpmn:messageFlow id="MessageFlow_PaymentDeclined" name="Payment response: declined (M06)" sourceRef="Participant_PaymentService" targetRef="Event_PaymentDeclined" />
+    <bpmn:messageFlow id="MessageFlow_OrderConfirmation" name="Order confirmation (M07)" sourceRef="ServiceTask_ConfirmOrder" targetRef="Event_CustomerConfirmationReceived" />
+    <bpmn:messageFlow id="MessageFlow_NotificationRequest" name="New order notification request (M08)" sourceRef="ServiceTask_NotifyProducer" targetRef="Participant_NotificationService" />
+    <bpmn:messageFlow id="MessageFlow_NewOrderNotification" name="New order notification (M09)" sourceRef="Participant_NotificationService" targetRef="Participant_Producer" />
+    <bpmn:messageFlow id="MessageFlow_CancellationNotice" name="Order cancelled notice (O06)" sourceRef="ServiceTask_NotifyCustomer" targetRef="Participant_Customer" />
+    <bpmn:messageFlow id="MessageFlow_DeclineNotice" name="Payment declined notice (O03)" sourceRef="UserTask_RetryOrCancel" targetRef="Participant_Customer" />
+    <bpmn:messageFlow id="MessageFlow_PaymentRetry" name="Payment retry (O04)" sourceRef="Participant_Customer" targetRef="UserTask_RetryOrCancel" />
+    <bpmn:messageFlow id="MessageFlow_PaymentDetails" name="Payment details (O05)" sourceRef="Task_CustomerGivePaymentDetails" targetRef="UserTask_GivePaymentDetails" />
+    <bpmn:messageFlow id="MessageFlow_PaymentConfirmed" name="Payment response: confirmed (M06)" sourceRef="Participant_PaymentService" targetRef="Event_PaymentConfirmed" />
+    <bpmn:messageFlow id="MessageFlow_RefundRequest" name="Refund request (O07)" sourceRef="ServiceTask_RefundPayment" targetRef="Participant_PaymentService" />
+  </bpmn:collaboration>
+  <bpmn:process id="process_payment" name="Process payment" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_ProcessPayment">
+      <bpmn:lane id="Lane_F03" name="Finance and settlements">
+        <bpmn:documentation>F03 Finance and settlements, as in the strategic model. It takes the payment, confirms the order and records the payment for settlement.</bpmn:documentation>
+        <bpmn:flowNodeRef>StartEvent_OrderAwaitingPayment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CalculateAmounts</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubProcess_TakePayment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_SplitSuccess</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_RecordPayment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_OrderConfirmed</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_JoinSuccess</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_PaymentSuccessful</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_ConfirmOrder</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_F01" name="Catalogue management">
+        <bpmn:documentation>F01 Catalogue management, as in the strategic model and FN1. It owns the stock: it updates it after a payment, records a stock discrepancy if the update fails, and releases the stock after a cancellation.</bpmn:documentation>
+        <bpmn:flowNodeRef>Gateway_JoinStock</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_ReleaseStock</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_RecordStockDiscrepancy</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_UpdateStock</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>BoundaryEvent_StockUpdateFailed</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_F02" name="Order management">
+        <bpmn:documentation>F02 Order management, as in the strategic model and FN1. It notifies the producers (M08), records any notification that fails, and cancels the order with its notice (O06).</bpmn:documentation>
+        <bpmn:flowNodeRef>ServiceTask_CancelOrder</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_NotifyCustomer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_OrderCancelled</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubProcess_NotifyProducers</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_OrderAwaitingPayment" name="Order awaiting payment">
+      <bpmn:documentation>FN1 (process_order) gives a confirmed order that needs payment (R06). Input variables: orderId, customerId, orderTotal, producerOrders, reservationExpiresAt. The start mechanism is open (S2): a call activity or a message.</bpmn:documentation>
+      <bpmn:outgoing>Flow_Start_Calculate</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:scriptTask id="Task_CalculateAmounts" name="Calculate producer amounts and commission">
+      <bpmn:documentation>MP17. Story B13, NFR05, U11. Each producer amount is 95% of its subtotal, rounded half up to 2 decimal places. The commission is the rest of the order total, so the amounts and the commission add up to the total (proposal for S4).</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:script expression="={producerAmounts: for p in producerOrders return {producerOrderId: p.producerOrderId, producerId: p.producerId, amount: round half up(p.subtotal * 0.95, 2)}, commission: orderTotal - sum(producerAmounts.amount)}" resultVariable="paymentSplit" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Start_Calculate</bpmn:incoming>
+      <bpmn:outgoing>Flow_Calculate_Sub</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:subProcess id="SubProcess_TakePayment" name="Take payment">
+      <bpmn:documentation>MP15, MP21, MP23. Stories B10, B11, B12, B17. The event sub-process Handle reservation expiry covers the stock reservation during the payment and its retries (S1, W3). Any payment taken before Take payment stops is refunded by compensation (O07, O08).</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:input source="=0" target="declineCount" />
+          <zeebe:input source="=0" target="unavailableCount" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Calculate_Sub</bpmn:incoming>
+      <bpmn:outgoing>Flow_Sub_PaymentSuccessful</bpmn:outgoing>
+      <bpmn:startEvent id="StartEvent_PaymentRequested" name="Payment requested">
+        <bpmn:outgoing>Flow_SubStart_JoinDetails</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:exclusiveGateway id="Gateway_JoinDetails">
+        <bpmn:incoming>Flow_SubStart_JoinDetails</bpmn:incoming>
+        <bpmn:incoming>Flow_RetryGateway_JoinDetails</bpmn:incoming>
+        <bpmn:outgoing>Flow_JoinDetails_Details</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:userTask id="UserTask_GivePaymentDetails" name="Give payment details">
+        <bpmn:documentation>CU10, MP16. Story B10, U7, U12. The customer selects a sandbox payment method. The form collects no card number and no card security code (NFR03). The customer sends the payment details through the form (O05).</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:userTask />
+          <zeebe:formDefinition formId="payment-details" />
+          <zeebe:assignmentDefinition assignee="=customerId" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_JoinDetails_Details</bpmn:incoming>
+        <bpmn:outgoing>Flow_Details_JoinSubmit</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:exclusiveGateway id="Gateway_JoinSubmit">
+        <bpmn:incoming>Flow_Details_JoinSubmit</bpmn:incoming>
+        <bpmn:incoming>Flow_Wait_JoinSubmit</bpmn:incoming>
+        <bpmn:outgoing>Flow_JoinSubmit_Submit</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:endEvent id="EndEvent_PaymentAccepted" name="Payment accepted">
+        <bpmn:incoming>Flow_Confirmed_Accepted</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:exclusiveGateway id="Gateway_DeclineLimit" name="Decline limit reached?" default="Flow_DeclineLimit_Retry">
+        <bpmn:documentation>Proposal for S3: the customer can try 3 times.</bpmn:documentation>
+        <bpmn:incoming>Flow_Declined_DeclineLimit</bpmn:incoming>
+        <bpmn:outgoing>Flow_DeclineLimit_Reached</bpmn:outgoing>
+        <bpmn:outgoing>Flow_DeclineLimit_Retry</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:endEvent id="EndEvent_DeclineLimitReached" name="Decline limit reached">
+        <bpmn:incoming>Flow_DeclineLimit_Reached</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:userTask id="UserTask_RetryOrCancel" name="Choose to retry or cancel">
+        <bpmn:documentation>CU11, MP22. Story B11, U9, O03 and O04. The form tells the customer that the payment was declined. The customer chooses to retry or to cancel (retryChoice). The form shows the decline notice (O03). The customer answers with the choice (O04).</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:userTask />
+          <zeebe:formDefinition formId="retry-or-cancel" />
+          <zeebe:assignmentDefinition assignee="=customerId" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_DeclineLimit_Retry</bpmn:incoming>
+        <bpmn:outgoing>Flow_Retry_RetryGateway</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:exclusiveGateway id="Gateway_Retry" name="Retry?" default="Flow_RetryGateway_Cancelled">
+        <bpmn:incoming>Flow_Retry_RetryGateway</bpmn:incoming>
+        <bpmn:outgoing>Flow_RetryGateway_JoinDetails</bpmn:outgoing>
+        <bpmn:outgoing>Flow_RetryGateway_Cancelled</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:endEvent id="EndEvent_CustomerCancelled" name="Customer cancelled">
+        <bpmn:incoming>Flow_RetryGateway_Cancelled</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:boundaryEvent id="BoundaryEvent_ServiceUnavailable" name="Payment service unavailable" attachedToRef="ServiceTask_SubmitPayment">
+        <bpmn:documentation>U10. The payment service did not answer after the job retries. The counter unavailableCount goes up by 1.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:output source="=unavailableCount + 1" target="unavailableCount" />
+            <zeebe:output source="=&#34;SERVICE_UNAVAILABLE&#34;" target="paymentStatus" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+        <bpmn:outgoing>Flow_Unavailable_TryAgain</bpmn:outgoing>
+        <bpmn:errorEventDefinition errorRef="Error_ServiceUnavailable" />
+      </bpmn:boundaryEvent>
+      <bpmn:exclusiveGateway id="Gateway_TryAgain" name="Try again?" default="Flow_TryAgain_Unavailable">
+        <bpmn:documentation>Proposal for S3: after the job retries, wait and try one more cycle. Then cancel.</bpmn:documentation>
+        <bpmn:incoming>Flow_JoinUnavailable_TryAgain</bpmn:incoming>
+        <bpmn:outgoing>Flow_TryAgain_Wait</bpmn:outgoing>
+        <bpmn:outgoing>Flow_TryAgain_Unavailable</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:intermediateCatchEvent id="TimerEvent_WaitBeforeRetry" name="Wait before the next attempt">
+        <bpmn:documentation>Proposal for S3: wait 1 minute. Change the duration when the group agrees S3.</bpmn:documentation>
+        <bpmn:incoming>Flow_TryAgain_Wait</bpmn:incoming>
+        <bpmn:outgoing>Flow_Wait_JoinSubmit</bpmn:outgoing>
+        <bpmn:timerEventDefinition>
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT1M</bpmn:timeDuration>
+        </bpmn:timerEventDefinition>
+      </bpmn:intermediateCatchEvent>
+      <bpmn:sequenceFlow id="Flow_SubStart_JoinDetails" sourceRef="StartEvent_PaymentRequested" targetRef="Gateway_JoinDetails" />
+      <bpmn:sequenceFlow id="Flow_JoinDetails_Details" sourceRef="Gateway_JoinDetails" targetRef="UserTask_GivePaymentDetails" />
+      <bpmn:sequenceFlow id="Flow_Details_JoinSubmit" sourceRef="UserTask_GivePaymentDetails" targetRef="Gateway_JoinSubmit" />
+      <bpmn:sequenceFlow id="Flow_JoinSubmit_Submit" sourceRef="Gateway_JoinSubmit" targetRef="ServiceTask_SubmitPayment" />
+      <bpmn:sequenceFlow id="Flow_Submit_Accepted" sourceRef="ServiceTask_SubmitPayment" targetRef="Gateway_PaymentResult" />
+      <bpmn:sequenceFlow id="Flow_DeclineLimit_Reached" name="Yes" sourceRef="Gateway_DeclineLimit" targetRef="EndEvent_DeclineLimitReached">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=declineCount &gt;= 3</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_DeclineLimit_Retry" name="No" sourceRef="Gateway_DeclineLimit" targetRef="UserTask_RetryOrCancel" />
+      <bpmn:sequenceFlow id="Flow_Retry_RetryGateway" sourceRef="UserTask_RetryOrCancel" targetRef="Gateway_Retry" />
+      <bpmn:sequenceFlow id="Flow_RetryGateway_JoinDetails" name="Yes" sourceRef="Gateway_Retry" targetRef="Gateway_JoinDetails">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=retryChoice = "RETRY"</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_RetryGateway_Cancelled" name="No" sourceRef="Gateway_Retry" targetRef="EndEvent_CustomerCancelled" />
+      <bpmn:sequenceFlow id="Flow_Unavailable_TryAgain" sourceRef="BoundaryEvent_ServiceUnavailable" targetRef="Gateway_JoinUnavailable" />
+      <bpmn:sequenceFlow id="Flow_TryAgain_Wait" name="Yes" sourceRef="Gateway_TryAgain" targetRef="TimerEvent_WaitBeforeRetry">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=unavailableCount &lt; 2</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_Wait_JoinSubmit" sourceRef="TimerEvent_WaitBeforeRetry" targetRef="Gateway_JoinSubmit" />
+      <bpmn:sequenceFlow id="Flow_TryAgain_Unavailable" name="No" sourceRef="Gateway_TryAgain" targetRef="EndEvent_ServiceUnavailable" />
+      <bpmn:sendTask id="ServiceTask_SubmitPayment" name="Send payment request">
+        <bpmn:documentation>MP16, MP20. Stories B10, B12, B20. Message M05. The worker sends paymentMethod and orderTotal to the sandbox or mock payment service and completes. It sends orderId as the idempotency key, so a retry after a timeout cannot charge the customer twice. The answer comes back as a message (M06). The worker records each attempt with the amount and the time, and the webhook or the mock adds the status and the payment reference when the answer arrives (NFR08). If the worker cannot reach the service after its job retries, it throws PAYMENT_SERVICE_UNAVAILABLE.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="submit-payment" retries="3" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_JoinSubmit_Submit</bpmn:incoming>
+        <bpmn:outgoing>Flow_Submit_Accepted</bpmn:outgoing>
+      </bpmn:sendTask>
+      <bpmn:eventBasedGateway id="Gateway_PaymentResult" name="Payment result?">
+        <bpmn:documentation>The engine waits for the first of three events: the payment is confirmed, the payment is declined, or no answer comes within 5 minutes.</bpmn:documentation>
+        <bpmn:incoming>Flow_Submit_Accepted</bpmn:incoming>
+        <bpmn:outgoing>Flow_Result_Timeout</bpmn:outgoing>
+        <bpmn:outgoing>Flow_Result_Declined</bpmn:outgoing>
+        <bpmn:outgoing>Flow_Result_Confirmed</bpmn:outgoing>
+      </bpmn:eventBasedGateway>
+      <bpmn:exclusiveGateway id="Gateway_JoinUnavailable">
+        <bpmn:incoming>Flow_Unavailable_TryAgain</bpmn:incoming>
+        <bpmn:incoming>Flow_Timeout_JoinUnavailable</bpmn:incoming>
+        <bpmn:outgoing>Flow_JoinUnavailable_TryAgain</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_JoinUnavailable_TryAgain" sourceRef="Gateway_JoinUnavailable" targetRef="Gateway_TryAgain" />
+      <bpmn:intermediateCatchEvent id="Event_NoAnswer" name="No answer in 5 minutes">
+        <bpmn:documentation>U10. Proposal for S3: the payment service did not answer within 5 minutes. The counter unavailableCount goes up by 1.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:output source="=unavailableCount + 1" target="unavailableCount" />
+            <zeebe:output source="=&#34;SERVICE_UNAVAILABLE&#34;" target="paymentStatus" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_Result_Timeout</bpmn:incoming>
+        <bpmn:outgoing>Flow_Timeout_JoinUnavailable</bpmn:outgoing>
+        <bpmn:timerEventDefinition id="TimerEventDefinition_0rkz4ic">
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT5M</bpmn:timeDuration>
+        </bpmn:timerEventDefinition>
+      </bpmn:intermediateCatchEvent>
+      <bpmn:sequenceFlow id="Flow_Result_Timeout" sourceRef="Gateway_PaymentResult" targetRef="Event_NoAnswer" />
+      <bpmn:sequenceFlow id="Flow_Timeout_JoinUnavailable" sourceRef="Event_NoAnswer" targetRef="Gateway_JoinUnavailable" />
+      <bpmn:intermediateCatchEvent id="Event_PaymentDeclined" name="Payment declined">
+        <bpmn:documentation>M06. The payment service declines the payment. The counter declineCount goes up by 1.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:output source="=declineCount + 1" target="declineCount" />
+            <zeebe:output source="=&#34;DECLINED&#34;" target="paymentStatus" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_Result_Declined</bpmn:incoming>
+        <bpmn:outgoing>Flow_Declined_DeclineLimit</bpmn:outgoing>
+        <bpmn:messageEventDefinition id="MessageEventDefinition_1jzyr4a" messageRef="Message_1r17arl" />
+      </bpmn:intermediateCatchEvent>
+      <bpmn:sequenceFlow id="Flow_Result_Declined" sourceRef="Gateway_PaymentResult" targetRef="Event_PaymentDeclined" />
+      <bpmn:sequenceFlow id="Flow_Declined_DeclineLimit" sourceRef="Event_PaymentDeclined" targetRef="Gateway_DeclineLimit" />
+      <bpmn:intermediateCatchEvent id="Event_PaymentConfirmed" name="Payment confirmed">
+        <bpmn:documentation>M06. The payment service confirms the payment. The webhook or the mock publishes payment-confirmed with orderId as the correlation key.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:output source="=&#34;SUCCEEDED&#34;" target="paymentStatus" />
+            <zeebe:output source="=paymentReference" target="paymentReference" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_Result_Confirmed</bpmn:incoming>
+        <bpmn:outgoing>Flow_Confirmed_Accepted</bpmn:outgoing>
+        <bpmn:messageEventDefinition id="MessageEventDefinition_16tc3ua" messageRef="Message_39uo0og" />
+      </bpmn:intermediateCatchEvent>
+      <bpmn:sequenceFlow id="Flow_Result_Confirmed" sourceRef="Gateway_PaymentResult" targetRef="Event_PaymentConfirmed" />
+      <bpmn:sequenceFlow id="Flow_Confirmed_Accepted" sourceRef="Event_PaymentConfirmed" targetRef="EndEvent_PaymentAccepted" />
+      <bpmn:boundaryEvent id="BoundaryEvent_RefundPayment" name="Refund" attachedToRef="ServiceTask_SubmitPayment">
+        <bpmn:documentation>Compensation for Send payment request. It links each completed request to its handler, Refund payment.</bpmn:documentation>
+        <bpmn:compensateEventDefinition id="CompensateEventDefinition_1tbpxiy" />
+      </bpmn:boundaryEvent>
+      <bpmn:serviceTask id="ServiceTask_RefundPayment" name="Refund payment" isForCompensation="true">
+        <bpmn:documentation>Messages O07 and O08, MP20, NFR08. Compensation handler of Send payment request. The worker asks the payment service whether it took the payment. If it did, the worker requests a refund (O07) and records the result (O08). The result comes back in the answer to the same call, so the diagram draws only O07: the modeler does not allow a message flow into a compensation handler. If the service took no payment, the worker completes without a refund.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="refund-payment" retries="3" />
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+      <bpmn:endEvent id="EndEvent_ServiceUnavailable" name="Service unavailable">
+        <bpmn:documentation>U10. The payment service stayed unavailable after the retries. This compensation end event refunds any payment that the service took during the attempts, for example after an answer that never arrived.</bpmn:documentation>
+        <bpmn:incoming>Flow_TryAgain_Unavailable</bpmn:incoming>
+        <bpmn:compensateEventDefinition id="CompensateEventDefinition_12fqmdn" />
+      </bpmn:endEvent>
+      <bpmn:subProcess id="SubProcess_ReservationExpired" name="Handle reservation expiry" triggeredByEvent="true">
+        <bpmn:documentation>MP13, B08, W3. Proposal for S1. When the stock reservation of FN1 expires during the payment, this event sub-process stops Take payment and refunds any payment that the service already took.</bpmn:documentation>
+        <bpmn:endEvent id="EndEvent_PaymentStopped" name="Payment stopped">
+          <bpmn:documentation>Take payment ends without a payment. Payment successful? (No) releases the stock and cancels the order, and the customer gets the cancellation notice (O06).</bpmn:documentation>
+          <bpmn:incoming>Flow_Refund_Stopped</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:intermediateThrowEvent id="Event_RefundAnyPayment" name="Refund any payment taken">
+          <bpmn:documentation>Compensation for the whole of Take payment. It runs Refund payment once for each Send payment request that completed.</bpmn:documentation>
+          <bpmn:incoming>Flow_Expiry_Refund</bpmn:incoming>
+          <bpmn:outgoing>Flow_Refund_Stopped</bpmn:outgoing>
+          <bpmn:compensateEventDefinition id="CompensateEventDefinition_0dtugb0" />
+        </bpmn:intermediateThrowEvent>
+        <bpmn:startEvent id="StartEvent_ReservationExpired" name="Reservation expired">
+          <bpmn:documentation>The stock reservation expires (reservationExpiresAt). The start event interrupts Take payment and sets paymentStatus to RESERVATION_EXPIRED.</bpmn:documentation>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=&#34;RESERVATION_EXPIRED&#34;" target="paymentStatus" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+          <bpmn:outgoing>Flow_Expiry_Refund</bpmn:outgoing>
+          <bpmn:timerEventDefinition id="TimerEventDefinition_1scaa8s">
+            <bpmn:timeDate xsi:type="bpmn:tFormalExpression">=reservationExpiresAt</bpmn:timeDate>
+          </bpmn:timerEventDefinition>
+        </bpmn:startEvent>
+        <bpmn:sequenceFlow id="Flow_Expiry_Refund" sourceRef="StartEvent_ReservationExpired" targetRef="Event_RefundAnyPayment" />
+        <bpmn:sequenceFlow id="Flow_Refund_Stopped" sourceRef="Event_RefundAnyPayment" targetRef="EndEvent_PaymentStopped" />
+      </bpmn:subProcess>
+      <bpmn:association id="Association_RefundPayment" associationDirection="One" sourceRef="BoundaryEvent_RefundPayment" targetRef="ServiceTask_RefundPayment" />
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="Flow_Sub_PaymentSuccessful" sourceRef="SubProcess_TakePayment" targetRef="Gateway_PaymentSuccessful" />
+    <bpmn:sequenceFlow id="Flow_PaymentSuccessful_Confirm" name="Yes" sourceRef="Gateway_PaymentSuccessful" targetRef="ServiceTask_ConfirmOrder">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=paymentStatus = "SUCCEEDED"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_PaymentSuccessful_Release" name="No" sourceRef="Gateway_PaymentSuccessful" targetRef="ServiceTask_ReleaseStock" />
+    <bpmn:sequenceFlow id="Flow_Confirm_Split" sourceRef="ServiceTask_ConfirmOrder" targetRef="Gateway_SplitSuccess" />
+    <bpmn:sequenceFlow id="Flow_Split_Update" sourceRef="Gateway_SplitSuccess" targetRef="ServiceTask_UpdateStock" />
+    <bpmn:sequenceFlow id="Flow_Split_Record" sourceRef="Gateway_SplitSuccess" targetRef="ServiceTask_RecordPayment" />
+    <bpmn:sequenceFlow id="Flow_Update_JoinStock" sourceRef="ServiceTask_UpdateStock" targetRef="Gateway_JoinStock" />
+    <bpmn:sequenceFlow id="Flow_Record_Join" sourceRef="ServiceTask_RecordPayment" targetRef="Gateway_JoinSuccess" />
+    <bpmn:sequenceFlow id="Flow_Join_Confirmed" sourceRef="Gateway_JoinSuccess" targetRef="EndEvent_OrderConfirmed" />
+    <bpmn:sequenceFlow id="Flow_Release_Cancel" sourceRef="ServiceTask_ReleaseStock" targetRef="ServiceTask_CancelOrder" />
+    <bpmn:sequenceFlow id="Flow_Cancel_Notify" sourceRef="ServiceTask_CancelOrder" targetRef="ServiceTask_NotifyCustomer" />
+    <bpmn:sequenceFlow id="Flow_Notify_Cancelled" sourceRef="ServiceTask_NotifyCustomer" targetRef="EndEvent_OrderCancelled" />
+    <bpmn:sequenceFlow id="Flow_Start_Calculate" sourceRef="StartEvent_OrderAwaitingPayment" targetRef="Task_CalculateAmounts" />
+    <bpmn:sequenceFlow id="Flow_Calculate_Sub" sourceRef="Task_CalculateAmounts" targetRef="SubProcess_TakePayment" />
+    <bpmn:parallelGateway id="Gateway_SplitSuccess">
+      <bpmn:incoming>Flow_Confirm_Split</bpmn:incoming>
+      <bpmn:outgoing>Flow_Split_Update</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Split_Record</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Split_Notify</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:serviceTask id="ServiceTask_RecordPayment" name="Record payment for settlement">
+      <bpmn:documentation>MP17, MP20. Story B13, R09, NFR08. The worker stores paymentReference and paymentSplit for the weekly settlement (P07).</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="record-payment" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Split_Record</bpmn:incoming>
+      <bpmn:outgoing>Flow_Record_Join</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_OrderConfirmed" name="Order confirmed">
+      <bpmn:documentation>The success path of P05. In the strategic model, P05 continues to P06 Fulfil order (M08, M09).</bpmn:documentation>
+      <bpmn:incoming>Flow_Join_Confirmed</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:parallelGateway id="Gateway_JoinSuccess">
+      <bpmn:incoming>Flow_Record_Join</bpmn:incoming>
+      <bpmn:incoming>Flow_JoinStock_Join</bpmn:incoming>
+      <bpmn:incoming>Flow_Notify_Join</bpmn:incoming>
+      <bpmn:outgoing>Flow_Join_Confirmed</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:exclusiveGateway id="Gateway_PaymentSuccessful" name="Payment successful?" default="Flow_PaymentSuccessful_Release">
+      <bpmn:documentation>The outcome of P05 Process payment. The strategic model shows only the success path (D1 of the strategic README).</bpmn:documentation>
+      <bpmn:incoming>Flow_Sub_PaymentSuccessful</bpmn:incoming>
+      <bpmn:outgoing>Flow_PaymentSuccessful_Confirm</bpmn:outgoing>
+      <bpmn:outgoing>Flow_PaymentSuccessful_Release</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="ServiceTask_ConfirmOrder" name="Confirm order">
+      <bpmn:documentation>MP18. Story B14, U8, message M07. The worker marks the order as paid and sends the order confirmation to the customer. The confirmation gives the producers, the delivery or collection arrangements and the totals.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="confirm-order" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PaymentSuccessful_Confirm</bpmn:incoming>
+      <bpmn:outgoing>Flow_Confirm_Split</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_JoinStock_Join" sourceRef="Gateway_JoinStock" targetRef="Gateway_JoinSuccess" />
+    <bpmn:exclusiveGateway id="Gateway_JoinStock">
+      <bpmn:incoming>Flow_Update_JoinStock</bpmn:incoming>
+      <bpmn:incoming>Flow_RecordStock_JoinStock</bpmn:incoming>
+      <bpmn:outgoing>Flow_JoinStock_Join</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="ServiceTask_ReleaseStock" name="Release stock">
+      <bpmn:documentation>MP24. Story B17, NFR06. The stock service releases the reservation of each item.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="release-stock" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PaymentSuccessful_Release</bpmn:incoming>
+      <bpmn:outgoing>Flow_Release_Cancel</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="ServiceTask_RecordStockDiscrepancy" name="Record stock discrepancy">
+      <bpmn:documentation>U8, R07, NFR08. The worker records the order and the items whose stock was not updated, so that the network admin can correct the stock by hand. The order stays confirmed.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="record-stock-discrepancy" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_StockFailed_Record</bpmn:incoming>
+      <bpmn:outgoing>Flow_RecordStock_JoinStock</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_StockFailed_Record" sourceRef="BoundaryEvent_StockUpdateFailed" targetRef="ServiceTask_RecordStockDiscrepancy" />
+    <bpmn:sequenceFlow id="Flow_RecordStock_JoinStock" sourceRef="ServiceTask_RecordStockDiscrepancy" targetRef="Gateway_JoinStock" />
+    <bpmn:subProcess id="SubProcess_NotifyProducers" name="Notify each producer">
+      <bpmn:documentation>MP19. Stories B16, B23, U8. One instance for each producer order element. A failed notification for one producer is recorded and does not stop the others. The order stays confirmed, because the customer has paid (question R2 of the i* README).</bpmn:documentation>
+      <bpmn:incoming>Flow_Split_Notify</bpmn:incoming>
+      <bpmn:outgoing>Flow_Notify_Join</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics>
+        <bpmn:extensionElements>
+          <zeebe:loopCharacteristics inputCollection="=producerOrders" inputElement="producerOrder" />
+        </bpmn:extensionElements>
+      </bpmn:multiInstanceLoopCharacteristics>
+      <bpmn:startEvent id="StartEvent_NotifyProducer" name="Producer order to notify">
+        <bpmn:outgoing>Flow_NotifyStart_Notify</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:serviceTask id="ServiceTask_NotifyProducer" name="Notify producer">
+        <bpmn:documentation>MP19. Stories B16, B23. Messages M08 and M09. The worker asks the notification service to tell the producer about the new order (producerOrder). If it still fails after the job retries, the worker throws NOTIFICATION_FAILED.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="notify-producer" retries="3" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_NotifyStart_Notify</bpmn:incoming>
+        <bpmn:outgoing>Flow_Notify_Notified</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_NotifyStart_Notify" sourceRef="StartEvent_NotifyProducer" targetRef="ServiceTask_NotifyProducer" />
+      <bpmn:endEvent id="EndEvent_ProducerNotified" name="Producer notified">
+        <bpmn:incoming>Flow_Notify_Notified</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_Notify_Notified" sourceRef="ServiceTask_NotifyProducer" targetRef="EndEvent_ProducerNotified" />
+      <bpmn:boundaryEvent id="BoundaryEvent_NotificationFailed" name="Notification failed" attachedToRef="ServiceTask_NotifyProducer">
+        <bpmn:documentation>U8. The notification service could not reach the producer, even after the job retries.</bpmn:documentation>
+        <bpmn:outgoing>Flow_NotifyFailed_Record</bpmn:outgoing>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_1c9i42b" errorRef="Error_1ngb6ru" />
+      </bpmn:boundaryEvent>
+      <bpmn:serviceTask id="ServiceTask_RecordFailedNotification" name="Record failed notification">
+        <bpmn:documentation>U8, NFR08. The worker records the producer order whose notification failed, so that the network admin can contact the producer. The other producers are still notified, and the order stays confirmed.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="record-failed-notification" retries="3" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_NotifyFailed_Record</bpmn:incoming>
+        <bpmn:outgoing>Flow_RecordNotify_End</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:endEvent id="EndEvent_FailureRecorded" name="Failure recorded">
+        <bpmn:incoming>Flow_RecordNotify_End</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_NotifyFailed_Record" sourceRef="BoundaryEvent_NotificationFailed" targetRef="ServiceTask_RecordFailedNotification" />
+      <bpmn:sequenceFlow id="Flow_RecordNotify_End" sourceRef="ServiceTask_RecordFailedNotification" targetRef="EndEvent_FailureRecorded" />
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="Flow_Split_Notify" sourceRef="Gateway_SplitSuccess" targetRef="SubProcess_NotifyProducers" />
+    <bpmn:sequenceFlow id="Flow_Notify_Join" sourceRef="SubProcess_NotifyProducers" targetRef="Gateway_JoinSuccess" />
+    <bpmn:serviceTask id="ServiceTask_UpdateStock" name="Update stock">
+      <bpmn:documentation>MP18. Story B15, U8, R07. The stock service turns the reservation into a sale. Lane F01 Catalogue management owns the stock, as in FN1. If the update still fails after the job retries, the worker throws STOCK_UPDATE_FAILED.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="update-stock" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Split_Update</bpmn:incoming>
+      <bpmn:outgoing>Flow_Update_JoinStock</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="BoundaryEvent_StockUpdateFailed" name="Stock update failed" attachedToRef="ServiceTask_UpdateStock">
+      <bpmn:documentation>U8. The stock service could not turn the reservation into a sale, even after the job retries. The order stays confirmed, because the customer has paid.</bpmn:documentation>
+      <bpmn:outgoing>Flow_StockFailed_Record</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0qnr99x" errorRef="Error_1n57w5o" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="ServiceTask_CancelOrder" name="Cancel order">
+      <bpmn:documentation>MP24. Story B17. The worker marks the order and its producer order elements as cancelled, with paymentStatus as the reason.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="cancel-order" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Release_Cancel</bpmn:incoming>
+      <bpmn:outgoing>Flow_Cancel_Notify</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="ServiceTask_NotifyCustomer" name="Tell the customer">
+      <bpmn:documentation>Stories B11, B12, B17, NFR04, message O06. The worker tells the customer that the order is cancelled, and why (paymentStatus).</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="notify-customer" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Cancel_Notify</bpmn:incoming>
+      <bpmn:outgoing>Flow_Notify_Cancelled</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_OrderCancelled" name="Order cancelled">
+      <bpmn:documentation>The order is cancelled and the stock is released. The strategic model does not show this path, because it shows only the happy path (D1).</bpmn:documentation>
+      <bpmn:incoming>Flow_Notify_Cancelled</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:error id="Error_ServiceUnavailable" name="Payment service unavailable" errorCode="PAYMENT_SERVICE_UNAVAILABLE" />
+  <bpmn:process id="Process_CustomerPayment" name="Customer" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_CustomerOrderPlaced" name="Order placed">
+      <bpmn:documentation>The customer has confirmed the order in FN1 (Purchase confirmed, R06). FN2 continues from here.</bpmn:documentation>
+      <bpmn:outgoing>Flow_CustomerPlaced_Details</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_CustomerGivePaymentDetails" name="Give payment details">
+      <bpmn:documentation>CU10. The customer chooses a sandbox payment method and sends it (O05). The form collects no card number and no card security code (NFR03). In process_payment this is the user task Give payment details.</bpmn:documentation>
+      <bpmn:incoming>Flow_CustomerPlaced_Details</bpmn:incoming>
+      <bpmn:outgoing>Flow_CustomerDetails_Confirmation</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="EndEvent_CustomerOrderPaid" name="Order paid">
+      <bpmn:documentation>The order is paid and confirmed. The goods follow in P06 Fulfil order.</bpmn:documentation>
+      <bpmn:incoming>Flow_CustomerConfirmation_Paid</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="Event_CustomerConfirmationReceived" name="Order confirmation received">
+      <bpmn:documentation>M07. The customer receives the order confirmation: the producers, the delivery or collection arrangements and the totals. If the payment fails, the customer gets the decline notice (O03) or the cancellation notice (O06) on the edge of the pool, as FN1 does with O01 and O02.</bpmn:documentation>
+      <bpmn:incoming>Flow_CustomerDetails_Confirmation</bpmn:incoming>
+      <bpmn:outgoing>Flow_CustomerConfirmation_Paid</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_11ylyql" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_CustomerPlaced_Details" sourceRef="StartEvent_CustomerOrderPlaced" targetRef="Task_CustomerGivePaymentDetails" />
+    <bpmn:sequenceFlow id="Flow_CustomerDetails_Confirmation" sourceRef="Task_CustomerGivePaymentDetails" targetRef="Event_CustomerConfirmationReceived" />
+    <bpmn:sequenceFlow id="Flow_CustomerConfirmation_Paid" sourceRef="Event_CustomerConfirmationReceived" targetRef="EndEvent_CustomerOrderPaid" />
+  </bpmn:process>
+  <bpmn:message id="Message_1r17arl" name="payment-declined">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=orderId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_39uo0og" name="payment-confirmed">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=orderId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:error id="Error_1ngb6ru" name="Notification failed" errorCode="NOTIFICATION_FAILED" />
+  <bpmn:error id="Error_1n57w5o" name="Stock update failed" errorCode="STOCK_UPDATE_FAILED" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_ProcessPayment">
+    <bpmndi:BPMNPlane id="BPMNPlane_ProcessPayment" bpmnElement="Collaboration_ProcessPayment">
+      <bpmndi:BPMNShape id="Participant_BRFNetwork_di" bpmnElement="Participant_BRFNetwork" isHorizontal="true">
+        <dc:Bounds x="150" y="270" width="2370" height="1060" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_020fb2e_di" bpmnElement="Lane_F02" isHorizontal="true">
+        <dc:Bounds x="180" y="1080" width="2340" height="250" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_160x7eg_di" bpmnElement="Lane_F01" isHorizontal="true">
+        <dc:Bounds x="180" y="895" width="2340" height="185" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0ctuu9n_di" bpmnElement="Lane_F03" isHorizontal="true">
+        <dc:Bounds x="180" y="270" width="2340" height="625" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_OrderAwaitingPayment_di" bpmnElement="StartEvent_OrderAwaitingPayment">
+        <dc:Bounds x="242" y="632" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="215" y="672" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CalculateAmounts_di" bpmnElement="Task_CalculateAmounts">
+        <dc:Bounds x="350" y="610" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0j6vx9i_di" bpmnElement="Gateway_JoinStock" isMarkerVisible="true">
+        <dc:Bounds x="2235" y="915" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_ReleaseStock_di" bpmnElement="ServiceTask_ReleaseStock">
+        <dc:Bounds x="1720" y="940" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_13w45sd_di" bpmnElement="ServiceTask_RecordStockDiscrepancy">
+        <dc:Bounds x="2210" y="990" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_UpdateStock_di" bpmnElement="ServiceTask_UpdateStock">
+        <dc:Bounds x="2080" y="900" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_CancelOrder_di" bpmnElement="ServiceTask_CancelOrder">
+        <dc:Bounds x="1720" y="1160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_NotifyCustomer_di" bpmnElement="ServiceTask_NotifyCustomer">
+        <dc:Bounds x="1860" y="1160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_OrderCancelled_di" bpmnElement="EndEvent_OrderCancelled">
+        <dc:Bounds x="1992" y="1182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1985" y="1226" width="50" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubProcess_TakePayment_di" bpmnElement="SubProcess_TakePayment" isExpanded="true">
+        <dc:Bounds x="510" y="310" width="1110" height="550" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_PaymentRequested_di" bpmnElement="StartEvent_PaymentRequested">
+        <dc:Bounds x="542" y="592" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="518" y="632" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_JoinDetails_di" bpmnElement="Gateway_JoinDetails" isMarkerVisible="true">
+        <dc:Bounds x="625" y="380" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_GivePaymentDetails_di" bpmnElement="UserTask_GivePaymentDetails">
+        <dc:Bounds x="720" y="365" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_JoinSubmit_di" bpmnElement="Gateway_JoinSubmit" isMarkerVisible="true">
+        <dc:Bounds x="865" y="445" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_PaymentAccepted_di" bpmnElement="EndEvent_PaymentAccepted">
+        <dc:Bounds x="1192" y="372" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1179" y="412.5" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_DeclineLimit_di" bpmnElement="Gateway_DeclineLimit" isMarkerVisible="true">
+        <dc:Bounds x="1285" y="445" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1340" y="458" width="66" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_DeclineLimitReached_di" bpmnElement="EndEvent_DeclineLimitReached">
+        <dc:Bounds x="1292" y="567" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1270" y="607" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_RetryOrCancel_di" bpmnElement="UserTask_RetryOrCancel">
+        <dc:Bounds x="1340" y="365" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Retry_di" bpmnElement="Gateway_Retry" isMarkerVisible="true">
+        <dc:Bounds x="1465" y="380" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1465" y="435" width="50" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_CustomerCancelled_di" bpmnElement="EndEvent_CustomerCancelled">
+        <dc:Bounds x="1562" y="387" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1538" y="427" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_TryAgain_di" bpmnElement="Gateway_TryAgain" isMarkerVisible="true">
+        <dc:Bounds x="975" y="625" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="936" y="606" width="55" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TimerEvent_WaitBeforeRetry_di" bpmnElement="TimerEvent_WaitBeforeRetry">
+        <dc:Bounds x="872" y="632" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="790" y="636" width="78" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0odb0oe_di" bpmnElement="ServiceTask_SubmitPayment">
+        <dc:Bounds x="980" y="430" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1xvpr59_di" bpmnElement="Gateway_PaymentResult">
+        <dc:Bounds x="1115" y="445" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1050" y="412" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1l16nop_di" bpmnElement="Gateway_JoinUnavailable" isMarkerVisible="true">
+        <dc:Bounds x="975" y="555" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_18o9pfw_di" bpmnElement="Event_NoAnswer">
+        <dc:Bounds x="1122" y="562" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1080" y="605" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_05yexsb_di" bpmnElement="Event_PaymentDeclined">
+        <dc:Bounds x="1192" y="452" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1219" y="495" width="84" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_06n4cmw_di" bpmnElement="Event_PaymentConfirmed">
+        <dc:Bounds x="1122" y="372" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1065" y="376" width="49" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0sl7owj_di" bpmnElement="ServiceTask_RefundPayment">
+        <dc:Bounds x="950" y="760" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1g5di4c_di" bpmnElement="EndEvent_ServiceUnavailable">
+        <dc:Bounds x="982" y="712" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="922" y="716" width="56" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0uu1r5o_di" bpmnElement="SubProcess_ReservationExpired" isExpanded="true">
+        <dc:Bounds x="540" y="710" width="350" height="120" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0yfe4mi_di" bpmnElement="EndEvent_PaymentStopped">
+        <dc:Bounds x="822" y="754" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="797" y="797" width="86" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1an185h_di" bpmnElement="Event_RefundAnyPayment">
+        <dc:Bounds x="702" y="754" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="684" y="797" width="73" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1yhiyz2_di" bpmnElement="StartEvent_ReservationExpired">
+        <dc:Bounds x="580" y="754" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="569" y="797" width="59" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0xztyl3_di" bpmnElement="Flow_Expiry_Refund">
+        <di:waypoint x="616" y="772" />
+        <di:waypoint x="702" y="772" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16h97q9_di" bpmnElement="Flow_Refund_Stopped">
+        <di:waypoint x="738" y="772" />
+        <di:waypoint x="822" y="772" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_12r9wnh_di" bpmnElement="BoundaryEvent_RefundPayment">
+        <dc:Bounds x="1022" y="492" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1078" y="514" width="36" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_ServiceUnavailable_di" bpmnElement="BoundaryEvent_ServiceUnavailable">
+        <dc:Bounds x="982" y="492" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="913" y="526" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_SubStart_JoinDetails_di" bpmnElement="Flow_SubStart_JoinDetails">
+        <di:waypoint x="578" y="610" />
+        <di:waypoint x="650" y="610" />
+        <di:waypoint x="650" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_JoinDetails_Details_di" bpmnElement="Flow_JoinDetails_Details">
+        <di:waypoint x="675" y="405" />
+        <di:waypoint x="720" y="405" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Details_JoinSubmit_di" bpmnElement="Flow_Details_JoinSubmit">
+        <di:waypoint x="820" y="405" />
+        <di:waypoint x="840" y="405" />
+        <di:waypoint x="840" y="470" />
+        <di:waypoint x="865" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_JoinSubmit_Submit_di" bpmnElement="Flow_JoinSubmit_Submit">
+        <di:waypoint x="915" y="470" />
+        <di:waypoint x="980" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Submit_Accepted_di" bpmnElement="Flow_Submit_Accepted">
+        <di:waypoint x="1080" y="470" />
+        <di:waypoint x="1115" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_DeclineLimit_Reached_di" bpmnElement="Flow_DeclineLimit_Reached">
+        <di:waypoint x="1310" y="495" />
+        <di:waypoint x="1310" y="567" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1309" y="524" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_DeclineLimit_Retry_di" bpmnElement="Flow_DeclineLimit_Retry">
+        <di:waypoint x="1310" y="445" />
+        <di:waypoint x="1310" y="405" />
+        <di:waypoint x="1340" y="405" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1316" y="417" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Retry_RetryGateway_di" bpmnElement="Flow_Retry_RetryGateway">
+        <di:waypoint x="1440" y="405" />
+        <di:waypoint x="1465" y="405" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RetryGateway_JoinDetails_di" bpmnElement="Flow_RetryGateway_JoinDetails">
+        <di:waypoint x="1490" y="380" />
+        <di:waypoint x="1490" y="340" />
+        <di:waypoint x="650" y="340" />
+        <di:waypoint x="650" y="380" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1496" y="351" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RetryGateway_Cancelled_di" bpmnElement="Flow_RetryGateway_Cancelled">
+        <di:waypoint x="1515" y="405" />
+        <di:waypoint x="1562" y="405" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1523" y="385" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Unavailable_TryAgain_di" bpmnElement="Flow_Unavailable_TryAgain">
+        <di:waypoint x="1000" y="528" />
+        <di:waypoint x="1000" y="555" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_TryAgain_Wait_di" bpmnElement="Flow_TryAgain_Wait">
+        <di:waypoint x="975" y="650" />
+        <di:waypoint x="908" y="650" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="939" y="633" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Wait_JoinSubmit_di" bpmnElement="Flow_Wait_JoinSubmit">
+        <di:waypoint x="890" y="632" />
+        <di:waypoint x="890" y="495" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_TryAgain_Unavailable_di" bpmnElement="Flow_TryAgain_Unavailable">
+        <di:waypoint x="1000" y="675" />
+        <di:waypoint x="1000" y="712" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1006" y="684" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1yfm1i7_di" bpmnElement="Flow_JoinUnavailable_TryAgain">
+        <di:waypoint x="1000" y="605" />
+        <di:waypoint x="1000" y="625" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_068dinx_di" bpmnElement="Flow_Result_Timeout">
+        <di:waypoint x="1140" y="495" />
+        <di:waypoint x="1140" y="562" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0w285nn_di" bpmnElement="Flow_Timeout_JoinUnavailable">
+        <di:waypoint x="1122" y="580" />
+        <di:waypoint x="1025" y="580" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1shv8u0_di" bpmnElement="Flow_Result_Declined">
+        <di:waypoint x="1165" y="470" />
+        <di:waypoint x="1192" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0yd1fhx_di" bpmnElement="Flow_Declined_DeclineLimit">
+        <di:waypoint x="1228" y="470" />
+        <di:waypoint x="1285" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0akfogr_di" bpmnElement="Flow_Result_Confirmed">
+        <di:waypoint x="1140" y="445" />
+        <di:waypoint x="1140" y="408" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zpaxp5_di" bpmnElement="Flow_Confirmed_Accepted">
+        <di:waypoint x="1158" y="390" />
+        <di:waypoint x="1192" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_005o3cu_di" bpmnElement="Association_RefundPayment">
+        <di:waypoint x="1040" y="528" />
+        <di:waypoint x="1040" y="760" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Gateway_SplitSuccess_di" bpmnElement="Gateway_SplitSuccess" isMarkerVisible="true">
+        <dc:Bounds x="2025" y="530" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_RecordPayment_di" bpmnElement="ServiceTask_RecordPayment">
+        <dc:Bounds x="2150" y="515" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_OrderConfirmed_di" bpmnElement="EndEvent_OrderConfirmed">
+        <dc:Bounds x="2432" y="537" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2408" y="577" width="84" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_JoinSuccess_di" bpmnElement="Gateway_JoinSuccess" isMarkerVisible="true">
+        <dc:Bounds x="2315" y="530" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_PaymentSuccessful_di" bpmnElement="Gateway_PaymentSuccessful" isMarkerVisible="true">
+        <dc:Bounds x="1645" y="530" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1640" y="496" width="60" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_ConfirmOrder_di" bpmnElement="ServiceTask_ConfirmOrder">
+        <dc:Bounds x="1820" y="515" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_16531l0_di" bpmnElement="SubProcess_NotifyProducers" isExpanded="true">
+        <dc:Bounds x="2080" y="1090" width="410" height="220" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_NotifyProducer_di" bpmnElement="ServiceTask_NotifyProducer">
+        <dc:Bounds x="2160" y="1120" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1dr9fdg_di" bpmnElement="StartEvent_NotifyProducer">
+        <dc:Bounds x="2102" y="1142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2082" y="1204" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_09sibfu_di" bpmnElement="EndEvent_ProducerNotified">
+        <dc:Bounds x="2342" y="1142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2319" y="1181" width="84" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_159lz60_di" bpmnElement="ServiceTask_RecordFailedNotification">
+        <dc:Bounds x="2290" y="1200" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_10koxzt_di" bpmnElement="EndEvent_FailureRecorded">
+        <dc:Bounds x="2412" y="1222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2392" y="1263" width="82" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_01uih6k_di" bpmnElement="BoundaryEvent_NotificationFailed">
+        <dc:Bounds x="2222" y="1182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2189" y="1224" width="82" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_14ibidv_di" bpmnElement="Flow_NotifyStart_Notify">
+        <di:waypoint x="2138" y="1160" />
+        <di:waypoint x="2160" y="1160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vopd9o_di" bpmnElement="Flow_Notify_Notified">
+        <di:waypoint x="2260" y="1160" />
+        <di:waypoint x="2342" y="1160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ckhgna_di" bpmnElement="Flow_NotifyFailed_Record">
+        <di:waypoint x="2258" y="1200" />
+        <di:waypoint x="2275" y="1200" />
+        <di:waypoint x="2275" y="1240" />
+        <di:waypoint x="2290" y="1240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1echyyv_di" bpmnElement="Flow_RecordNotify_End">
+        <di:waypoint x="2390" y="1240" />
+        <di:waypoint x="2412" y="1240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1ephjkk_di" bpmnElement="BoundaryEvent_StockUpdateFailed">
+        <dc:Bounds x="2112" y="962" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2057" y="1000" width="65" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_Sub_PaymentSuccessful_di" bpmnElement="Flow_Sub_PaymentSuccessful">
+        <di:waypoint x="1620" y="555" />
+        <di:waypoint x="1645" y="555" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PaymentSuccessful_Confirm_di" bpmnElement="Flow_PaymentSuccessful_Confirm">
+        <di:waypoint x="1695" y="555" />
+        <di:waypoint x="1820" y="555" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1736" y="533" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PaymentSuccessful_JoinCancel_di" bpmnElement="Flow_PaymentSuccessful_Release">
+        <di:waypoint x="1670" y="580" />
+        <di:waypoint x="1670" y="980" />
+        <di:waypoint x="1720" y="980" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1671" y="757" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Confirm_Split_di" bpmnElement="Flow_Confirm_Split">
+        <di:waypoint x="1920" y="555" />
+        <di:waypoint x="2025" y="555" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Split_Update_di" bpmnElement="Flow_Split_Update">
+        <di:waypoint x="2050" y="580" />
+        <di:waypoint x="2050" y="940" />
+        <di:waypoint x="2080" y="940" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Split_Record_di" bpmnElement="Flow_Split_Record">
+        <di:waypoint x="2075" y="555" />
+        <di:waypoint x="2150" y="555" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Update_Join_di" bpmnElement="Flow_Update_JoinStock">
+        <di:waypoint x="2180" y="940" />
+        <di:waypoint x="2235" y="940" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Record_Join_di" bpmnElement="Flow_Record_Join">
+        <di:waypoint x="2250" y="555" />
+        <di:waypoint x="2315" y="555" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Join_Confirmed_di" bpmnElement="Flow_Join_Confirmed">
+        <di:waypoint x="2365" y="555" />
+        <di:waypoint x="2432" y="555" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Release_Cancel_di" bpmnElement="Flow_Release_Cancel">
+        <di:waypoint x="1770" y="1020" />
+        <di:waypoint x="1770" y="1160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Cancel_Notify_di" bpmnElement="Flow_Cancel_Notify">
+        <di:waypoint x="1820" y="1200" />
+        <di:waypoint x="1860" y="1200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Notify_Cancelled_di" bpmnElement="Flow_Notify_Cancelled">
+        <di:waypoint x="1960" y="1200" />
+        <di:waypoint x="1992" y="1200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Start_Calculate_di" bpmnElement="Flow_Start_Calculate">
+        <di:waypoint x="278" y="650" />
+        <di:waypoint x="350" y="650" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Calculate_Sub_di" bpmnElement="Flow_Calculate_Sub">
+        <di:waypoint x="450" y="650" />
+        <di:waypoint x="510" y="650" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1aktc6s_di" bpmnElement="Flow_JoinStock_Join">
+        <di:waypoint x="2285" y="940" />
+        <di:waypoint x="2340" y="940" />
+        <di:waypoint x="2340" y="580" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11i108n_di" bpmnElement="Flow_StockFailed_Record">
+        <di:waypoint x="2130" y="998" />
+        <di:waypoint x="2130" y="1030" />
+        <di:waypoint x="2210" y="1030" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0p3vpgv_di" bpmnElement="Flow_RecordStock_JoinStock">
+        <di:waypoint x="2260" y="990" />
+        <di:waypoint x="2260" y="965" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pt6up9_di" bpmnElement="Flow_Split_Notify">
+        <di:waypoint x="2050" y="580" />
+        <di:waypoint x="2050" y="1160" />
+        <di:waypoint x="2080" y="1160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gzl724_di" bpmnElement="Flow_Notify_Join">
+        <di:waypoint x="2340" y="1090" />
+        <di:waypoint x="2340" y="580" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_0n1lkmp_di" bpmnElement="Participant_Customer" isHorizontal="true">
+        <dc:Bounds x="150" y="110" width="2750" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_15lkwnk_di" bpmnElement="StartEvent_CustomerOrderPlaced">
+        <dc:Bounds x="242" y="152" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="229" y="195" width="64" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0z7g1ju_di" bpmnElement="Task_CustomerGivePaymentDetails">
+        <dc:Bounds x="720" y="130" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1c9qck8_di" bpmnElement="EndEvent_CustomerOrderPaid">
+        <dc:Bounds x="2032" y="152" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2024" y="195" width="52" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1triq23_di" bpmnElement="Event_CustomerConfirmationReceived">
+        <dc:Bounds x="1852" y="152" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1840" y="110" width="60" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1gkz4sw_di" bpmnElement="Flow_CustomerPlaced_Details">
+        <di:waypoint x="278" y="170" />
+        <di:waypoint x="720" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ejzras_di" bpmnElement="Flow_CustomerDetails_Confirmation">
+        <di:waypoint x="820" y="170" />
+        <di:waypoint x="1852" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0b9wg5k_di" bpmnElement="Flow_CustomerConfirmation_Paid">
+        <di:waypoint x="1888" y="170" />
+        <di:waypoint x="2032" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_NotificationService_di" bpmnElement="Participant_NotificationService" isHorizontal="true">
+        <dc:Bounds x="2060" y="1380" width="300" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_Producer_di" bpmnElement="Participant_Producer" isHorizontal="true">
+        <dc:Bounds x="2530" y="1380" width="300" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_PaymentService_di" bpmnElement="Participant_PaymentService" isHorizontal="true">
+        <dc:Bounds x="910" y="1370" width="460" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_PaymentRequest_di" bpmnElement="MessageFlow_PaymentRequest">
+        <di:waypoint x="1070" y="510" />
+        <di:waypoint x="1070" y="1370" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="995" y="1331" width="60" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_PaymentResponse_di" bpmnElement="MessageFlow_PaymentDeclined">
+        <di:waypoint x="1210" y="1370" />
+        <di:waypoint x="1210" y="488" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1214" y="1331" width="80" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_OrderConfirmation_di" bpmnElement="MessageFlow_OrderConfirmation">
+        <di:waypoint x="1870" y="515" />
+        <di:waypoint x="1870" y="188" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1774" y="236" width="92" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_NotificationRequest_di" bpmnElement="MessageFlow_NotificationRequest">
+        <di:waypoint x="2180" y="1200" />
+        <di:waypoint x="2180" y="1380" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2069" y="1331" width="101" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_NewOrderNotification_di" bpmnElement="MessageFlow_NewOrderNotification">
+        <di:waypoint x="2360" y="1410" />
+        <di:waypoint x="2530" y="1410" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2385" y="1376" width="115" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_CancellationNotice_di" bpmnElement="MessageFlow_CancellationNotice">
+        <di:waypoint x="1910" y="1240" />
+        <di:waypoint x="1910" y="1480" />
+        <di:waypoint x="2890" y="1480" />
+        <di:waypoint x="2890" y="230" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2801" y="750" width="78" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0k00vfm_di" bpmnElement="MessageFlow_DeclineNotice">
+        <di:waypoint x="1370" y="365" />
+        <di:waypoint x="1370" y="230" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1276" y="236" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0l181hg_di" bpmnElement="MessageFlow_PaymentRetry">
+        <di:waypoint x="1410" y="230" />
+        <di:waypoint x="1410" y="365" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1415" y="236" width="69" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0cjz89k_di" bpmnElement="MessageFlow_PaymentDetails">
+        <di:waypoint x="770" y="210" />
+        <di:waypoint x="770" y="365" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="775" y="243" width="79" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0erm68a_di" bpmnElement="MessageFlow_PaymentConfirmed">
+        <di:waypoint x="1172" y="1370" />
+        <di:waypoint x="1172" y="350" />
+        <di:waypoint x="1140" y="350" />
+        <di:waypoint x="1140" y="372" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1081" y="1331" width="80" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pzkxdo_di" bpmnElement="MessageFlow_RefundRequest">
+        <di:waypoint x="950" y="795" />
+        <di:waypoint x="920" y="795" />
+        <di:waypoint x="920" y="1370" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="861" y="1331" width="58" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
