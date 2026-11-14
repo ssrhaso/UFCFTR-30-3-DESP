@@ -68,6 +68,7 @@ The list covers the whole case study, so that the Task 1 scope is visible agains
 | FR18 | The system shows food miles from postcode-based distances | CS p. 2 (Environmental reporting) | P09 | FN1, optional (Could) | B09 |
 | FR19 | A producer publishes a surplus produce offer with a last-minute discount, and the interested customers are told | CS p. 2 (Community features) | P10 | Task 2 | None |
 | FR20 | A producer shares seasonal recipes, storage guidance and farm stories next to its products | CS p. 2 (Educational components) | P11 | Task 2 | None |
+| FR21 | After the order is confirmed, a customer can report a delivery problem or ask for a refund, and order management resolves it | **Proposal** (D8 in interactions.md); consumer law for distance sales | P12 | Task 2 | None |
 
 FR15 states the visibility. The 48 hours are NFR07, because they are a measurable constraint on FR13 and FR15 and not a behaviour of their own.
 
@@ -126,7 +127,7 @@ The sources give no performance or capacity target: the network has about forty 
 
 ## 6. FN1 Process order (P04)
 
-Owning function: F02 Orders. The process starts when the customer proceeds to checkout (M04) and ends when the marketplace order and its producer order elements exist (R06).
+Owning function: F02 Order management. The process starts when the customer proceeds to checkout (M04) and ends when the marketplace order and its producer order elements exist (R06).
 
 ### B01 Check the stock at checkout
 
@@ -219,7 +220,7 @@ Priority: Could. Points: 2. Sprint: 3. Traces to: R14, M16 to M18, CS p. 2. Plan
 
 ## 7. FN2 Process payment (P05)
 
-Owning function: F03 Finance, with F01 (the stock) and F02 (the producer notifications). The process starts when FN1 gives a confirmed order that needs payment (R06).
+Owning function: F03 Finance and settlements, with F01 (the stock) and F02 (the producer notifications). The process starts when FN1 gives a confirmed order that needs payment (R06).
 
 ### B10 Pay through the sandbox payment service
 
@@ -394,7 +395,7 @@ Each story sits on one chain. The chain starts at a page of the case study, pass
 | Case study | CS p. 2: checkout for single-vendor and multi-vendor orders, the aggregation of multi-vendor orders, and the records that link customers, products and producers | CS p. 2: secure payment for single and multiple vendor orders, and the 5% commission. CS p. 1: order visibility for the producers |
 | Requirements | FR06 to FR09, FR15 (B04), FR17 and FR18 (optional); NFR01, NFR04 to NFR07 and NFR09 to NFR13 | FR10 to FR15; NFR01 to NFR13 |
 | UC2 | U2 to U6 | U7 to U12 |
-| Strategic model | P04 in the F02 Orders lane; M04, O01, O02; R04, R06 | P05 in the F03 Finance lane, with F01 and F02; M05 to M09, O03, O04; R06 to R09 |
+| Strategic model | P04 in the F02 Order management lane; M04, O01, O02; R04, R06 | P05 in the F03 Finance and settlements lane, with F01 and F02; M05 to M09, O03, O04; R06 to R09 |
 | Stories | B01 to B09 | B10 to B17 |
 | Operational model | `process_order`, the call activity that 1.6 ([#84](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/84)) adds to Figure 1; the job types `check-stock`, `identify-producers`, `create-order` and `split-order`; a timer boundary event (B08) | `process_payment`, the other call activity of 1.6; the job types `submit-payment`, `confirm-order`, `update-stock` and `notify-producer`; the errors `PAYMENT_DECLINED` and `PAYMENT_SERVICE_UNAVAILABLE` |
 | Enablers | B21, B22, B24 | B20, B22, B23 |
@@ -409,7 +410,7 @@ The Stories column of section 3 and the Applies to column of section 4 give the 
 
 - Every functional requirement in Task 1 scope (FR06 to FR15, FR17 and FR18) has at least one story.
 - Every functional story (B01 to B19) realises at least one functional requirement. Every enabler story (B20 to B24) supports at least one.
-- Eight functional requirements have no Task 1 story. FR03, FR04 and FR05 are B18 and B19, which the group does not plan. FR01, FR02, FR16, FR19 and FR20 are Task 2, and each names its process and is marked Task 2. None is lost.
+- Nine functional requirements have no Task 1 story. FR03, FR04 and FR05 are B18 and B19, which the group does not plan. FR01, FR02, FR16, FR19, FR20 and FR21 are Task 2, and each names its process and is marked Task 2. None is lost.
 - Every non-functional requirement applies to at least one story, or to the definition of done (NFR09, NFR11 and NFR12).
 - Every strategic element of UC2 (M04 to M09, O01 to O04 and R04 to R09) appears in the Traces to of at least one story.
 

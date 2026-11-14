@@ -17,6 +17,8 @@ The IDs of the other documents are used throughout: A01 to A07 and E01 to E06 ([
 
 OpenOME uses the original i* notation. This document uses its names. The iStar 2.0 names are in brackets, for anyone who reads the models in another tool.
 
+The current models are in piStar, which uses iStar 2.0. Section 3 of the [README](README.md) records the differences between the two notations, as the Week 12 lab sheet requires.
+
 | Element or link | Meaning in these models |
 |---|---|
 | Goal | A state that the actor wants. The actor does not say how to reach it |
@@ -27,7 +29,7 @@ OpenOME uses the original i* notation. This document uses its names. The iStar 2
 | Means-end (OR-refinement) | A task is one way to reach a goal. Two means for one end are alternatives |
 | Decomposition (AND-refinement) | A task needs all its parts: subgoals, subtasks, resources and softgoals |
 | Contribution | The effect of an element on a softgoal: Make, Help, Hurt or Break |
-| Is-a, is-part-of | Specialisation of an actor, and an actor inside another actor |
+| Is-a, is-part-of (participates-in) | Specialisation of an actor, and an actor inside another actor |
 
 ## 3. Actors
 
@@ -39,8 +41,8 @@ OpenOME uses the original i* notation. This document uses its names. The iStar 2
 | A03 | Restaurant or café buyer | Role, is-a Customer | Customer pool | Independent restaurants and cafés (CS p. 1) |
 | A04 | Producer | Role | Producer pool | One of 40 SMEs. Delivers or hands over its part of the order (assumption, Q1) |
 | A05 | BRF Network | Agent | BRF Network pool | The organisation: its business goals, rules and decisions |
-| A06 | Marketplace administrator | Role, is-part-of BRF Network | Quality and traceability lane (F04) | UC3 only |
-| A07 | Authorised marketplace representative | Role, is-part-of BRF Network | Quality and traceability lane (F04) | UC3 only |
+| A06 | Marketplace administrator | Role, participates-in BRF Network | Quality and traceability lane (F04) | UC3 only |
+| A07 | Authorised marketplace representative | Role, participates-in BRF Network | Quality and traceability lane (F04) | UC3 only |
 | SYS | Marketplace platform | Agent | The automated activities in the lanes F01 to F05 | The system to be built. Its tasks become the service tasks of the operational models and the Task 2 services (decision DI2) |
 | E01 | Payment service | Agent | Payment service pool | Sandbox or mock only (NFR02) |
 | E02 | Organic certification verification service | Agent | Organic certification verification service pool | UC1 |
@@ -131,6 +133,7 @@ These show why the three segments are separate in actors.md: each one has a diff
 | SD38 | BRF Network | Surplus produce report | Resource | Producer | M19, P10 | Wider |
 | SD39 | BRF Network | Educational content | Resource | Producer | M22, P11 | Wider |
 | SD40 | Customer | Food miles information | Resource | Marketplace platform | M16, P09, B09 | Wider |
+| SD41 | Customer | Order issue resolved (redelivery or refund) | Goal | Marketplace platform | P12, M24, M25, D8 | Wider |
 
 ## 5. Strategic Rationale model
 
@@ -157,6 +160,7 @@ The SR model opens Customer, Producer, BRF Network and Marketplace platform. The
 | CU15 | Low supplier admin | Softgoal | Mainly A03 | CS p. 1 |
 | CU16 | Quick delivery | Softgoal | All segments | Assumption (TN4) |
 | CU17 | Safe payment and personal data | Softgoal | All segments | NFR01, NFR03 |
+| CU18 | Order problems put right | Goal | Decomposes CU02 | P12, D8 |
 
 **Contributions:**
 
@@ -168,7 +172,7 @@ The SR model opens Customer, Producer, BRF Network and Marketplace platform. The
 | CU03 Buy from farm shops and markets | CU13 | Hurt | Restricted opening hours (CS p. 1) |
 | CU03 | CU14 | Hurt | Hard to find reliable sources (CS p. 1) |
 | CU03 | CU15 | Break | Admin of many small suppliers is "prohibitively time-consuming" (CS p. 1) |
-| CU08 Amend unavailable items | CU13 | Hurt | Extra effort when stock runs out |
+| CU08 Amend unavailable items | Customer pool; not in Figure 1 (happy path, D1) | Hurt | Extra effort when stock runs out |
 | CU10 Give sandbox payment reference | CU17 | Help | No card data in the forms (NFR03) |
 
 ### 5.2 Producer
@@ -214,6 +218,7 @@ The SR model opens Customer, Producer, BRF Network and Marketplace platform. The
 | NW07 | Handle quality incidents | Task | Decomposes NW02 | P08, A06, A07 |
 | NW08 | Promote surplus offers, food miles and education | Task | Decomposes NW02 | P09, P10, P11 |
 | NW09 | Regulations complied with | Goal | Decomposes NW02 | NFR01, E05 |
+| NW15 | Resolve order issues after the sale | Task | Decomposes NW02 | P12, D8 |
 | NW10 | Financial viability | Softgoal | | CS p. 2 |
 | NW11 | Producers attracted and kept | Softgoal | | CS p. 1 |
 | NW12 | Sustainability (fewer food miles, less waste) | Softgoal | | CS p. 2 |
@@ -267,6 +272,7 @@ This actor holds the two functionalities. Its tasks name the planned job types o
 | MP27 | Stock open to other buyers | Softgoal | | W3 |
 | MP28 | Reliable checkout | Softgoal | | NFR04 |
 | MP29 | Quick checkout | Softgoal | | NFR10 |
+| MP33 | Handle order issue | Task | Decomposes MP01 (after the order) | P12, D8 |
 | MP30 | Secure payment | Softgoal | | NFR03 |
 | MP31 | Accurate amounts | Softgoal | | NFR05 |
 | MP32 | Auditability | Softgoal | | NFR08 |
@@ -279,14 +285,14 @@ This actor holds the two functionalities. Its tasks name the planned job types o
 | MP13 | MP27 Stock open to other buyers | Hurt | Abandoned checkouts hold stock until the time limit (TN3) |
 | MP14 Check stock only at payment | MP26 | Hurt | Two customers can buy the last unit |
 | MP14 | MP27 | Help | No stock is held |
-| MP24 Retry, then cancel and release stock | MP28 Reliable checkout | Help | Every failure ends in a modelled state (NFR04) |
+| MP24 Retry, then cancel and release stock | Not in Figure 1 (happy path, D1) | Help | Every failure ends in a modelled state (NFR04) |
 | MP24 | MP29 Quick checkout | Hurt | The customer waits during the retries (TN5) |
 | MP25 End the process at once | MP28 | Break | Against UC2 |
 | MP25 | MP29 | Help | No wait |
 | MP16 Submit payment | MP30 Secure payment | Help | Sandbox reference only, no card data (NFR03) |
 | MP17 Calculate producer amounts and 5% commission | MP31 Accurate amounts | Make | Amounts plus commission equal the total (NFR05) |
 | MP20 Record every payment attempt | MP32 Auditability | Make | NFR08 |
-| MP22 Let customer retry or cancel | MP28 | Help | A decline does not lose the order |
+| MP22 Let customer retry or cancel | Not in Figure 1 (happy path, D1) | Help | A decline does not lose the order |
 
 ### 5.5 Dependencies in the SR model
 
@@ -299,11 +305,11 @@ In the SR model, each UC2 dependency of section 4 starts and ends at an element 
 | SD04 Order confirmation | CU09 Pay for the order | MP18 Confirm order and update stock |
 | SD06 Secure payment | CU17 Safe payment and personal data | MP16 Submit payment |
 | SD07 Review and confirm order | MP09 Get customer confirmation | CU07 Review and confirm order |
-| SD08 Amend unavailable items | MP07 Ask customer to amend order | CU08 Amend unavailable items |
+| SD08 Amend unavailable items | MP07 Ask customer to amend order | Not in Figure 1 (happy path, D1) |
 | SD09 Sandbox payment reference | MP16 Submit payment | CU10 Give sandbox payment reference |
 | SD10 Goods delivered or collected | CU12 Goods received | PR07 Prepare and hand over orders |
 | SD11 Product listing and updates | MP11 Product catalogue and stock | PR04 List and update products |
-| SD12 Accurate stock levels | MP06 Check stock | PR05 Keep stock levels accurate |
+| SD12 Accurate stock levels | MP06 Check stock | Process order (Order management lane); the check is inside it |
 | SD13 Delivery or collection arrangements | MP08 Identify producers and arrangements | PR06 Set delivery or collection arrangements |
 | SD14 New order notification | PR08 New order notification | MP19 Notify each producer |
 | SD15 Adequate lead time | PR13 Enough time to prepare | MP08 Identify producers and arrangements |
@@ -334,23 +340,26 @@ The operational models are not built yet. The last two columns use the planned e
 
 | i* element | Strategic BPMN (Figure 1) | Operational BPMN (planned) | Stories |
 |---|---|---|---|
-| CU07 Review and confirm order | Customer pool, Order message (M04) | `process_order`: user task with a Camunda Form | B05 |
-| CU08 Amend unavailable items | Customer pool (O01, O02) | `process_order`: user task and a loop back to the stock check | B02 |
+| CU07 Review and confirm order | Place order (Customer pool), Order message (M04) | `process_order`: user task with a Camunda Form | B05 |
+| CU08 Amend unavailable items | Items in stock? gateway, Amend order message (M23) | `process_order`: user task and a loop back to the stock check | B02 |
 | CU10 Give sandbox payment reference | Customer pool | `process_payment`: user task with a Camunda Form | B10 |
 | CU11 Retry or cancel after decline | Customer pool (O03, O04) | `process_payment`: user task after `PAYMENT_DECLINED` | B11 |
-| MP06 Check stock | Process order (Orders lane) | Service task `check-stock` | B01, B21 |
-| MP13 Reserve stock for a time limit | Process order (Orders lane) | Reservation, with a timer boundary event on the review task | B07, B08 |
-| MP08 Identify producers and arrangements | Process order (Orders lane) | Service task `identify-producers` | B03, B04 |
-| MP10 Create and split marketplace order | Process order (Orders lane) | Service tasks `create-order` and `split-order` | B06 |
-| MP16 Submit payment | Process payment (Finance lane), Payment service (M05, M06) | Service task `submit-payment` | B10, B20 |
-| MP17 Calculate producer amounts and 5% commission | Process payment (Finance lane) | FEEL expressions in output mappings | B13 |
-| MP18 Confirm order and update stock | Update stock (Product listing lane), Order confirmation (M07) | Service tasks `confirm-order` and `update-stock` | B14, B15 |
-| MP19 Notify each producer | Notify producers (Orders lane), Notification service (M08, M09) | Multi-instance service task `notify-producer` | B16, B23 |
+| MP06 Check stock | Items in stock? gateway (Catalogue management lane), before Process order | Service task `check-stock` | B01, B21 |
+| MP07 Ask customer to amend order | Amend order requested event, Amend order message (M23) | `process_order`: user task after the stock check | B02 |
+| MP11 Product catalogue and stock | Not drawn; DS1 in interactions.md section 4.1 | Product service (W1) | B01 |
+| MP13 Reserve stock for a time limit | Process order (Order management lane) | Reservation, with a timer boundary event on the review task | B07, B08 |
+| MP08 Identify producers and arrangements | Process order (Order management lane) | Service task `identify-producers` | B03, B04 |
+| MP10 Create and split marketplace order | Process order (Order management lane) | Service tasks `create-order` and `split-order` | B06 |
+| MP16 Submit payment | Process payment (Finance and settlements lane), Payment service (M05, M06) | Service task `submit-payment` | B10, B20 |
+| MP17 Calculate producer amounts and 5% commission | Process payment (Finance and settlements lane) | FEEL expressions in output mappings | B13 |
+| MP18 Confirm order and update stock | Process payment (Finance and settlements lane), Order confirmation (M07) | Service tasks `confirm-order` and `update-stock` | B14, B15 |
+| MP19 Notify each producer | Process payment (Finance and settlements lane), Notification service (M08, M09) | Multi-instance service task `notify-producer` | B16, B23 |
 | MP22 Let customer retry or cancel | Payment successful? gateway | Error boundary event `PAYMENT_DECLINED` | B11 |
 | MP24 Retry, then cancel and release stock | Payment not completed end event | Retry loop, then cancellation (`PAYMENT_SERVICE_UNAVAILABLE`) | B12, B17 |
-| PR07 Prepare and hand over orders | Fulfil order (Producer pool) | Out of scope | None |
-| NW06 Settle producers weekly | Settle producer payments (Finance lane) | Out of scope | None |
+| PR07 Prepare and hand over orders | Fulfil order (Producer lane) | Out of scope | None |
+| NW06 Settle producers weekly | Settle producer payments (Finance and settlements lane) | Out of scope | None |
 | NW07 Handle quality incidents | Handle quality incident (Quality and traceability lane) | Out of scope | None |
+| CU18 Order problems put right, NW15, MP33 | Handle order issue (Order management lane), M24, M25 | Out of scope (Task 2, FR21) | None |
 
 ### 7.2 From the softgoals to the requirements
 
