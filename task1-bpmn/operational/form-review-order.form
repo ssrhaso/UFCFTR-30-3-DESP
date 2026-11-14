@@ -1,0 +1,90 @@
+{
+  "components": [
+    {
+      "id": "Field_intro",
+      "type": "text",
+      "layout": {
+        "row": "Row_intro"
+      },
+      "text": "## Review your order\n\nYour items are reserved until **{{if reservationExpiresAt = null then \"the time limit\" else substring(reservationExpiresAt, 12, 5) + \" UTC\"}}**. Confirm the order before then, or the reservation ends and the items go back into stock."
+    },
+    {
+      "id": "Table_orderLines",
+      "type": "table",
+      "label": "Your order",
+      "layout": {
+        "row": "Row_lines"
+      },
+      "rowCount": 10,
+      "dataSource": "=for l in orderLines return {productName: l.productName, producerName: l.producerName, quantity: l.quantity, price: string(floor(l.lineTotal)) + \".\" + substring(string(floor(l.lineTotal * 100 + 0.5) - floor(l.lineTotal) * 100 + 100), 2)}",
+      "columns": [
+        {
+          "label": "Product",
+          "key": "productName"
+        },
+        {
+          "label": "Producer",
+          "key": "producerName"
+        },
+        {
+          "label": "Quantity",
+          "key": "quantity"
+        },
+        {
+          "label": "Price (£)",
+          "key": "price"
+        }
+      ]
+    },
+    {
+      "id": "Field_total",
+      "type": "text",
+      "layout": {
+        "row": "Row_total"
+      },
+      "text": "### Total: £{{string(floor(orderTotal)) + \".\" + substring(string(floor(orderTotal * 100 + 0.5) - floor(orderTotal) * 100 + 100), 2)}}"
+    },
+    {
+      "id": "Field_foodMiles",
+      "type": "text",
+      "layout": {
+        "row": "Row_foodMiles"
+      },
+      "text": "Food miles for this order: **{{foodMiles}}**",
+      "conditional": {
+        "hide": "=foodMiles = null"
+      }
+    },
+    {
+      "id": "Field_reviewDecision",
+      "type": "radio",
+      "key": "reviewDecision",
+      "label": "What do you want to do?",
+      "layout": {
+        "row": "Row_decision"
+      },
+      "validate": {
+        "required": true
+      },
+      "values": [
+        {
+          "label": "Confirm the order and go to payment",
+          "value": "confirm"
+        },
+        {
+          "label": "Add more items",
+          "value": "addItems"
+        },
+        {
+          "label": "Cancel the order",
+          "value": "cancel"
+        }
+      ]
+    }
+  ],
+  "type": "default",
+  "id": "form-review-order",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 16
+}
