@@ -12,8 +12,10 @@ The rules in this README follow the Week 12 lecture on i* (AlHaj Hassan, 2026) a
 
 | File | Content | State |
 |---|---|---|
-| `sd-model-draft.pistar.txt` | SD model, piStar source | Current. Converted from the OpenOME draft, with the review fixes of [#160](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/160) |
-| `sr-model-draft.pistar.txt` | SR model, piStar source | Current. As above |
+| `istar-sd.pistar.txt`, `istar-sd.png` | SD model, piStar source and export | Current. The draft with the layout refinements of 4.3 and 4.4 ([#161](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/161)) |
+| `istar-sr.pistar.txt`, `istar-sr.png` | SR model, piStar source and export | Current. The draft with the BRF Network and Producer refinements of 4.3 and 4.4 (#161) |
+| `sd-model-draft.pistar.txt` | SD model, piStar source | Second draft. Converted from the OpenOME draft, with the review fixes of [#160](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/160). Kept as history |
+| `sr-model-draft.pistar.txt` | SR model, piStar source | Second draft. As above |
 | `sd-model-draft.ood`, `sd-model-draft.png` | SD model, OpenOME source and export (Royden Dias) | First draft. Kept as history |
 | `sr-model-draft.ood`, `sr-model-draft.png` | SR model, OpenOME source and export (Royden Dias) | First draft. Kept as history |
 | `colour-key.png` | Colour of each element type | Current |
@@ -26,7 +28,7 @@ The rules in this README follow the Week 12 lecture on i* (AlHaj Hassan, 2026) a
 | SD | `istar-sd.pistar.txt` | `istar-sd.png` |
 | SR | `istar-sr.pistar.txt` | `istar-sr.png` |
 
-These are the output names of 4.1 (#142). [PR #161](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/161) adds a second copy of each model (`BRF-Network-&-Producer-refinement-SD.txt` and `-SR.txt`). If the group agrees D1, rename these two files to the names above before #161 merges. Do not use `&` in a file name, because it causes problems in shells and URLs.
+These are the output names of 4.1 (#142). PR #161 applies D1: it puts the refinements of 4.3 and 4.4 into these files. Do not use `&` in a file name, because it causes problems in shells and URLs.
 
 ## 2. Tool and file rules
 
@@ -150,7 +152,7 @@ Each dependency gives the depender a capability. It also makes the depender vuln
 | E02 | SD25: Marketplace platform depends on Organic certification verification service for **Organic certification verified** (goal) | Trust in the listings (P02) | An organic claim stays unverified | "Listing not published" end event in the strategic model | Only if P02 stays (T3 in processes.md). Not in UC2 |
 | E03 | SD24: Marketplace platform depends on Notification service for **Notifications delivered** (goal) | PR13 Enough time to prepare, through SD14 | A producer does not learn of a paid order and misses the 48-hour lead time (NFR07) | Multi-instance `notify-producer` (B16) and a stub (B23). The failure path is open (question R2 in section 8.5) | External (assumption Q3, decision DI5) |
 | E04 | SD26: Marketplace platform depends on Postcode distance service for **Postcode distance** (resource) | NW12 Sustainability (P09) | The customer does not see the food miles | Not in FN1 or FN2. B09 is a Could story | External (assumption Q3) |
-| E05 | SD31: Data protection and financial services regulators depend on BRF Network for **Regulations complied with** (goal) | NW09 Regulations complied with | The network does not comply with the regulations. Here the network is the dependee, so this is a commitment of the network (slide 24) | NFR01 and NFR03 (no card data), NFR08 (audit trail). #161 adds the task "Protect personal data and keep financial audit trail" | i* only |
+| E05 | SD31: Data protection and financial services regulators depend on BRF Network for **Regulations complied with** (goal) | NW09 Regulations complied with | The network does not comply with the regulations. Here the network is the dependee, so this is a commitment of the network (slide 24) | NFR01 and NFR03 (no card data), NFR08 (audit trail). NW19 Protect personal data and keep financial audit trail is the means for NW09 | i* only |
 | E06 | SD32: Tax authority depends on Producer for **Producer tax report** (resource) | PR14 Tax-ready accounts | The producer cannot report its tax | P07 settles each producer weekly with an audit trail (SD17, SD18) | i* only |
 
 Each dependency has one depender, one dependum and one dependee. The SR model shows E01 and E03 as closed actors. E02, E04, E05 and E06 are only in the SD model (decision DI7).
@@ -194,12 +196,10 @@ The table maps each task of the SR model. "Out of scope" means that the task is 
 | NW06 | Settle producers weekly | Settle producer payments (P07, Finance lane) | None. Out of scope | None |
 | NW07 | Handle quality incidents | Handle quality incident (P08, Quality and traceability lane) | None. Out of scope (UC3) | None |
 | NW08 | Promote surplus offers, food miles and education | The three activities of the F05 lane | None. Out of scope | None |
-| (#161) | Offer surplus produce | Offer surplus produce (P10, F05 lane) | None. Out of scope | None |
-| (#161) | Report food miles | Report food miles (P09, F05 lane) | None. Out of scope | B09 |
-| (#161) | Share educational content | Share educational content (P11, F05 lane) | None. Out of scope | None |
-| (#161) | Protect personal data and keep financial audit trail | None. A constraint on all processes | No card data in Forms or variables (NFR03). A record of each payment attempt (NFR08) | B10, B13 |
-
-The four tasks marked "(#161)" are in PR #161. They get IDs when model-content.md section 5.3 is updated.
+| NW16 | Offer surplus produce | Offer surplus produce (P10, F05 lane) | None. Out of scope | None |
+| NW17 | Report food miles | Report food miles (P09, F05 lane) | None. Out of scope | B09 |
+| NW18 | Share educational content | Share educational content (P11, F05 lane) | None. Out of scope | None |
+| NW19 | Protect personal data and keep financial audit trail | None. A constraint on all processes | No card data in Forms or variables (NFR03). A record of each payment attempt (NFR08) | B10, B13 |
 
 ### 8.4 Marketplace platform
 
@@ -224,7 +224,7 @@ The four tasks marked "(#161)" are in PR #161. They get IDs when model-content.m
 | MP24 | Retry, then cancel and release stock | "Payment not completed" end event | Retry loop, then cancellation (`PAYMENT_SERVICE_UNAVAILABLE`) | B12, B17 |
 | MP25 | End the process at once | None. A rejected alternative (UC2) | None | None |
 
-**Summary:** the SR model has 39 tasks on main and 43 tasks with #161. FN1 or FN2 uses 24 of them. Twelve are in the strategic model only. Four are rejected alternatives. Three are agreements or constraints, not activities.
+**Summary:** the SR model has 43 tasks. FN1 or FN2 uses 24 of them. Twelve are in the strategic model only. Four are rejected alternatives. Three are agreements or constraints, not activities.
 
 ### 8.5 What the i* models add to the BPMN models
 
