@@ -7,6 +7,8 @@
 
 This table links each sentence of Use Case 2 (U2 to U12) to the stories and the models. It covers the strategic BPMN model, the i* models, the operational BPMN models and the Camunda processes. The rows come from section 5 of [functionalities.md](scope/functionalities.md). U1 is the input of FN1, so the table starts at U2.
 
+Section 3.1 gives the same chain for the extra operational model of P07 Settle producer payments, which no use case covers.
+
 The brief asks for "strong traceability" along the chain from the i* models to the Camunda automation. The plan for Sprint 2 adds one column each week ([plan.md](../sprints/task1-sprint2/plan.md), section 5.1).
 
 ## 2. How to read the i* columns
@@ -31,6 +33,19 @@ The brief asks for "strong traceability" along the chain from the i* models to t
 | U11 | For multi-vendor orders, the system calculates the amount of each producer and the 5% commission | FN2 | B13 | P05 Process payment (F03). The payment record supplies P07 Settle producer payments (R09) | SD19: BRF Network on Marketplace platform for 5% commission calculated (goal). SD17: Producer on BRF Network for Weekly settlement with statement (resource) | MP17 Calculate producer amounts and 5% commission makes MP31 Accurate amounts. NW04 Charge 5% commission. PR10 Accept 5% commission hurts PR12 Fair income per sale | TN1 | Script task "Calculate producer amounts and commission", service task "Record payment for settlement" | FEEL script with the result variable `paymentSplit` (`producerAmounts`, `commission`). Job type `record-payment` |
 | U12 | The group uses a sandbox or simulated payment service, not a live system | FN2 | B10, B20 | Payment service pool (E01) | SD22 and SD09 (see U7). E01 is a sandbox or a mock (NFR02) | MP16 Submit payment helps MP30 Secure payment | TN6 | Collapsed pool "Payment service" (E01, sandbox or mock). Form `payment-details` offers sandbox payment methods only | Form values `pm_card_visa` and `pm_card_chargeDeclined` (Stripe test methods). No variable holds card data (NFR03) |
 
+### 3.1 P07 Settle producer payments (the extra model)
+
+P07 is outside Use Case 2, so its rows start from the requirements, not from a UC2 sentence. The model is `settle_producer_payments` (5.5, [#167](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/167)). Its design is in [settle-producer-payments.md](../task1-bpmn/operational/settle-producer-payments.md). FR16 is Task 2, so P07 has no story yet. DR1 to DR7 are the draft rules of that document.
+
+| No. | Requirement (shortened) | Stories | Strategic BPMN | i* SD | i* SR | Operational BPMN (5.5) | Camunda |
+|---|---|---|---|---|---|---|---|
+| ST1 | Settle each producer weekly, on the agreed date (FR16, DR1) | None (Task 2) | Start_P07 "Weekly settlement date", call activity P07 (F03 Finance and settlements) | SD17: Producer on BRF Network for Weekly settlement with statement (resource) | NW06 Settle producers weekly, PR09 Weekly settlement received | Timer start event "Every Monday at 06:00", none start event "Settlement run requested", service task "Collect the week's payments" | Cron `0 0 6 * * MON`. Job type `collect-settlement-data`. P07 calls `settle_producer_payments` |
+| ST2 | Each producer receives its amount less the 5% commission (FR14, FR16, NFR05) | B13 supplies the amounts (R09) | P07, with R09 and R19 through DS3 | SD17. SD20: BRF Network on Marketplace platform for Payment and settlement records (resource) | NW06, PR09. PR10 Accept 5% commission hurts PR12 Fair income per sale | Business rule task "Decide the payout", multi-instance sub-process "Settle each producer", send task "Send the payout", receive task "Wait for the payout result", message flows O11 and O12 | DMN `payout-decision` (hit policy UNIQUE). Input collection `=producerSettlements`. Job type `send-payout`. Message `payout-result`, correlation key `=payoutRequestId` |
+| ST3 | A producer without bank details is asked for them, and the payout waits (FR16, DR4) | None | None (happy path, D1) | SD17 | PR09 | Send task "Ask the producer for bank details", receive task "Wait for the bank details", timer "No reply in 3 days", service task "Save the bank details", message flows O09 and O10 | Job types `request-bank-details` and `save-bank-details`. Message `bank-details-received`, correlation key `=settlementRunId + ":" + settlement.producerId`. Timer `P3D` |
+| ST4 | No balance is lost or paid twice, and open payouts are chased (NFR14, DR5, DR6) | None | None (happy path, D1) | SD18: Producer on BRF Network for Transparent audit trail (softgoal) | NW06 helps NW14 Trust | Timer "No answer in 1 hour", service task "Check the payout status", gateway "Payout still pending?", timer "Wait 1 hour", user task "Review the failed payout", service task "Release the collected balances", timer "Payouts still open after 2 days", user task "Chase the open payouts" | Job types `check-payout-status` and `release-settlement-balances`. Timers `PT1H` and `P2D`. `payoutAttempt` in the idempotency key. Forms `review-failed-payout` (`retryDecision`) and `chase-open-payouts` |
+| ST5 | A transparent audit trail for tax reporting (FR16, NFR08) | None | M10 to the Producer lane | SD17, SD18, SD20. SD32: Tax authority on Producer for Producer tax report (resource) | NW19 Protect personal data and keep financial audit trail. MP32 Auditability. PR09 helps PR14 Tax-ready accounts | Service tasks "Record the payout attempt" and "Record the settlement run", multi-instance send task "Send the weekly statements", message flow M10 | Job types `record-payout-attempt`, `record-settlement-run` and `send-settlement-statement` (input collection `=settlementResults`) |
+| ST6 | A second person approves a large run, so that the financial transactions comply with regulation (NFR01, E05, DR2) | None | None (happy path, D1) | None | NW09 Regulations complied with | Gateway "Run total over £10,000?", user task "Approve the settlement run", gateway "Run approved?" | Condition `=runTotal > 10000`. Form `approve-settlement-run` (`runDecision`). Candidate group `finance-manager` |
+
 ## 4. Checks
 
 | Check | Result |
@@ -39,6 +54,7 @@ The brief asks for "strong traceability" along the chain from the i* models to t
 | Each row has at least one SR element | 11 of 11 |
 | Each FN1 and FN2 story (B01 to B17) is in a row | Yes. B09 (Could) and B18, B19 (input) are not in UC2 rows |
 | Each SR element in the table is in model-content.md | Yes |
+| The P07 rows (ST1 to ST6) of section 3.1 | Each row has an operational BPMN and a Camunda entry from the 5.5 model. ST1, ST2 and ST5 have strategic elements. ST3, ST4 and ST6 are outside the happy path (D1). ST6 has no SD dependency, because the regulators E05 are in the i* models only |
 | The operational BPMN and Camunda columns are filled | FN2 rows (U7 to U12): both columns filled from the 5.4 model ([#166](https://github.com/ssrhaso/UFCFTR-30-3-DESP/pull/166)). FN1 rows (U2 to U6): not yet (5.2). 6.1 adds the deployment evidence |
 
 ## 5. References

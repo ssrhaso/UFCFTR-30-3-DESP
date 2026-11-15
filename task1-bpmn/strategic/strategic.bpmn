@@ -104,11 +104,14 @@
         <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R/P7D</bpmn:timeCycle>
       </bpmn:timerEventDefinition>
     </bpmn:startEvent>
-    <bpmn:task id="P07" name="Settle producer payments">
-      <bpmn:documentation>P07. Owner: F03 Finance and settlements. Amount of each producer less the 5% commission, with an audit trail. See requirements/strategic/processes.md, section 3. i*: NW06, PR09, SD17, SD32.</bpmn:documentation>
+    <bpmn:callActivity id="P07" name="Settle producer payments">
+      <bpmn:documentation>P07. Owner: F03 Finance and settlements. Amount of each producer less the 5% commission, with an audit trail. Calls settle_producer_payments, the extra operational model (task 5.5, task1-bpmn/operational/settle-producer-payments.md); its none start event "Settlement run requested" is the entry point. See requirements/strategic/processes.md, section 3. i*: NW06, PR09, SD17, SD32.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="settle_producer_payments" propagateAllChildVariables="false" />
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_BRF_12</bpmn:incoming>
       <bpmn:outgoing>Flow_BRF_13</bpmn:outgoing>
-    </bpmn:task>
+    </bpmn:callActivity>
     <bpmn:endEvent id="End_P07" name="Producers settled">
       <bpmn:incoming>Flow_BRF_13</bpmn:incoming>
     </bpmn:endEvent>

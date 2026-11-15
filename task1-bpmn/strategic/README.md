@@ -22,7 +22,7 @@ The figure is the network pool with a lane for each of its parties (the five fun
 ## 2. How to read it
 
 - The order chain reads the way the book draws it: in the Customer pool the customer wants to buy, places the order and receives the goods; in the network the catalogue serves the browsing, Order management and Finance process the order and the Producer lane fulfils it. The listing chain ends with the producer.
-- A rounded box is a process. The two boxes with a plus sign, Process order (P04) and Process payment (P05), are call activities: they stand for the operational models FN1 and FN2 of [functionalities.md](../../requirements/scope/functionalities.md).
+- A rounded box is a process. The three boxes with a plus sign are call activities. Process order (P04) and Process payment (P05) stand for the operational models FN1 and FN2 of [functionalities.md](../../requirements/scope/functionalities.md). Settle producer payments (P07) stands for the extra operational model of [settle-producer-payments.md](../operational/settle-producer-payments.md).
 - A thin circle starts a process. An envelope in it means a message starts it, a clock means a schedule (the weekly settlement). The plain start of P03 is the customer's own visit to the marketplace.
 - A thick circle ends a process. Its name is the outcome.
 - There are no decisions in the figure: it is the happy path (decision D1, tutor feedback of 9 Nov 2026). The stock check, the organic claim, the certification result and the payment result are decided in the operational models.

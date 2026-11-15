@@ -95,7 +95,7 @@ Notes:
 
 ### 3.2 Messages for the operational models
 
-These messages support the alternative and exception paths associated with P04 and P05. Figure 1 omits them: it is the happy path (D1). They stay here until Sprint 2 starts, and then move into the operational model of Use Case 2 ([#49](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/49)).
+These messages support the alternative and exception paths associated with P04 and P05 (O01 to O08), and the exchanges of the extra operational model of P07 (O09 to O12). Figure 1 omits them: it is the happy path (D1). They stay here until Sprint 2 starts, and then move into the operational model of Use Case 2 ([#49](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/49)).
 
 | No. | Sender | Receiver | Message | Process | Source |
 |---|---|---|---|---|---|
@@ -103,10 +103,18 @@ These messages support the alternative and exception paths associated with P04 a
 | O02 | Customer | BRF Network (F02) | Amended order | P04 | UC2 |
 | O03 | BRF Network (F03) | Customer | Payment declined notice | P05 | UC2 |
 | O04 | Customer | BRF Network (F03) | Payment retry | P05 | UC2 |
+| O05 | Customer | BRF Network (F03) | Payment details (a sandbox payment method) | P05 | UC2 (U7). Used in `process_payment` |
+| O06 | BRF Network (F02) | Customer | Order cancelled notice, with the reason | P05 | S3 (proposal). Used in `process_payment` |
+| O07 | BRF Network (F03) | Payment service (E01) | Refund request | P05 | S1, U10 (proposal). Used in `process_payment` |
+| O08 | Payment service (E01) | BRF Network (F03) | Refund result | P05 | S1, U10 (proposal). Used in `process_payment` |
+| O09 | BRF Network (F03) | Producer | Bank details request, with the reference of the run | P07 | FR16 (proposal). Used in `settle_producer_payments` |
+| O10 | Producer | BRF Network (F03) | Bank details reply, with the same reference | P07 | FR16 (proposal). Used in `settle_producer_payments` |
+| O11 | BRF Network (F03) | Payment service (E01) | Payout request (the producer, the amount and the idempotency key) | P07 | FR16; Q2 in actors.md, draft rule DR7 (proposal). Used in `settle_producer_payments` |
+| O12 | Payment service (E01) | BRF Network (F03) | Payout result (confirmed or failed, with the reference or the reason) | P07 | FR16; Q2 in actors.md, draft rule DR7 (proposal). Used in `settle_producer_payments` |
 
 Payment-service unavailability is handled through the exception or retry path described in section 3.1. No additional received message is assumed where the service does not respond.
 
-This table currently covers UC2. UC1 and UC3 remain relevant to the enterprise-wide strategic model. If either contributes to an additional selected operational functionality, review this table and add the relevant alternative and exception messages.
+This table covers UC2 (O01 to O08) and the extra operational model of P07 (O09 to O12, [settle-producer-payments.md](../../task1-bpmn/operational/settle-producer-payments.md)). UC1 and UC3 remain relevant to the enterprise-wide strategic model. If either contributes to an additional selected operational functionality, review this table and add the relevant alternative and exception messages.
 
 ### 3.3 Changes and refinements from the 1.2 draft
 
