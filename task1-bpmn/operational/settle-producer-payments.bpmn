@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="64767e4" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
   <bpmn:collaboration id="Collaboration_SettleProducerPayments">
-    <bpmn:documentation>P07 Settle producer payments, an additional operational model: none of the three use cases covers it. It follows FN2, which records each payment with the producer amounts and the 5% commission in DS3. P07 pays each producer weekly from those records (FR16, CS p. 2). i*: NW06, PR09, SD17, SD32, as in the strategic model. Draft for review.</bpmn:documentation>
+    <bpmn:documentation>P07 Settle producer payments, an additional operational model: none of the three use cases covers it. It follows FN2, which records each payment with the producer amounts and the 5% commission in DS3 (R09). P07 pays each producer weekly from those records (FR16, CS p. 2). The strategic call activity P07 calls this process. i*: NW06, PR09, SD17, SD18, SD32, as in the strategic model. The values of the draft rules DR1 to DR7 are proposals until the group agrees them (settle-producer-payments.md, section 9).</bpmn:documentation>
     <bpmn:participant id="Participant_BRFNetwork" name="Bristol Regional Food Network marketplace" processRef="settle_producer_payments">
       <bpmn:documentation>A05. The network pool (D9), with the lane F03 Finance and settlements. settle_producer_payments (P07) is the executable process.</bpmn:documentation>
     </bpmn:participant>
     <bpmn:participant id="Participant_Producer" name="Producer">
-      <bpmn:documentation>A04. Receives the weekly settlement statement (M10). Gives its bank details when they are missing (O09, O10). A separate pool, as in FN2, because the producer acts outside the engine.</bpmn:documentation>
+      <bpmn:documentation>A04. Receives the weekly settlement statement (M10). Gives its bank details when they are missing (O09, O10). A collapsed pool, as in FN2, because the producer acts outside the engine. The strategic model uses a lane (D9).</bpmn:documentation>
     </bpmn:participant>
     <bpmn:participant id="Participant_PaymentService" name="Payment service">
-      <bpmn:documentation>E01. Sandbox or mock only (NFR02). In this draft E01 also pays the producers, which answers Q2 of actors.md for now.</bpmn:documentation>
+      <bpmn:documentation>E01. Sandbox or mock only (NFR02). Takes each payout request (O11) and returns the result (O12). In this draft E01 also pays the producers (draft rule DR7), which answers Q2 of actors.md for now.</bpmn:documentation>
     </bpmn:participant>
     <bpmn:messageFlow id="MessageFlow_PayoutRequest" name="Payout request (O11)" sourceRef="SendTask_SendPayout" targetRef="Participant_PaymentService" />
     <bpmn:messageFlow id="MessageFlow_PayoutResult" name="Payout result (O12)" sourceRef="Participant_PaymentService" targetRef="ReceiveTask_WaitForPayoutResult" />
-    <bpmn:messageFlow id="MessageFlow_SettlementStatement" name="Weekly settlement statement (M10)" sourceRef="SendTask_SendStatement" targetRef="Participant_Producer" />
+    <bpmn:messageFlow id="MessageFlow_SettlementStatement" name="Weekly settlement statement (M10)" sourceRef="SendTask_SendStatements" targetRef="Participant_Producer" />
     <bpmn:messageFlow id="MessageFlow_BankDetails" name="Bank details (O10)" sourceRef="Participant_Producer" targetRef="ReceiveTask_WaitForBankDetails" />
     <bpmn:messageFlow id="MessageFlow_BankDetailsRequest" name="Bank details request (O09)" sourceRef="SendTask_RequestBankDetails" targetRef="Participant_Producer" />
   </bpmn:collaboration>
@@ -28,25 +28,27 @@
         <bpmn:flowNodeRef>Gateway_ApprovalNeeded</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>UserTask_ApproveRun</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_RunApproved</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_JoinApproved</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_ReleaseBalances</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent_RunStopped</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>UserTask_ChaseOpenPayouts</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_JoinApproved</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>SubProcess_SettleEachProducer</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>BoundaryEvent_PayoutsStillOpen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>UserTask_ChaseOpenPayouts</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent_OpenPayoutsChased</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ServiceTask_RecordSettlementRun</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SendTask_SendStatements</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent_ProducersSettled</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="StartEvent_WeeklySettlement" name="Every Monday at 06:00">
-      <bpmn:documentation>The weekly settlement date of the strategic model (Start_P07). FR16, CS p. 2. Draft rule: the run starts every Monday at 06:00 and settles the payments of the previous Monday to Sunday. The cron expression is 0 0 6 * * MON.</bpmn:documentation>
+      <bpmn:documentation>The weekly settlement date of the strategic model (Start_P07). FR16, CS p. 2. Draft rule DR1: the run starts every Monday at 06:00 and settles the payments of the previous Monday to Sunday. The cron expression is 0 0 6 * * MON.</bpmn:documentation>
       <bpmn:outgoing>Flow_Weekly_JoinStart</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_1tdx9zy">
         <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">0 0 6 * * MON</bpmn:timeCycle>
       </bpmn:timerEventDefinition>
     </bpmn:startEvent>
     <bpmn:startEvent id="StartEvent_RunRequested" name="Settlement run requested">
-      <bpmn:documentation>Finance starts a run by hand: after a stopped run, or to show the process in the demo. The run then follows the same steps as the weekly run.</bpmn:documentation>
+      <bpmn:documentation>Finance starts a run by hand: after a stopped run, or for the demonstration. The strategic call activity P07 also starts the process here, because a call activity starts the none start event. The run then follows the same steps as the weekly run.</bpmn:documentation>
       <bpmn:outgoing>Flow_Requested_JoinStart</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_Weekly_JoinStart" sourceRef="StartEvent_WeeklySettlement" targetRef="Gateway_JoinStart" />
@@ -58,9 +60,10 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_Approval_No" name="No" sourceRef="Gateway_ApprovalNeeded" targetRef="Gateway_JoinApproved" />
     <bpmn:sequenceFlow id="Flow_Approve_RunApproved" sourceRef="UserTask_ApproveRun" targetRef="Gateway_RunApproved" />
-    <bpmn:sequenceFlow id="Flow_RunApproved_No" name="No" sourceRef="Gateway_RunApproved" targetRef="EndEvent_RunStopped" />
+    <bpmn:sequenceFlow id="Flow_RunApproved_No" name="No" sourceRef="Gateway_RunApproved" targetRef="ServiceTask_ReleaseBalances" />
+    <bpmn:sequenceFlow id="Flow_Release_Stopped" sourceRef="ServiceTask_ReleaseBalances" targetRef="EndEvent_RunStopped" />
     <bpmn:sequenceFlow id="Flow_RunApproved_Yes" name="Yes" sourceRef="Gateway_RunApproved" targetRef="Gateway_JoinApproved">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=runApproved = true</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=runDecision = "APPROVE"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:exclusiveGateway id="Gateway_JoinStart">
       <bpmn:documentation>Joins the two starts.</bpmn:documentation>
@@ -68,8 +71,8 @@
       <bpmn:incoming>Flow_Requested_JoinStart</bpmn:incoming>
       <bpmn:outgoing>Flow_JoinStart_Collect</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="ServiceTask_CollectPayments" name="Collect the week&#39;s payments">
-      <bpmn:documentation>R09, DS3. The worker reads the payments of the week that FN2 confirmed, with the amount of each producer and the 5% commission (B13, S4). It subtracts the refunds of the week and adds any balance carried from earlier weeks. It returns settlementRunId, periodStart, periodEnd, runTotal and producerSettlements: one entry per producer with producerId, grossAmount, commission, refunds, carriedIn, netAmount and bankDetailsOnFile.</bpmn:documentation>
+    <bpmn:serviceTask id="ServiceTask_CollectPayments" name="Collect the week's payments">
+      <bpmn:documentation>R09, R19, DS3. The worker reads the payments of the week that FN2 confirmed, with the amount of each producer and the 5% commission (B13, S4). It subtracts the refunds of the week (R19) and adds the balances that earlier runs carried or held. It marks each balance that it takes with the new settlementRunId, and it skips each balance that has the mark of a run that is still open. Thus two runs never pay the same balance (NFR14). It returns settlementRunId, periodStart, periodEnd, runTotal and producerSettlements: one entry for each producer with producerId, producerName, grossAmount, commission, refunds, carriedIn, netAmount and bankDetailsOnFile.</bpmn:documentation>
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="collect-settlement-data" retries="3" />
       </bpmn:extensionElements>
@@ -82,13 +85,13 @@
       </bpmn:dataInputAssociation>
     </bpmn:serviceTask>
     <bpmn:exclusiveGateway id="Gateway_ApprovalNeeded" name="Run total over £10,000?" default="Flow_Approval_No">
-      <bpmn:documentation>Draft rule: a second person approves a large run before any money leaves the network (a four-eyes check on financial transactions, E05).</bpmn:documentation>
+      <bpmn:documentation>Draft rule DR2: a second person approves a large run before any money leaves the network. This is a four-eyes check on financial transactions (E05, NFR01).</bpmn:documentation>
       <bpmn:incoming>Flow_Collect_Approval</bpmn:incoming>
       <bpmn:outgoing>Flow_Approval_Yes</bpmn:outgoing>
       <bpmn:outgoing>Flow_Approval_No</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:userTask id="UserTask_ApproveRun" name="Approve the settlement run">
-      <bpmn:documentation>The finance manager checks the totals of the run against DS3, then approves the run or stops it. Form approve-settlement-run (to add). It sets runApproved.</bpmn:documentation>
+      <bpmn:documentation>The finance manager checks the totals of the run against DS3, then approves the run or stops it. Form approve-settlement-run. It sets runDecision (APPROVE or STOP), and approvalNote when the run stops.</bpmn:documentation>
       <bpmn:extensionElements>
         <zeebe:userTask />
         <zeebe:formDefinition formId="approve-settlement-run" />
@@ -98,199 +101,259 @@
       <bpmn:outgoing>Flow_Approve_RunApproved</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="Gateway_RunApproved" name="Run approved?" default="Flow_RunApproved_No">
+      <bpmn:documentation>The default flow is the safe choice: without an approval, no money leaves the network.</bpmn:documentation>
       <bpmn:incoming>Flow_Approve_RunApproved</bpmn:incoming>
       <bpmn:outgoing>Flow_RunApproved_No</bpmn:outgoing>
       <bpmn:outgoing>Flow_RunApproved_Yes</bpmn:outgoing>
     </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="ServiceTask_ReleaseBalances" name="Release the collected balances">
+      <bpmn:documentation>NFR14. The worker removes the mark of this run from each balance that Collect took. The next run can then collect them again.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="release-settlement-balances" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_RunApproved_No</bpmn:incoming>
+      <bpmn:outgoing>Flow_Release_Stopped</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_RunStopped" name="Run stopped for checks">
+      <bpmn:documentation>No payout is sent. Finance corrects the records, then starts the run again (Settlement run requested).</bpmn:documentation>
+      <bpmn:incoming>Flow_Release_Stopped</bpmn:incoming>
+    </bpmn:endEvent>
     <bpmn:exclusiveGateway id="Gateway_JoinApproved">
       <bpmn:documentation>Joins the approved run and the run below the limit.</bpmn:documentation>
       <bpmn:incoming>Flow_Approval_No</bpmn:incoming>
       <bpmn:incoming>Flow_RunApproved_Yes</bpmn:incoming>
       <bpmn:outgoing>Flow_JoinApproved_Settle</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="EndEvent_RunStopped" name="Run stopped for checks">
-      <bpmn:documentation>No payout is sent. Finance corrects the records, then starts the run again (Settlement run requested).</bpmn:documentation>
-      <bpmn:incoming>Flow_RunApproved_No</bpmn:incoming>
-    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_JoinApproved_Settle" sourceRef="Gateway_JoinApproved" targetRef="SubProcess_SettleEachProducer" />
     <bpmn:subProcess id="SubProcess_SettleEachProducer" name="Settle each producer">
-      <bpmn:documentation>FR16. One instance for each entry of producerSettlements, in parallel. Each instance pays the producer, leaves a small balance for next week, or holds the payout until the bank details arrive. The input mappings make the variables local, so the instances do not overwrite each other. settlementResults collects the outcome of each producer for the audit trail.</bpmn:documentation>
+      <bpmn:documentation>FR16. One instance for each entry of producerSettlements, in parallel. Each instance pays the producer, leaves a small balance for next week, or holds the payout. The input mappings make the variables local, so the instances do not overwrite each other. payoutAttempt starts at 1. settlementResults collects the result of each producer for the audit trail and the statements, with outcome PAID, CARRIED or HELD.</bpmn:documentation>
       <bpmn:extensionElements>
         <zeebe:ioMapping>
           <zeebe:input source="=null" target="payoutAction" />
+          <zeebe:input source="=1" target="payoutAttempt" />
           <zeebe:input source="=null" target="payoutRequestId" />
           <zeebe:input source="=null" target="payoutStatus" />
           <zeebe:input source="=null" target="payoutReference" />
           <zeebe:input source="=null" target="failureReason" />
           <zeebe:input source="=null" target="retryDecision" />
+          <zeebe:input source="=null" target="reviewNote" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_JoinApproved_Settle</bpmn:incoming>
       <bpmn:outgoing>Flow_Settle_Record</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics>
         <bpmn:extensionElements>
-          <zeebe:loopCharacteristics inputCollection="=producerSettlements" inputElement="settlement" outputCollection="settlementResults" outputElement="={producerId: settlement.producerId, payoutAction: payoutAction, payoutStatus: payoutStatus, payoutReference: payoutReference, retryDecision: retryDecision}" />
+          <zeebe:loopCharacteristics inputCollection="=producerSettlements" inputElement="settlement" outputCollection="settlementResults" outputElement="={producerId: settlement.producerId, producerName: settlement.producerName, netAmount: settlement.netAmount, payoutAction: payoutAction, payoutAttempt: payoutAttempt, payoutStatus: payoutStatus, payoutReference: payoutReference, failureReason: failureReason, retryDecision: retryDecision, reviewNote: reviewNote, outcome: if payoutStatus = &quot;CONFIRMED&quot; then &quot;PAID&quot; else if payoutAction = &quot;PAY&quot; or payoutAction = &quot;HOLD&quot; then &quot;HELD&quot; else &quot;CARRIED&quot;}" />
         </bpmn:extensionElements>
       </bpmn:multiInstanceLoopCharacteristics>
       <bpmn:startEvent id="StartEvent_ProducerToSettle" name="Producer to settle">
         <bpmn:documentation>One entry of producerSettlements, in the local variable settlement.</bpmn:documentation>
         <bpmn:outgoing>Flow_ProducerStart_Decide</bpmn:outgoing>
       </bpmn:startEvent>
+      <bpmn:sequenceFlow id="Flow_ProducerStart_Decide" sourceRef="StartEvent_ProducerToSettle" targetRef="BusinessRuleTask_DecidePayout" />
       <bpmn:businessRuleTask id="BusinessRuleTask_DecidePayout" name="Decide the payout">
-        <bpmn:documentation>DMN decision payout-decision (to add). Inputs: settlement.netAmount and settlement.bankDetailsOnFile. Draft rule: below £5.00, including zero or less after refunds, gives CARRY_OVER. No bank details gives HOLD. Otherwise PAY. It sets payoutAction.</bpmn:documentation>
+        <bpmn:documentation>DMN decision payout-decision in payout-decision.dmn. Inputs: settlement.netAmount and settlement.bankDetailsOnFile. Draft rule DR3: a net amount below £5.00, including zero or less after refunds, gives CARRY_OVER. Missing bank details give HOLD. Otherwise PAY. It sets payoutAction.</bpmn:documentation>
         <bpmn:extensionElements>
           <zeebe:calledDecision decisionId="payout-decision" resultVariable="payoutAction" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_ProducerStart_Decide</bpmn:incoming>
         <bpmn:outgoing>Flow_Decide_Action</bpmn:outgoing>
       </bpmn:businessRuleTask>
-      <bpmn:sequenceFlow id="Flow_ProducerStart_Decide" sourceRef="StartEvent_ProducerToSettle" targetRef="BusinessRuleTask_DecidePayout" />
+      <bpmn:sequenceFlow id="Flow_Decide_Action" sourceRef="BusinessRuleTask_DecidePayout" targetRef="Gateway_PayoutAction" />
       <bpmn:exclusiveGateway id="Gateway_PayoutAction" name="Payout action?" default="Flow_Action_CarryOver">
+        <bpmn:documentation>The default flow is the safe choice: an unknown result pays nothing this week.</bpmn:documentation>
         <bpmn:incoming>Flow_Decide_Action</bpmn:incoming>
         <bpmn:outgoing>Flow_Action_Pay</bpmn:outgoing>
         <bpmn:outgoing>Flow_Action_CarryOver</bpmn:outgoing>
         <bpmn:outgoing>Flow_Action_Hold</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_Decide_Action" sourceRef="BusinessRuleTask_DecidePayout" targetRef="Gateway_PayoutAction" />
-      <bpmn:exclusiveGateway id="Gateway_JoinPay">
-        <bpmn:documentation>Joins the two ways to the payout.</bpmn:documentation>
-        <bpmn:incoming>Flow_Action_Pay</bpmn:incoming>
-        <bpmn:incoming>Flow_Save_JoinPay</bpmn:incoming>
-        <bpmn:outgoing>Flow_JoinPay_JoinRetry</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:exclusiveGateway id="Gateway_JoinRetry">
-        <bpmn:documentation>Joins a retry after a failed payout.</bpmn:documentation>
-        <bpmn:incoming>Flow_JoinPay_JoinRetry</bpmn:incoming>
-        <bpmn:incoming>Flow_Retry_Yes</bpmn:incoming>
-        <bpmn:outgoing>Flow_JoinRetry_Send</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
       <bpmn:sequenceFlow id="Flow_Action_Pay" name="Pay" sourceRef="Gateway_PayoutAction" targetRef="Gateway_JoinPay">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=payoutAction = "PAY"</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
-      <bpmn:sequenceFlow id="Flow_JoinPay_JoinRetry" sourceRef="Gateway_JoinPay" targetRef="Gateway_JoinRetry" />
-      <bpmn:sendTask id="SendTask_SendPayout" name="Send the payout">
-        <bpmn:documentation>O11 (new). The worker asks the sandbox or mock payment service (NFR02) to pay settlement.netAmount to the producer. It sends settlementRunId and producerId as the idempotency key, so a retry cannot pay twice (NFR05). It returns payoutRequestId.</bpmn:documentation>
-        <bpmn:extensionElements>
-          <zeebe:taskDefinition type="send-payout" retries="3" />
-        </bpmn:extensionElements>
-        <bpmn:incoming>Flow_JoinRetry_Send</bpmn:incoming>
-        <bpmn:outgoing>Flow_Send_WaitResult</bpmn:outgoing>
-      </bpmn:sendTask>
-      <bpmn:sequenceFlow id="Flow_JoinRetry_Send" sourceRef="Gateway_JoinRetry" targetRef="SendTask_SendPayout" />
-      <bpmn:receiveTask id="ReceiveTask_WaitForPayoutResult" name="Wait for the payout result" messageRef="Message_28b2l1g">
-        <bpmn:documentation>O12 (new). Message payout-result, correlated on payoutRequestId. It sets payoutStatus (CONFIRMED or FAILED), payoutReference and failureReason.</bpmn:documentation>
-        <bpmn:incoming>Flow_Send_WaitResult</bpmn:incoming>
-        <bpmn:outgoing>Flow_WaitResult_Confirmed</bpmn:outgoing>
-      </bpmn:receiveTask>
-      <bpmn:sequenceFlow id="Flow_Send_WaitResult" sourceRef="SendTask_SendPayout" targetRef="ReceiveTask_WaitForPayoutResult" />
-      <bpmn:exclusiveGateway id="Gateway_PayoutConfirmed" name="Payout confirmed?" default="Flow_Confirmed_No">
-        <bpmn:incoming>Flow_WaitResult_Confirmed</bpmn:incoming>
-        <bpmn:outgoing>Flow_Confirmed_Yes</bpmn:outgoing>
-        <bpmn:outgoing>Flow_Confirmed_No</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_WaitResult_Confirmed" sourceRef="ReceiveTask_WaitForPayoutResult" targetRef="Gateway_PayoutConfirmed" />
-      <bpmn:sendTask id="SendTask_SendStatement" name="Send the settlement statement">
-        <bpmn:documentation>M10, FR16. The statement lists the orders of the week, the 5% commission, the refunds, the amount paid and the payout reference. It is the audit trail that the producer uses for its tax report (E06).</bpmn:documentation>
-        <bpmn:extensionElements>
-          <zeebe:taskDefinition type="send-settlement-statement" retries="3" />
-        </bpmn:extensionElements>
-        <bpmn:incoming>Flow_Confirmed_Yes</bpmn:incoming>
-        <bpmn:outgoing>Flow_Statement_Paid</bpmn:outgoing>
-      </bpmn:sendTask>
-      <bpmn:sequenceFlow id="Flow_Confirmed_Yes" name="Yes" sourceRef="Gateway_PayoutConfirmed" targetRef="SendTask_SendStatement">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=payoutStatus = "CONFIRMED"</bpmn:conditionExpression>
-      </bpmn:sequenceFlow>
-      <bpmn:endEvent id="EndEvent_ProducerPaid" name="Producer paid">
-        <bpmn:incoming>Flow_Statement_Paid</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_Statement_Paid" sourceRef="SendTask_SendStatement" targetRef="EndEvent_ProducerPaid" />
-      <bpmn:endEvent id="EndEvent_BalanceCarried" name="Balance carried to next week">
-        <bpmn:documentation>Nothing is paid this week. The balance stays in DS3, and next week's run adds it (carriedIn). NFR05: no amount is lost or paid twice.</bpmn:documentation>
-        <bpmn:incoming>Flow_Action_CarryOver</bpmn:incoming>
-      </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_Action_CarryOver" name="Below the minimum" sourceRef="Gateway_PayoutAction" targetRef="EndEvent_BalanceCarried" />
       <bpmn:sequenceFlow id="Flow_Action_Hold" name="Bank details missing" sourceRef="Gateway_PayoutAction" targetRef="SendTask_RequestBankDetails">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=payoutAction = "HOLD"</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
-      <bpmn:sequenceFlow id="Flow_Request_WaitDetails" sourceRef="SendTask_RequestBankDetails" targetRef="ReceiveTask_WaitForBankDetails" />
-      <bpmn:sequenceFlow id="Flow_WaitDetails_Save" sourceRef="ReceiveTask_WaitForBankDetails" targetRef="ServiceTask_SaveBankDetails" />
-      <bpmn:sequenceFlow id="Flow_Save_JoinPay" sourceRef="ServiceTask_SaveBankDetails" targetRef="Gateway_JoinPay" />
+      <bpmn:endEvent id="EndEvent_BalanceCarried" name="Balance carried to next week">
+        <bpmn:documentation>Nothing is paid this week. Record the settlement run removes the mark of this run, so the next run adds the balance (carriedIn). The producer still gets a statement. NFR14: no amount is lost or paid twice.</bpmn:documentation>
+        <bpmn:incoming>Flow_Action_CarryOver</bpmn:incoming>
+      </bpmn:endEvent>
       <bpmn:sendTask id="SendTask_RequestBankDetails" name="Ask the producer for bank details">
-        <bpmn:documentation>O09 (new). The worker asks the producer for the account to pay into.</bpmn:documentation>
+        <bpmn:documentation>O09. The worker asks the producer for the account to pay into. The request carries the reference settlementRunId:producerId, which the reply (O10) uses.</bpmn:documentation>
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="request-bank-details" retries="3" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_Action_Hold</bpmn:incoming>
         <bpmn:outgoing>Flow_Request_WaitDetails</bpmn:outgoing>
       </bpmn:sendTask>
+      <bpmn:sequenceFlow id="Flow_Request_WaitDetails" sourceRef="SendTask_RequestBankDetails" targetRef="ReceiveTask_WaitForBankDetails" />
       <bpmn:receiveTask id="ReceiveTask_WaitForBankDetails" name="Wait for the bank details" messageRef="Message_0j7rs7g">
-        <bpmn:documentation>O10 (new). Message bank-details-received, correlated on settlement.producerId.</bpmn:documentation>
+        <bpmn:documentation>O10. Message bank-details-received, correlated on settlementRunId and producerId. Thus a reply reaches only the run that asked for it.</bpmn:documentation>
         <bpmn:incoming>Flow_Request_WaitDetails</bpmn:incoming>
         <bpmn:outgoing>Flow_WaitDetails_Save</bpmn:outgoing>
       </bpmn:receiveTask>
+      <bpmn:sequenceFlow id="Flow_WaitDetails_Save" sourceRef="ReceiveTask_WaitForBankDetails" targetRef="ServiceTask_SaveBankDetails" />
       <bpmn:boundaryEvent id="BoundaryEvent_NoBankDetails" name="No reply in 3 days" attachedToRef="ReceiveTask_WaitForBankDetails">
-        <bpmn:documentation>Draft rule: after 3 days the payout waits for next week's run.</bpmn:documentation>
+        <bpmn:documentation>Draft rule DR4: after 3 days the payout waits for next week's run.</bpmn:documentation>
         <bpmn:outgoing>Flow_NoBankDetails_Held</bpmn:outgoing>
         <bpmn:timerEventDefinition id="TimerEventDefinition_0rh0s3x">
           <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P3D</bpmn:timeDuration>
         </bpmn:timerEventDefinition>
       </bpmn:boundaryEvent>
-      <bpmn:endEvent id="EndEvent_PayoutHeld" name="Payout held for next week">
-        <bpmn:documentation>Nothing is paid this week. The balance stays in DS3 for next week's run.</bpmn:documentation>
+      <bpmn:sequenceFlow id="Flow_NoBankDetails_Held" sourceRef="BoundaryEvent_NoBankDetails" targetRef="EndEvent_PayoutHeld" />
+      <bpmn:endEvent id="EndEvent_PayoutHeld" name="Held for next week (no bank details)">
+        <bpmn:documentation>Nothing is paid this week. Record the settlement run removes the mark of this run, so the next run collects the balance again and asks again for the bank details.</bpmn:documentation>
         <bpmn:incoming>Flow_NoBankDetails_Held</bpmn:incoming>
       </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_NoBankDetails_Held" sourceRef="BoundaryEvent_NoBankDetails" targetRef="EndEvent_PayoutHeld" />
       <bpmn:serviceTask id="ServiceTask_SaveBankDetails" name="Save the bank details">
-        <bpmn:documentation>The worker stores the producer's account details. The run continues to the payout.</bpmn:documentation>
+        <bpmn:documentation>The worker stores the producer's account details for this run and later runs. The payout then continues.</bpmn:documentation>
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="save-bank-details" retries="3" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_WaitDetails_Save</bpmn:incoming>
         <bpmn:outgoing>Flow_Save_JoinPay</bpmn:outgoing>
       </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_Save_JoinPay" sourceRef="ServiceTask_SaveBankDetails" targetRef="Gateway_JoinPay" />
+      <bpmn:exclusiveGateway id="Gateway_JoinPay">
+        <bpmn:documentation>Joins the two ways to the payout.</bpmn:documentation>
+        <bpmn:incoming>Flow_Action_Pay</bpmn:incoming>
+        <bpmn:incoming>Flow_Save_JoinPay</bpmn:incoming>
+        <bpmn:outgoing>Flow_JoinPay_JoinRetry</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_JoinPay_JoinRetry" sourceRef="Gateway_JoinPay" targetRef="Gateway_JoinRetry" />
+      <bpmn:exclusiveGateway id="Gateway_JoinRetry">
+        <bpmn:documentation>Joins a retry after a failed payout. A separate join keeps the retry loop clear of the bank details path.</bpmn:documentation>
+        <bpmn:incoming>Flow_JoinPay_JoinRetry</bpmn:incoming>
+        <bpmn:incoming>Flow_Retry_Yes</bpmn:incoming>
+        <bpmn:outgoing>Flow_JoinRetry_Send</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_JoinRetry_Send" sourceRef="Gateway_JoinRetry" targetRef="SendTask_SendPayout" />
+      <bpmn:sendTask id="SendTask_SendPayout" name="Send the payout">
+        <bpmn:documentation>O11. The worker asks the sandbox or mock payment service (NFR02) to pay settlement.netAmount to the producer. The idempotency key is settlementRunId, producerId and payoutAttempt. A job retry of the worker sends the same key, so the service cannot pay twice. A retry after a confirmed failure has a new attempt number, so the service makes a new payout (NFR14). It returns payoutRequestId.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="send-payout" retries="3" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_JoinRetry_Send</bpmn:incoming>
+        <bpmn:outgoing>Flow_Send_WaitResult</bpmn:outgoing>
+      </bpmn:sendTask>
+      <bpmn:sequenceFlow id="Flow_Send_WaitResult" sourceRef="SendTask_SendPayout" targetRef="ReceiveTask_WaitForPayoutResult" />
+      <bpmn:receiveTask id="ReceiveTask_WaitForPayoutResult" name="Wait for the payout result" messageRef="Message_28b2l1g">
+        <bpmn:documentation>O12. Message payout-result, correlated on payoutRequestId. It sets payoutStatus (CONFIRMED or FAILED), payoutReference and failureReason.</bpmn:documentation>
+        <bpmn:incoming>Flow_Send_WaitResult</bpmn:incoming>
+        <bpmn:outgoing>Flow_WaitResult_JoinResult</bpmn:outgoing>
+      </bpmn:receiveTask>
+      <bpmn:sequenceFlow id="Flow_WaitResult_JoinResult" sourceRef="ReceiveTask_WaitForPayoutResult" targetRef="Gateway_JoinResult" />
       <bpmn:boundaryEvent id="BoundaryEvent_NoPayoutAnswer" name="No answer in 1 hour" attachedToRef="ReceiveTask_WaitForPayoutResult">
-        <bpmn:documentation>Draft rule: no answer within 1 hour counts as a failed payout.</bpmn:documentation>
-        <bpmn:outgoing>Flow_NoAnswer_JoinFailed</bpmn:outgoing>
+        <bpmn:documentation>Draft rule DR5. No answer does not mean that the payout failed: the service can pay after the hour. Thus the process asks the service for the status before anyone decides on a retry (NFR14).</bpmn:documentation>
+        <bpmn:outgoing>Flow_NoAnswer_JoinCheck</bpmn:outgoing>
         <bpmn:timerEventDefinition id="TimerEventDefinition_083ceyz">
           <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT1H</bpmn:timeDuration>
         </bpmn:timerEventDefinition>
       </bpmn:boundaryEvent>
-      <bpmn:exclusiveGateway id="Gateway_JoinFailed">
-        <bpmn:documentation>Joins a failed payout and a payout with no answer.</bpmn:documentation>
-        <bpmn:incoming>Flow_NoAnswer_JoinFailed</bpmn:incoming>
-        <bpmn:incoming>Flow_Confirmed_No</bpmn:incoming>
-        <bpmn:outgoing>Flow_JoinFailed_Review</bpmn:outgoing>
+      <bpmn:sequenceFlow id="Flow_NoAnswer_JoinCheck" sourceRef="BoundaryEvent_NoPayoutAnswer" targetRef="Gateway_JoinCheck" />
+      <bpmn:exclusiveGateway id="Gateway_JoinCheck">
+        <bpmn:documentation>Joins the first status check and each check after a wait.</bpmn:documentation>
+        <bpmn:incoming>Flow_NoAnswer_JoinCheck</bpmn:incoming>
+        <bpmn:incoming>Flow_WaitBeforeCheck_JoinCheck</bpmn:incoming>
+        <bpmn:outgoing>Flow_JoinCheck_Check</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_NoAnswer_JoinFailed" sourceRef="BoundaryEvent_NoPayoutAnswer" targetRef="Gateway_JoinFailed" />
-      <bpmn:sequenceFlow id="Flow_Confirmed_No" name="No" sourceRef="Gateway_PayoutConfirmed" targetRef="Gateway_JoinFailed" />
-      <bpmn:sequenceFlow id="Flow_JoinFailed_Review" sourceRef="Gateway_JoinFailed" targetRef="UserTask_ReviewFailedPayout" />
+      <bpmn:sequenceFlow id="Flow_JoinCheck_Check" sourceRef="Gateway_JoinCheck" targetRef="ServiceTask_CheckPayoutStatus" />
+      <bpmn:serviceTask id="ServiceTask_CheckPayoutStatus" name="Check the payout status">
+        <bpmn:documentation>NFR14. The worker asks the payment service for the status of payoutRequestId. It sets payoutStatus to CONFIRMED, FAILED or PENDING, with payoutReference or failureReason. If the service has no record of the request, the status is FAILED.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="check-payout-status" retries="3" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_JoinCheck_Check</bpmn:incoming>
+        <bpmn:outgoing>Flow_Check_StillPending</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_Check_StillPending" sourceRef="ServiceTask_CheckPayoutStatus" targetRef="Gateway_StillPending" />
+      <bpmn:exclusiveGateway id="Gateway_StillPending" name="Payout still pending?" default="Flow_StillPending_No">
+        <bpmn:incoming>Flow_Check_StillPending</bpmn:incoming>
+        <bpmn:outgoing>Flow_StillPending_Yes</bpmn:outgoing>
+        <bpmn:outgoing>Flow_StillPending_No</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_StillPending_Yes" name="Yes" sourceRef="Gateway_StillPending" targetRef="IntermediateCatchEvent_WaitBeforeCheck">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=payoutStatus = "PENDING"</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_WaitBeforeCheck" name="Wait 1 hour">
+        <bpmn:documentation>Draft rule DR5: ask again every hour. The chase after 2 days shows the payouts that stay open.</bpmn:documentation>
+        <bpmn:incoming>Flow_StillPending_Yes</bpmn:incoming>
+        <bpmn:outgoing>Flow_WaitBeforeCheck_JoinCheck</bpmn:outgoing>
+        <bpmn:timerEventDefinition id="TimerEventDefinition_WaitBeforeCheck">
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT1H</bpmn:timeDuration>
+        </bpmn:timerEventDefinition>
+      </bpmn:intermediateCatchEvent>
+      <bpmn:sequenceFlow id="Flow_WaitBeforeCheck_JoinCheck" sourceRef="IntermediateCatchEvent_WaitBeforeCheck" targetRef="Gateway_JoinCheck" />
+      <bpmn:sequenceFlow id="Flow_StillPending_No" name="No" sourceRef="Gateway_StillPending" targetRef="Gateway_JoinResult" />
+      <bpmn:exclusiveGateway id="Gateway_JoinResult">
+        <bpmn:documentation>Joins the payout result and the result of the status check.</bpmn:documentation>
+        <bpmn:incoming>Flow_WaitResult_JoinResult</bpmn:incoming>
+        <bpmn:incoming>Flow_StillPending_No</bpmn:incoming>
+        <bpmn:outgoing>Flow_JoinResult_Record</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_JoinResult_Record" sourceRef="Gateway_JoinResult" targetRef="ServiceTask_RecordPayoutAttempt" />
+      <bpmn:serviceTask id="ServiceTask_RecordPayoutAttempt" name="Record the payout attempt">
+        <bpmn:documentation>NFR08, NFR14. The worker writes the attempt to DS3 at once: settlementRunId, producerId, payoutAttempt, payoutRequestId, payoutStatus, payoutReference, failureReason and the time. Thus each failed attempt and each retry has a record, also if the run stops later.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="record-payout-attempt" retries="3" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_JoinResult_Record</bpmn:incoming>
+        <bpmn:outgoing>Flow_Record_Confirmed</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_Record_Confirmed" sourceRef="ServiceTask_RecordPayoutAttempt" targetRef="Gateway_PayoutConfirmed" />
+      <bpmn:exclusiveGateway id="Gateway_PayoutConfirmed" name="Payout confirmed?" default="Flow_Confirmed_No">
+        <bpmn:incoming>Flow_Record_Confirmed</bpmn:incoming>
+        <bpmn:outgoing>Flow_Confirmed_Yes</bpmn:outgoing>
+        <bpmn:outgoing>Flow_Confirmed_No</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_Confirmed_Yes" name="Yes" sourceRef="Gateway_PayoutConfirmed" targetRef="EndEvent_ProducerPaid">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=payoutStatus = "CONFIRMED"</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:endEvent id="EndEvent_ProducerPaid" name="Producer paid">
+        <bpmn:documentation>The weekly statement after the run gives the payout reference (M10).</bpmn:documentation>
+        <bpmn:incoming>Flow_Confirmed_Yes</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_Confirmed_No" name="No" sourceRef="Gateway_PayoutConfirmed" targetRef="UserTask_ReviewFailedPayout" />
       <bpmn:userTask id="UserTask_ReviewFailedPayout" name="Review the failed payout">
-        <bpmn:documentation>Finance checks failureReason, for example a closed account, then chooses to try again or to hold the payout for next week. Form review-failed-payout (to add). It sets retryDecision.</bpmn:documentation>
+        <bpmn:documentation>Finance checks failureReason, for example a closed account, then chooses to try again or to hold the payout for next week. Form review-failed-payout. The output mappings set retryDecision and reviewNote. For a retry they also add 1 to payoutAttempt, so the retry has a new idempotency key.</bpmn:documentation>
         <bpmn:extensionElements>
           <zeebe:userTask />
           <zeebe:formDefinition formId="review-failed-payout" />
           <zeebe:assignmentDefinition candidateGroups="finance" />
+          <zeebe:ioMapping>
+            <zeebe:output source="=retryDecision" target="retryDecision" />
+            <zeebe:output source="=reviewNote" target="reviewNote" />
+            <zeebe:output source="=if retryDecision = &quot;RETRY&quot; then payoutAttempt + 1 else payoutAttempt" target="payoutAttempt" />
+          </zeebe:ioMapping>
         </bpmn:extensionElements>
-        <bpmn:incoming>Flow_JoinFailed_Review</bpmn:incoming>
+        <bpmn:incoming>Flow_Confirmed_No</bpmn:incoming>
         <bpmn:outgoing>Flow_Review_Retry</bpmn:outgoing>
       </bpmn:userTask>
+      <bpmn:sequenceFlow id="Flow_Review_Retry" sourceRef="UserTask_ReviewFailedPayout" targetRef="Gateway_RetryPayout" />
       <bpmn:exclusiveGateway id="Gateway_RetryPayout" name="Try the payout again?" default="Flow_Retry_No">
         <bpmn:incoming>Flow_Review_Retry</bpmn:incoming>
         <bpmn:outgoing>Flow_Retry_No</bpmn:outgoing>
         <bpmn:outgoing>Flow_Retry_Yes</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_Review_Retry" sourceRef="UserTask_ReviewFailedPayout" targetRef="Gateway_RetryPayout" />
-      <bpmn:endEvent id="EndEvent_PayoutHeldAfterFailure" name="Payout held for next week">
-        <bpmn:documentation>Nothing is paid this week. The balance stays in DS3 for next week's run.</bpmn:documentation>
-        <bpmn:incoming>Flow_Retry_No</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_Retry_No" name="No" sourceRef="Gateway_RetryPayout" targetRef="EndEvent_PayoutHeldAfterFailure" />
       <bpmn:sequenceFlow id="Flow_Retry_Yes" name="Yes" sourceRef="Gateway_RetryPayout" targetRef="Gateway_JoinRetry">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=retryDecision = "RETRY"</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_Retry_No" name="No" sourceRef="Gateway_RetryPayout" targetRef="EndEvent_PayoutHeldAfterFailure" />
+      <bpmn:endEvent id="EndEvent_PayoutHeldAfterFailure" name="Held for next week (payout failed)">
+        <bpmn:documentation>Nothing is paid this week. Record the settlement run removes the mark of this run, so the next run collects the balance again.</bpmn:documentation>
+        <bpmn:incoming>Flow_Retry_No</bpmn:incoming>
+      </bpmn:endEvent>
     </bpmn:subProcess>
-    <bpmn:sequenceFlow id="Flow_JoinApproved_Settle" sourceRef="Gateway_JoinApproved" targetRef="SubProcess_SettleEachProducer" />
+    <bpmn:boundaryEvent id="BoundaryEvent_PayoutsStillOpen" name="Payouts still open after 2 days" cancelActivity="false" attachedToRef="SubProcess_SettleEachProducer">
+      <bpmn:documentation>Non-interrupting: the open instances keep waiting. Draft rule DR6: a run should finish within 2 days, so after that the finance manager chases what is still open.</bpmn:documentation>
+      <bpmn:outgoing>Flow_StillOpen_Chase</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0ba86to">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P2D</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_StillOpen_Chase" sourceRef="BoundaryEvent_PayoutsStillOpen" targetRef="UserTask_ChaseOpenPayouts" />
     <bpmn:userTask id="UserTask_ChaseOpenPayouts" name="Chase the open payouts">
-      <bpmn:documentation>The finance manager contacts the producers whose bank details or failed payouts are still open. Form chase-open-payouts (to add).</bpmn:documentation>
+      <bpmn:documentation>The finance manager contacts the producers whose bank details or failed payouts are still open. Form chase-open-payouts lists the producers that the run asked for bank details. The open reviews are in Tasklist. The run continues while the manager chases.</bpmn:documentation>
       <bpmn:extensionElements>
         <zeebe:userTask />
         <zeebe:formDefinition formId="chase-open-payouts" />
@@ -299,41 +362,47 @@
       <bpmn:incoming>Flow_StillOpen_Chase</bpmn:incoming>
       <bpmn:outgoing>Flow_Chase_Chased</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_StillOpen_Chase" sourceRef="BoundaryEvent_PayoutsStillOpen" targetRef="UserTask_ChaseOpenPayouts" />
+    <bpmn:sequenceFlow id="Flow_Chase_Chased" sourceRef="UserTask_ChaseOpenPayouts" targetRef="EndEvent_OpenPayoutsChased" />
     <bpmn:endEvent id="EndEvent_OpenPayoutsChased" name="Open payouts chased">
       <bpmn:incoming>Flow_Chase_Chased</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_Chase_Chased" sourceRef="UserTask_ChaseOpenPayouts" targetRef="EndEvent_OpenPayoutsChased" />
-    <bpmn:boundaryEvent id="BoundaryEvent_PayoutsStillOpen" name="Payouts still open after 2 days" cancelActivity="false" attachedToRef="SubProcess_SettleEachProducer">
-      <bpmn:documentation>Non-interrupting: the open instances keep waiting. Draft rule: a run should finish within 2 days, so after that the finance manager chases what is still open.</bpmn:documentation>
-      <bpmn:outgoing>Flow_StillOpen_Chase</bpmn:outgoing>
-      <bpmn:timerEventDefinition id="TimerEventDefinition_0ba86to">
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P2D</bpmn:timeDuration>
-      </bpmn:timerEventDefinition>
-    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_Settle_Record" sourceRef="SubProcess_SettleEachProducer" targetRef="ServiceTask_RecordSettlementRun" />
     <bpmn:serviceTask id="ServiceTask_RecordSettlementRun" name="Record the settlement run">
-      <bpmn:documentation>NFR08, FR16. The worker writes the audit trail of the run to DS3: for each producer the gross amount, the 5% commission, the refunds, the amount paid, carried or held, and the payout reference. The producers use this trail for their tax reports (E06).</bpmn:documentation>
+      <bpmn:documentation>NFR08, FR16. The worker writes the summary of the run to DS3 from settlementResults: for each producer the outcome (PAID, CARRIED or HELD), the amount and the payout reference. It removes the mark of this run from each carried or held balance, so that the next run collects it (NFR14). The producers use this trail for their tax reports (E06).</bpmn:documentation>
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="record-settlement-run" retries="3" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_Settle_Record</bpmn:incoming>
-      <bpmn:outgoing>Flow_Record_Settled</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Record_Statements</bpmn:outgoing>
       <bpmn:dataOutputAssociation id="DataOutputAssociation_RecordSettlementRun">
         <bpmn:targetRef>DataStoreReference_RecordsOut</bpmn:targetRef>
       </bpmn:dataOutputAssociation>
     </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_Record_Statements" sourceRef="ServiceTask_RecordSettlementRun" targetRef="SendTask_SendStatements" />
+    <bpmn:sendTask id="SendTask_SendStatements" name="Send the weekly statements">
+      <bpmn:documentation>M10, FR16. One statement for each entry of settlementResults, in parallel: every producer gets one, also when its balance is carried or held. The worker reads the recorded run in DS3. The statement lists the orders of the week, the 5% commission, the refunds, the amount paid, carried or held, and the payout reference. It is the audit trail that the producer uses for its tax report (E06, SD32).</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="send-settlement-statement" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Record_Statements</bpmn:incoming>
+      <bpmn:outgoing>Flow_Statements_Settled</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics>
+        <bpmn:extensionElements>
+          <zeebe:loopCharacteristics inputCollection="=settlementResults" inputElement="result" />
+        </bpmn:extensionElements>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:sendTask>
+    <bpmn:sequenceFlow id="Flow_Statements_Settled" sourceRef="SendTask_SendStatements" targetRef="EndEvent_ProducersSettled" />
     <bpmn:endEvent id="EndEvent_ProducersSettled" name="Producers settled">
       <bpmn:documentation>The end of P07 in the strategic model (End_P07).</bpmn:documentation>
-      <bpmn:incoming>Flow_Record_Settled</bpmn:incoming>
+      <bpmn:incoming>Flow_Statements_Settled</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_Record_Settled" sourceRef="ServiceTask_RecordSettlementRun" targetRef="EndEvent_ProducersSettled" />
     <bpmn:dataStoreReference id="DataStoreReference_RecordsIn" name="Payment and settlement records (DS3)">
       <bpmn:documentation>DS3, owned by F03. FN2 writes the payments. P07 reads them here.</bpmn:documentation>
     </bpmn:dataStoreReference>
     <bpmn:dataStoreReference id="DataStoreReference_RecordsOut" name="Payment and settlement records (DS3)">
-      <bpmn:documentation>The same store DS3. P07 writes the settlement records here.</bpmn:documentation>
+      <bpmn:documentation>The same store DS3. P07 writes the settlement records here. Record the payout attempt also writes each attempt to DS3.</bpmn:documentation>
     </bpmn:dataStoreReference>
-    <bpmn:sequenceFlow id="Flow_Settle_Record" sourceRef="SubProcess_SettleEachProducer" targetRef="ServiceTask_RecordSettlementRun" />
   </bpmn:process>
   <bpmn:message id="Message_28b2l1g" name="payout-result">
     <bpmn:extensionElements>
@@ -342,336 +411,391 @@
   </bpmn:message>
   <bpmn:message id="Message_0j7rs7g" name="bank-details-received">
     <bpmn:extensionElements>
-      <zeebe:subscription correlationKey="=settlement.producerId" />
+      <zeebe:subscription correlationKey="=settlementRunId + &quot;:&quot; + settlement.producerId" />
     </bpmn:extensionElements>
   </bpmn:message>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_SettleProducerPayments">
-      <bpmndi:BPMNShape id="Participant_0ohbiaz_di" bpmnElement="Participant_BRFNetwork" isHorizontal="true">
-        <dc:Bounds x="150" y="200" width="2690" height="680" />
+      <bpmndi:BPMNShape id="Participant_BRFNetwork_di" bpmnElement="Participant_BRFNetwork" isHorizontal="true">
+        <dc:Bounds x="150" y="200" width="3110" height="680" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_19qx6kg_di" bpmnElement="Lane_F03" isHorizontal="true">
-        <dc:Bounds x="180" y="200" width="2660" height="680" />
+      <bpmndi:BPMNShape id="Lane_F03_di" bpmnElement="Lane_F03" isHorizontal="true">
+        <dc:Bounds x="180" y="200" width="3080" height="680" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_00y06ef_di" bpmnElement="StartEvent_WeeklySettlement">
+      <bpmndi:BPMNShape id="StartEvent_WeeklySettlement_di" bpmnElement="StartEvent_WeeklySettlement">
         <dc:Bounds x="222" y="422" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="198" y="385" width="83" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_04e8t0a_di" bpmnElement="StartEvent_RunRequested">
+      <bpmndi:BPMNShape id="StartEvent_RunRequested_di" bpmnElement="StartEvent_RunRequested">
         <dc:Bounds x="222" y="622" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="204" y="665" width="72" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_08n3y8q_di" bpmnElement="Gateway_JoinStart" isMarkerVisible="true">
+      <bpmndi:BPMNShape id="Gateway_JoinStart_di" bpmnElement="Gateway_JoinStart" isMarkerVisible="true">
         <dc:Bounds x="265" y="515" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0ro4ti2_di" bpmnElement="ServiceTask_CollectPayments">
+      <bpmndi:BPMNShape id="ServiceTask_CollectPayments_di" bpmnElement="ServiceTask_CollectPayments">
         <dc:Bounds x="350" y="500" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_19xyg37_di" bpmnElement="Gateway_ApprovalNeeded" isMarkerVisible="true">
+      <bpmndi:BPMNShape id="Gateway_ApprovalNeeded_di" bpmnElement="Gateway_ApprovalNeeded" isMarkerVisible="true">
         <dc:Bounds x="505" y="515" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="496" y="572" width="69" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0iafrx7_di" bpmnElement="UserTask_ApproveRun">
+      <bpmndi:BPMNShape id="UserTask_ApproveRun_di" bpmnElement="UserTask_ApproveRun">
         <dc:Bounds x="590" y="240" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0b01npe_di" bpmnElement="Gateway_RunApproved" isMarkerVisible="true">
+      <bpmndi:BPMNShape id="Gateway_RunApproved_di" bpmnElement="Gateway_RunApproved" isMarkerVisible="true">
         <dc:Bounds x="735" y="255" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="722" y="231" width="76" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_00b7b1c_di" bpmnElement="Gateway_JoinApproved" isMarkerVisible="true">
+      <bpmndi:BPMNShape id="ServiceTask_ReleaseBalances_di" bpmnElement="ServiceTask_ReleaseBalances">
+        <dc:Bounds x="850" y="240" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_RunStopped_di" bpmnElement="EndEvent_RunStopped">
+        <dc:Bounds x="1002" y="262" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="981" y="305" width="79" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_JoinApproved_di" bpmnElement="Gateway_JoinApproved" isMarkerVisible="true">
         <dc:Bounds x="735" y="515" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0btm0xl_di" bpmnElement="EndEvent_RunStopped">
-        <dc:Bounds x="872" y="262" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="851" y="305" width="79" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1tkevee_di" bpmnElement="UserTask_ChaseOpenPayouts">
-        <dc:Bounds x="1240" y="240" width="100" height="80" />
+      <bpmndi:BPMNShape id="SubProcess_SettleEachProducer_di" bpmnElement="SubProcess_SettleEachProducer" isExpanded="true">
+        <dc:Bounds x="830" y="360" width="1990" height="480" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_08wjq12_di" bpmnElement="EndEvent_OpenPayoutsChased">
-        <dc:Bounds x="1452" y="262" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1436" y="305" width="69" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0zf1ag5_di" bpmnElement="ServiceTask_RecordSettlementRun">
-        <dc:Bounds x="2580" y="500" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_03hjdc5_di" bpmnElement="EndEvent_ProducersSettled">
-        <dc:Bounds x="2742" y="522" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="2717" y="565" width="86" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DataStoreReference_01xhyjd_di" bpmnElement="DataStoreReference_RecordsIn">
-        <dc:Bounds x="375" y="735" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="366" y="792" width="69" height="40" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DataStoreReference_1w70rve_di" bpmnElement="DataStoreReference_RecordsOut">
-        <dc:Bounds x="2605" y="735" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="2596" y="792" width="69" height="40" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1k7dd2z_di" bpmnElement="SubProcess_SettleEachProducer" isExpanded="true">
-        <dc:Bounds x="830" y="360" width="1690" height="480" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1e3jrr0_di" bpmnElement="StartEvent_ProducerToSettle">
+      <bpmndi:BPMNShape id="StartEvent_ProducerToSettle_di" bpmnElement="StartEvent_ProducerToSettle">
         <dc:Bounds x="870" y="522" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="845" y="565" width="87" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_08tx02b_di" bpmnElement="BusinessRuleTask_DecidePayout">
+      <bpmndi:BPMNShape id="BusinessRuleTask_DecidePayout_di" bpmnElement="BusinessRuleTask_DecidePayout">
         <dc:Bounds x="950" y="500" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0gxvglw_di" bpmnElement="Gateway_PayoutAction" isMarkerVisible="true">
+      <bpmndi:BPMNShape id="Gateway_PayoutAction_di" bpmnElement="Gateway_PayoutAction" isMarkerVisible="true">
         <dc:Bounds x="1085" y="515" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1112" y="558" width="56" height="27" />
+          <dc:Bounds x="1128" y="560" width="56" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0fwlncv_di" bpmnElement="SendTask_SendStatement">
-        <dc:Bounds x="2280" y="500" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0myz0a7_di" bpmnElement="EndEvent_ProducerPaid">
-        <dc:Bounds x="2442" y="522" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="2426" y="565" width="69" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0r3yaqs_di" bpmnElement="EndEvent_BalanceCarried">
+      <bpmndi:BPMNShape id="EndEvent_BalanceCarried_di" bpmnElement="EndEvent_BalanceCarried">
         <dc:Bounds x="1192" y="412" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1172" y="455" width="77" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0d6g3xz_di" bpmnElement="SendTask_SendPayout">
-        <dc:Bounds x="1680" y="500" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1h48ima_di" bpmnElement="Gateway_JoinRetry" isMarkerVisible="true">
-        <dc:Bounds x="1605" y="515" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1ebw2d8_di" bpmnElement="Gateway_JoinPay" isMarkerVisible="true">
-        <dc:Bounds x="1525" y="515" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1vgojrx_di" bpmnElement="ReceiveTask_WaitForPayoutResult">
-        <dc:Bounds x="1810" y="500" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1n6xygs_di" bpmnElement="Gateway_PayoutConfirmed" isMarkerVisible="true">
-        <dc:Bounds x="1935" y="515" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1932" y="477.5" width="55" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0u4cytx_di" bpmnElement="SendTask_RequestBankDetails">
+      <bpmndi:BPMNShape id="SendTask_RequestBankDetails_di" bpmnElement="SendTask_RequestBankDetails">
         <dc:Bounds x="1140" y="610" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1rbxuie_di" bpmnElement="ReceiveTask_WaitForBankDetails">
+      <bpmndi:BPMNShape id="ReceiveTask_WaitForBankDetails_di" bpmnElement="ReceiveTask_WaitForBankDetails">
         <dc:Bounds x="1280" y="610" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_110agih_di" bpmnElement="EndEvent_PayoutHeld">
-        <dc:Bounds x="1452" y="742" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1433" y="785" width="74" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1qjfnjo_di" bpmnElement="ServiceTask_SaveBankDetails">
+      <bpmndi:BPMNShape id="ServiceTask_SaveBankDetails_di" bpmnElement="ServiceTask_SaveBankDetails">
         <dc:Bounds x="1420" y="610" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0q36ts3_di" bpmnElement="Gateway_JoinFailed" isMarkerVisible="true">
-        <dc:Bounds x="1935" y="625" width="50" height="50" />
+      <bpmndi:BPMNShape id="EndEvent_PayoutHeld_di" bpmnElement="EndEvent_PayoutHeld">
+        <dc:Bounds x="1452" y="742" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1420" y="785" width="100" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1r2loj3_di" bpmnElement="UserTask_ReviewFailedPayout">
-        <dc:Bounds x="2020" y="610" width="100" height="80" />
+      <bpmndi:BPMNShape id="Gateway_JoinPay_di" bpmnElement="Gateway_JoinPay" isMarkerVisible="true">
+        <dc:Bounds x="1555" y="515" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_JoinRetry_di" bpmnElement="Gateway_JoinRetry" isMarkerVisible="true">
+        <dc:Bounds x="1635" y="515" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SendTask_SendPayout_di" bpmnElement="SendTask_SendPayout">
+        <dc:Bounds x="1720" y="500" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1t5xtuv_di" bpmnElement="Gateway_RetryPayout" isMarkerVisible="true">
-        <dc:Bounds x="2155" y="625" width="50" height="50" />
+      <bpmndi:BPMNShape id="ReceiveTask_WaitForPayoutResult_di" bpmnElement="ReceiveTask_WaitForPayoutResult">
+        <dc:Bounds x="1870" y="500" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_JoinCheck_di" bpmnElement="Gateway_JoinCheck" isMarkerVisible="true">
+        <dc:Bounds x="1985" y="625" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_CheckPayoutStatus_di" bpmnElement="ServiceTask_CheckPayoutStatus">
+        <dc:Bounds x="2070" y="610" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_StillPending_di" bpmnElement="Gateway_StillPending" isMarkerVisible="true">
+        <dc:Bounds x="2205" y="625" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2145" y="587.5" width="70" height="27" />
+          <dc:Bounds x="2262" y="637" width="62" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0wcwubx_di" bpmnElement="EndEvent_PayoutHeldAfterFailure">
-        <dc:Bounds x="2242" y="632" width="36" height="36" />
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_WaitBeforeCheck_di" bpmnElement="IntermediateCatchEvent_WaitBeforeCheck">
+        <dc:Bounds x="2102" y="722" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2223" y="675" width="74" height="27" />
+          <dc:Bounds x="2092" y="765" width="57" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0ztex0w_di" bpmnElement="BoundaryEvent_NoBankDetails">
+      <bpmndi:BPMNShape id="Gateway_JoinResult_di" bpmnElement="Gateway_JoinResult" isMarkerVisible="true">
+        <dc:Bounds x="2205" y="515" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_RecordPayoutAttempt_di" bpmnElement="ServiceTask_RecordPayoutAttempt">
+        <dc:Bounds x="2290" y="500" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_PayoutConfirmed_di" bpmnElement="Gateway_PayoutConfirmed" isMarkerVisible="true">
+        <dc:Bounds x="2425" y="515" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2422" y="477" width="55" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_ProducerPaid_di" bpmnElement="EndEvent_ProducerPaid">
+        <dc:Bounds x="2532" y="522" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2516" y="565" width="69" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_ReviewFailedPayout_di" bpmnElement="UserTask_ReviewFailedPayout">
+        <dc:Bounds x="2400" y="610" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_RetryPayout_di" bpmnElement="Gateway_RetryPayout" isMarkerVisible="true">
+        <dc:Bounds x="2535" y="625" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2525" y="590" width="70" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_PayoutHeldAfterFailure_di" bpmnElement="EndEvent_PayoutHeldAfterFailure">
+        <dc:Bounds x="2632" y="632" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2605" y="675" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_NoBankDetails_di" bpmnElement="BoundaryEvent_NoBankDetails">
         <dc:Bounds x="1342" y="672" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1305" y="706" width="52" height="27" />
+          <dc:Bounds x="1382" y="712" width="60" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1b349pb_di" bpmnElement="BoundaryEvent_NoPayoutAnswer">
-        <dc:Bounds x="1872" y="562" width="36" height="36" />
+      <bpmndi:BPMNShape id="BoundaryEvent_NoPayoutAnswer_di" bpmnElement="BoundaryEvent_NoPayoutAnswer">
+        <dc:Bounds x="1932" y="562" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1831" y="596" width="57" height="27" />
+          <dc:Bounds x="1878" y="600" width="57" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_16u9ahx_di" bpmnElement="Flow_ProducerStart_Decide">
+      <bpmndi:BPMNEdge id="Flow_ProducerStart_Decide_di" bpmnElement="Flow_ProducerStart_Decide">
         <di:waypoint x="906" y="540" />
         <di:waypoint x="950" y="540" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0hhxx0l_di" bpmnElement="Flow_Decide_Action">
+      <bpmndi:BPMNEdge id="Flow_Decide_Action_di" bpmnElement="Flow_Decide_Action">
         <di:waypoint x="1050" y="540" />
         <di:waypoint x="1085" y="540" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_00mn9dn_di" bpmnElement="Flow_Action_Pay">
+      <bpmndi:BPMNEdge id="Flow_Action_Pay_di" bpmnElement="Flow_Action_Pay">
         <di:waypoint x="1135" y="540" />
-        <di:waypoint x="1525" y="540" />
+        <di:waypoint x="1555" y="540" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1321" y="522" width="19" height="14" />
+          <dc:Bounds x="1336" y="522" width="19" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0dkeyit_di" bpmnElement="Flow_JoinPay_JoinRetry">
-        <di:waypoint x="1575" y="540" />
-        <di:waypoint x="1605" y="540" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1oku8kt_di" bpmnElement="Flow_JoinRetry_Send">
-        <di:waypoint x="1655" y="540" />
-        <di:waypoint x="1680" y="540" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0xcztd4_di" bpmnElement="Flow_Send_WaitResult">
-        <di:waypoint x="1780" y="540" />
-        <di:waypoint x="1810" y="540" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_09p80qd_di" bpmnElement="Flow_WaitResult_Confirmed">
-        <di:waypoint x="1910" y="540" />
-        <di:waypoint x="1935" y="540" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_194kefc_di" bpmnElement="Flow_Confirmed_Yes">
-        <di:waypoint x="1985" y="540" />
-        <di:waypoint x="2280" y="540" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="2124" y="522" width="18" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0zembsk_di" bpmnElement="Flow_Statement_Paid">
-        <di:waypoint x="2380" y="540" />
-        <di:waypoint x="2442" y="540" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0v2p8tf_di" bpmnElement="Flow_Action_CarryOver">
+      <bpmndi:BPMNEdge id="Flow_Action_CarryOver_di" bpmnElement="Flow_Action_CarryOver">
         <di:waypoint x="1110" y="515" />
         <di:waypoint x="1110" y="430" />
         <di:waypoint x="1192" y="430" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1055" y="431.5" width="49" height="40" />
+          <dc:Bounds x="1055" y="431" width="49" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1rvsl7o_di" bpmnElement="Flow_Action_Hold">
+      <bpmndi:BPMNEdge id="Flow_Action_Hold_di" bpmnElement="Flow_Action_Hold">
         <di:waypoint x="1110" y="565" />
         <di:waypoint x="1110" y="650" />
         <di:waypoint x="1140" y="650" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1035" y="626.5" width="70" height="27" />
+          <dc:Bounds x="1035" y="627" width="70" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_11qy83o_di" bpmnElement="Flow_Request_WaitDetails">
+      <bpmndi:BPMNEdge id="Flow_Request_WaitDetails_di" bpmnElement="Flow_Request_WaitDetails">
         <di:waypoint x="1240" y="650" />
         <di:waypoint x="1280" y="650" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_14thkb3_di" bpmnElement="Flow_WaitDetails_Save">
+      <bpmndi:BPMNEdge id="Flow_WaitDetails_Save_di" bpmnElement="Flow_WaitDetails_Save">
         <di:waypoint x="1380" y="650" />
         <di:waypoint x="1420" y="650" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0bkixmw_di" bpmnElement="Flow_Save_JoinPay">
+      <bpmndi:BPMNEdge id="Flow_Save_JoinPay_di" bpmnElement="Flow_Save_JoinPay">
         <di:waypoint x="1520" y="650" />
-        <di:waypoint x="1550" y="650" />
-        <di:waypoint x="1550" y="565" />
+        <di:waypoint x="1580" y="650" />
+        <di:waypoint x="1580" y="565" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_111n3ch_di" bpmnElement="Flow_NoBankDetails_Held">
+      <bpmndi:BPMNEdge id="Flow_NoBankDetails_Held_di" bpmnElement="Flow_NoBankDetails_Held">
         <di:waypoint x="1360" y="708" />
         <di:waypoint x="1360" y="760" />
         <di:waypoint x="1452" y="760" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0v8spja_di" bpmnElement="Flow_NoAnswer_JoinFailed">
-        <di:waypoint x="1890" y="598" />
-        <di:waypoint x="1890" y="650" />
-        <di:waypoint x="1935" y="650" />
+      <bpmndi:BPMNEdge id="Flow_JoinPay_JoinRetry_di" bpmnElement="Flow_JoinPay_JoinRetry">
+        <di:waypoint x="1605" y="540" />
+        <di:waypoint x="1635" y="540" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0pl4v7n_di" bpmnElement="Flow_Confirmed_No">
-        <di:waypoint x="1960" y="565" />
-        <di:waypoint x="1960" y="625" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1968" y="592" width="15" height="14" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNEdge id="Flow_JoinRetry_Send_di" bpmnElement="Flow_JoinRetry_Send">
+        <di:waypoint x="1685" y="540" />
+        <di:waypoint x="1720" y="540" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1epnfqe_di" bpmnElement="Flow_JoinFailed_Review">
+      <bpmndi:BPMNEdge id="Flow_Send_WaitResult_di" bpmnElement="Flow_Send_WaitResult">
+        <di:waypoint x="1820" y="540" />
+        <di:waypoint x="1870" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_WaitResult_JoinResult_di" bpmnElement="Flow_WaitResult_JoinResult">
+        <di:waypoint x="1970" y="540" />
+        <di:waypoint x="2205" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NoAnswer_JoinCheck_di" bpmnElement="Flow_NoAnswer_JoinCheck">
+        <di:waypoint x="1950" y="598" />
+        <di:waypoint x="1950" y="650" />
         <di:waypoint x="1985" y="650" />
-        <di:waypoint x="2020" y="650" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1ol378x_di" bpmnElement="Flow_Review_Retry">
-        <di:waypoint x="2120" y="650" />
-        <di:waypoint x="2155" y="650" />
+      <bpmndi:BPMNEdge id="Flow_JoinCheck_Check_di" bpmnElement="Flow_JoinCheck_Check">
+        <di:waypoint x="2035" y="650" />
+        <di:waypoint x="2070" y="650" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_13uelc3_di" bpmnElement="Flow_Retry_No">
+      <bpmndi:BPMNEdge id="Flow_Check_StillPending_di" bpmnElement="Flow_Check_StillPending">
+        <di:waypoint x="2170" y="650" />
         <di:waypoint x="2205" y="650" />
-        <di:waypoint x="2242" y="650" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_StillPending_Yes_di" bpmnElement="Flow_StillPending_Yes">
+        <di:waypoint x="2230" y="675" />
+        <di:waypoint x="2230" y="740" />
+        <di:waypoint x="2138" y="740" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2216" y="632" width="15" height="14" />
+          <dc:Bounds x="2236" y="700" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_12rmm26_di" bpmnElement="Flow_Retry_Yes">
-        <di:waypoint x="2180" y="675" />
-        <di:waypoint x="2180" y="760" />
-        <di:waypoint x="1630" y="760" />
-        <di:waypoint x="1630" y="565" />
+      <bpmndi:BPMNEdge id="Flow_WaitBeforeCheck_JoinCheck_di" bpmnElement="Flow_WaitBeforeCheck_JoinCheck">
+        <di:waypoint x="2102" y="740" />
+        <di:waypoint x="2010" y="740" />
+        <di:waypoint x="2010" y="675" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_StillPending_No_di" bpmnElement="Flow_StillPending_No">
+        <di:waypoint x="2230" y="625" />
+        <di:waypoint x="2230" y="565" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1896" y="742" width="18" height="14" />
+          <dc:Bounds x="2236" y="588" width="15" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Event_13iddsm_di" bpmnElement="BoundaryEvent_PayoutsStillOpen">
-        <dc:Bounds x="1092" y="342" width="36" height="36" />
+      <bpmndi:BPMNEdge id="Flow_JoinResult_Record_di" bpmnElement="Flow_JoinResult_Record">
+        <di:waypoint x="2255" y="540" />
+        <di:waypoint x="2290" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Record_Confirmed_di" bpmnElement="Flow_Record_Confirmed">
+        <di:waypoint x="2390" y="540" />
+        <di:waypoint x="2425" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Confirmed_Yes_di" bpmnElement="Flow_Confirmed_Yes">
+        <di:waypoint x="2475" y="540" />
+        <di:waypoint x="2532" y="540" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1016" y="326" width="87" height="27" />
+          <dc:Bounds x="2494" y="522" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Confirmed_No_di" bpmnElement="Flow_Confirmed_No">
+        <di:waypoint x="2450" y="565" />
+        <di:waypoint x="2450" y="610" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2456" y="578" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Review_Retry_di" bpmnElement="Flow_Review_Retry">
+        <di:waypoint x="2500" y="650" />
+        <di:waypoint x="2535" y="650" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Retry_No_di" bpmnElement="Flow_Retry_No">
+        <di:waypoint x="2585" y="650" />
+        <di:waypoint x="2632" y="650" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2601" y="632" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Retry_Yes_di" bpmnElement="Flow_Retry_Yes">
+        <di:waypoint x="2560" y="675" />
+        <di:waypoint x="2560" y="800" />
+        <di:waypoint x="1660" y="800" />
+        <di:waypoint x="1660" y="565" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2566" y="705" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BoundaryEvent_PayoutsStillOpen_di" bpmnElement="BoundaryEvent_PayoutsStillOpen">
+        <dc:Bounds x="2092" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2000" y="322" width="87" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_16r1yy4_di" bpmnElement="Flow_Weekly_JoinStart">
+      <bpmndi:BPMNShape id="UserTask_ChaseOpenPayouts_di" bpmnElement="UserTask_ChaseOpenPayouts">
+        <dc:Bounds x="2190" y="240" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_OpenPayoutsChased_di" bpmnElement="EndEvent_OpenPayoutsChased">
+        <dc:Bounds x="2342" y="262" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2326" y="305" width="69" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_RecordSettlementRun_di" bpmnElement="ServiceTask_RecordSettlementRun">
+        <dc:Bounds x="2880" y="500" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SendTask_SendStatements_di" bpmnElement="SendTask_SendStatements">
+        <dc:Bounds x="3030" y="500" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_ProducersSettled_di" bpmnElement="EndEvent_ProducersSettled">
+        <dc:Bounds x="3182" y="522" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3157" y="565" width="86" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataStoreReference_RecordsIn_di" bpmnElement="DataStoreReference_RecordsIn">
+        <dc:Bounds x="375" y="735" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="366" y="792" width="69" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataStoreReference_RecordsOut_di" bpmnElement="DataStoreReference_RecordsOut">
+        <dc:Bounds x="2905" y="735" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2896" y="792" width="69" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_Weekly_JoinStart_di" bpmnElement="Flow_Weekly_JoinStart">
         <di:waypoint x="258" y="440" />
         <di:waypoint x="290" y="440" />
         <di:waypoint x="290" y="515" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1l4uyz7_di" bpmnElement="Flow_Requested_JoinStart">
+      <bpmndi:BPMNEdge id="Flow_Requested_JoinStart_di" bpmnElement="Flow_Requested_JoinStart">
         <di:waypoint x="258" y="640" />
         <di:waypoint x="290" y="640" />
         <di:waypoint x="290" y="565" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_03ia8ex_di" bpmnElement="Flow_JoinStart_Collect">
+      <bpmndi:BPMNEdge id="Flow_JoinStart_Collect_di" bpmnElement="Flow_JoinStart_Collect">
         <di:waypoint x="315" y="540" />
         <di:waypoint x="350" y="540" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0q77s05_di" bpmnElement="Flow_Collect_Approval">
+      <bpmndi:BPMNEdge id="Flow_Collect_Approval_di" bpmnElement="Flow_Collect_Approval">
         <di:waypoint x="450" y="540" />
         <di:waypoint x="505" y="540" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_06w2dmb_di" bpmnElement="Flow_Approval_Yes">
+      <bpmndi:BPMNEdge id="Flow_Approval_Yes_di" bpmnElement="Flow_Approval_Yes">
         <di:waypoint x="530" y="515" />
         <di:waypoint x="530" y="280" />
         <di:waypoint x="590" y="280" />
@@ -679,97 +803,105 @@
           <dc:Bounds x="536" y="395" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1it5oyg_di" bpmnElement="Flow_Approval_No">
+      <bpmndi:BPMNEdge id="Flow_Approval_No_di" bpmnElement="Flow_Approval_No">
         <di:waypoint x="555" y="540" />
         <di:waypoint x="735" y="540" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="638" y="522" width="15" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0hya4yu_di" bpmnElement="Flow_Approve_RunApproved">
+      <bpmndi:BPMNEdge id="Flow_Approve_RunApproved_di" bpmnElement="Flow_Approve_RunApproved">
         <di:waypoint x="690" y="280" />
         <di:waypoint x="735" y="280" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1fcduvc_di" bpmnElement="Flow_RunApproved_No">
+      <bpmndi:BPMNEdge id="Flow_RunApproved_No_di" bpmnElement="Flow_RunApproved_No">
         <di:waypoint x="785" y="280" />
-        <di:waypoint x="872" y="280" />
+        <di:waypoint x="850" y="280" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="821" y="262" width="15" height="14" />
+          <dc:Bounds x="810" y="262" width="15" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0wxb514_di" bpmnElement="Flow_RunApproved_Yes">
+      <bpmndi:BPMNEdge id="Flow_Release_Stopped_di" bpmnElement="Flow_Release_Stopped">
+        <di:waypoint x="950" y="280" />
+        <di:waypoint x="1002" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RunApproved_Yes_di" bpmnElement="Flow_RunApproved_Yes">
         <di:waypoint x="760" y="305" />
         <di:waypoint x="760" y="515" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="761" y="395" width="18" height="14" />
+          <dc:Bounds x="766" y="395" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0s1jtbs_di" bpmnElement="Flow_JoinApproved_Settle">
+      <bpmndi:BPMNEdge id="Flow_JoinApproved_Settle_di" bpmnElement="Flow_JoinApproved_Settle">
         <di:waypoint x="785" y="540" />
         <di:waypoint x="830" y="540" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_07163bb_di" bpmnElement="Flow_StillOpen_Chase">
-        <di:waypoint x="1110" y="342" />
-        <di:waypoint x="1110" y="280" />
-        <di:waypoint x="1240" y="280" />
+      <bpmndi:BPMNEdge id="Flow_StillOpen_Chase_di" bpmnElement="Flow_StillOpen_Chase">
+        <di:waypoint x="2110" y="342" />
+        <di:waypoint x="2110" y="280" />
+        <di:waypoint x="2190" y="280" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_17vnmpi_di" bpmnElement="Flow_Chase_Chased">
-        <di:waypoint x="1340" y="280" />
-        <di:waypoint x="1452" y="280" />
+      <bpmndi:BPMNEdge id="Flow_Chase_Chased_di" bpmnElement="Flow_Chase_Chased">
+        <di:waypoint x="2290" y="280" />
+        <di:waypoint x="2342" y="280" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_00z7otw_di" bpmnElement="Flow_Record_Settled">
-        <di:waypoint x="2680" y="540" />
-        <di:waypoint x="2742" y="540" />
+      <bpmndi:BPMNEdge id="Flow_Settle_Record_di" bpmnElement="Flow_Settle_Record">
+        <di:waypoint x="2820" y="540" />
+        <di:waypoint x="2880" y="540" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1l7qwvi_di" bpmnElement="Flow_Settle_Record">
-        <di:waypoint x="2520" y="540" />
-        <di:waypoint x="2580" y="540" />
+      <bpmndi:BPMNEdge id="Flow_Record_Statements_di" bpmnElement="Flow_Record_Statements">
+        <di:waypoint x="2980" y="540" />
+        <di:waypoint x="3030" y="540" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Participant_1x6sc7f_di" bpmnElement="Participant_Producer" isHorizontal="true">
-        <dc:Bounds x="150" y="940" width="2690" height="60" />
+      <bpmndi:BPMNEdge id="Flow_Statements_Settled_di" bpmnElement="Flow_Statements_Settled">
+        <di:waypoint x="3130" y="540" />
+        <di:waypoint x="3182" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_Producer_di" bpmnElement="Participant_Producer" isHorizontal="true">
+        <dc:Bounds x="150" y="940" width="3110" height="60" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Participant_1e8fy1x_di" bpmnElement="Participant_PaymentService" isHorizontal="true">
-        <dc:Bounds x="150" y="80" width="2690" height="60" />
+      <bpmndi:BPMNShape id="Participant_PaymentService_di" bpmnElement="Participant_PaymentService" isHorizontal="true">
+        <dc:Bounds x="150" y="80" width="3110" height="60" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="DataInputAssociation_1d2bbu0_di" bpmnElement="DataInputAssociation_CollectPayments">
+      <bpmndi:BPMNEdge id="DataInputAssociation_CollectPayments_di" bpmnElement="DataInputAssociation_CollectPayments">
         <di:waypoint x="400" y="735" />
         <di:waypoint x="400" y="580" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DataOutputAssociation_1tduxvi_di" bpmnElement="DataOutputAssociation_RecordSettlementRun">
-        <di:waypoint x="2630" y="580" />
-        <di:waypoint x="2630" y="735" />
+      <bpmndi:BPMNEdge id="DataOutputAssociation_RecordSettlementRun_di" bpmnElement="DataOutputAssociation_RecordSettlementRun">
+        <di:waypoint x="2930" y="580" />
+        <di:waypoint x="2930" y="735" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1dn2m0s_di" bpmnElement="MessageFlow_PayoutRequest">
-        <di:waypoint x="1750" y="500" />
-        <di:waypoint x="1750" y="140" />
+      <bpmndi:BPMNEdge id="MessageFlow_PayoutRequest_di" bpmnElement="MessageFlow_PayoutRequest">
+        <di:waypoint x="1755" y="500" />
+        <di:waypoint x="1755" y="140" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1663" y="156" width="74" height="27" />
+          <dc:Bounds x="1673" y="156" width="74" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_01vzh49_di" bpmnElement="MessageFlow_PayoutResult">
-        <di:waypoint x="1860" y="140" />
-        <di:waypoint x="1860" y="500" />
+      <bpmndi:BPMNEdge id="MessageFlow_PayoutResult_di" bpmnElement="MessageFlow_PayoutResult">
+        <di:waypoint x="1955" y="140" />
+        <di:waypoint x="1955" y="500" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1867" y="156" width="65" height="27" />
+          <dc:Bounds x="1962" y="156" width="65" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1quvbvt_di" bpmnElement="MessageFlow_SettlementStatement">
-        <di:waypoint x="2334" y="580" />
-        <di:waypoint x="2334" y="940" />
+      <bpmndi:BPMNEdge id="MessageFlow_SettlementStatement_di" bpmnElement="MessageFlow_SettlementStatement">
+        <di:waypoint x="3110" y="580" />
+        <di:waypoint x="3110" y="940" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2345" y="896" width="90" height="27" />
+          <dc:Bounds x="3121" y="896" width="90" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1nrbqdk_di" bpmnElement="MessageFlow_BankDetails">
+      <bpmndi:BPMNEdge id="MessageFlow_BankDetails_di" bpmnElement="MessageFlow_BankDetails">
         <di:waypoint x="1300" y="940" />
         <di:waypoint x="1300" y="690" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1301" y="896" width="69" height="27" />
+          <dc:Bounds x="1306" y="896" width="69" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0eun446_di" bpmnElement="MessageFlow_BankDetailsRequest">
+      <bpmndi:BPMNEdge id="MessageFlow_BankDetailsRequest_di" bpmnElement="MessageFlow_BankDetailsRequest">
         <di:waypoint x="1190" y="690" />
         <di:waypoint x="1190" y="940" />
         <bpmndi:BPMNLabel>

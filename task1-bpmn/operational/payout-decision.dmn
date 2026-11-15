@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_PayoutDecision" name="Payout decision" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Web Modeler" exporterVersion="64767e4" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
+  <decision id="payout-decision" name="Decide the payout">
+    <description>P07 Settle producer payments, business rule task "Decide the payout". One evaluation for each producer of the run. Draft rule DR3: the minimum payout is £5.00. A smaller balance, including zero or less after refunds, is carried to next week. A producer without bank details on file is held until the details arrive. The hit policy is UNIQUE: the rules do not overlap, and together they cover every amount and every value of the bank details. A missing amount matches no rule, and the default flow of "Payout action?" then carries the balance over.</description>
+    <decisionTable id="DecisionTable_PayoutDecision" hitPolicy="UNIQUE">
+      <input id="Input_NetAmount" label="Net amount (£)">
+        <inputExpression id="InputExpression_NetAmount" typeRef="number">
+          <text>settlement.netAmount</text>
+        </inputExpression>
+      </input>
+      <input id="Input_BankDetailsOnFile" label="Bank details on file">
+        <inputExpression id="InputExpression_BankDetailsOnFile" typeRef="boolean">
+          <text>settlement.bankDetailsOnFile</text>
+        </inputExpression>
+      </input>
+      <output id="Output_PayoutAction" label="Payout action" name="payoutAction" typeRef="string">
+        <outputValues id="UnaryTests_PayoutAction">
+          <text>"PAY","HOLD","CARRY_OVER"</text>
+        </outputValues>
+      </output>
+      <rule id="Rule_CarryOver">
+        <description>Below the £5.00 minimum (DR3), or zero or less after refunds. Carry the balance to next week</description>
+        <inputEntry id="UnaryTests_CarryOver_Amount">
+          <text>&lt; 5</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_CarryOver_Bank">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_CarryOver">
+          <text>"CARRY_OVER"</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_Hold">
+        <description>At or above the minimum, but no bank details on file (false or missing). Ask the producer and hold the payout</description>
+        <inputEntry id="UnaryTests_Hold_Amount">
+          <text>&gt;= 5</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_Hold_Bank">
+          <text>not(true)</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_Hold">
+          <text>"HOLD"</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_Pay">
+        <description>At or above the minimum, with bank details on file. Pay the net amount this week</description>
+        <inputEntry id="UnaryTests_Pay_Amount">
+          <text>&gt;= 5</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_Pay_Bank">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_Pay">
+          <text>"PAY"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_PayoutDecision">
+      <dmndi:DMNShape id="DMNShape_PayoutDecision" dmnElementRef="payout-decision">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

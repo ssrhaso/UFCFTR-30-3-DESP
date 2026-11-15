@@ -370,7 +370,7 @@ The operational models are not built yet. The last two columns use the planned e
 | MP22 Let customer retry or cancel | Payment successful? gateway | Error boundary event `PAYMENT_DECLINED` | B11 |
 | MP24 Retry, then cancel and release stock | Payment not completed end event | Retry loop, then cancellation (`PAYMENT_SERVICE_UNAVAILABLE`) | B12, B17 |
 | PR07 Prepare and hand over orders | Fulfil order (Producer lane) | Out of scope | None |
-| NW06 Settle producers weekly | Settle producer payments (Finance and settlements lane) | Out of scope | None |
+| NW06 Settle producers weekly | Settle producer payments (Finance and settlements lane), a call activity since 5.5 | `settle_producer_payments`, the extra operational model: multi-instance sub-process "Settle each producer" | None (FR16 is Task 2) |
 | NW07 Handle quality incidents | Handle quality incident (Quality and traceability lane) | Out of scope | None |
 | CU18 Order problems put right, NW15, MP33 | Handle order issue (Order management lane), M24, M25 | Out of scope (Task 2, FR21) | None |
 
