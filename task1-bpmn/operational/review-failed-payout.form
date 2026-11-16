@@ -1,0 +1,59 @@
+{
+  "components": [
+    {
+      "id": "Field_intro",
+      "type": "text",
+      "layout": {
+        "row": "Row_intro"
+      },
+      "text": "## Review the failed payout\n\nProducer **{{settlement.producerName}}** ({{settlement.producerId}}) in run **{{settlementRunId}}**. Amount: **£{{string(floor(floor(settlement.netAmount * 100 + 0.5) / 100)) + \".\" + substring(string(floor(settlement.netAmount * 100 + 0.5) - floor(floor(settlement.netAmount * 100 + 0.5) / 100) * 100 + 100), 2)}}**. Attempt: **{{payoutAttempt}}**.\n\nResult from the payment service: **{{payoutStatus}}**. Reason: **{{if failureReason = null then \"None given\" else failureReason}}**."
+    },
+    {
+      "id": "Field_help",
+      "type": "text",
+      "layout": {
+        "row": "Row_help"
+      },
+      "text": "A retry sends a new payout with a new attempt number. Hold the payout if the problem needs more time to correct, for example a closed account. The next run then includes the balance again."
+    },
+    {
+      "id": "Field_retryDecision",
+      "type": "radio",
+      "key": "retryDecision",
+      "label": "What do you want to do?",
+      "layout": {
+        "row": "Row_decision"
+      },
+      "validate": {
+        "required": true
+      },
+      "values": [
+        {
+          "label": "Try the payout again",
+          "value": "RETRY"
+        },
+        {
+          "label": "Hold the payout for next week's run",
+          "value": "HOLD"
+        }
+      ]
+    },
+    {
+      "id": "Field_reviewNote",
+      "type": "textarea",
+      "key": "reviewNote",
+      "label": "Note for the audit trail",
+      "layout": {
+        "row": "Row_note"
+      },
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "type": "default",
+  "id": "review-failed-payout",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 16
+}

@@ -1,0 +1,53 @@
+{
+  "components": [
+    {
+      "id": "Field_intro",
+      "type": "text",
+      "layout": {
+        "row": "Row_intro"
+      },
+      "text": "## Chase the open payouts\n\nRun **{{settlementRunId}}** ({{periodStart}} to {{periodEnd}}) is still open after 2 days (draft rule DR6).\n\n1. Contact each producer in the table that has not yet sent its bank details.\n2. In Tasklist, complete each open task \"Review the failed payout\" of this run."
+    },
+    {
+      "id": "Table_bankDetailsRequested",
+      "type": "table",
+      "label": "Producers that the run asked for bank details",
+      "layout": {
+        "row": "Row_table"
+      },
+      "rowCount": 10,
+      "dataSource": "=for s in producerSettlements[bankDetailsOnFile != true and netAmount >= 5] return {producer: s.producerName, producerId: s.producerId, amount: string(floor(floor(s.netAmount * 100 + 0.5) / 100)) + \".\" + substring(string(floor(s.netAmount * 100 + 0.5) - floor(floor(s.netAmount * 100 + 0.5) / 100) * 100 + 100), 2)}",
+      "columns": [
+        {
+          "label": "Producer",
+          "key": "producer"
+        },
+        {
+          "label": "Producer ID",
+          "key": "producerId"
+        },
+        {
+          "label": "Amount held (£)",
+          "key": "amount"
+        }
+      ]
+    },
+    {
+      "id": "Field_chaseNote",
+      "type": "textarea",
+      "key": "chaseNote",
+      "label": "What did you do?",
+      "layout": {
+        "row": "Row_note"
+      },
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "type": "default",
+  "id": "chase-open-payouts",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 16
+}

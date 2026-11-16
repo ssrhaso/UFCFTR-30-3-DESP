@@ -1,0 +1,39 @@
+{
+  "components": [
+    {
+      "text": "## Your payment was declined\n\nOrder **{{orderId}}**. Declined attempts: **{{declineCount}}** of 3.\n\nYou can try again with another sandbox payment method, or cancel the order. If you cancel, the reserved items go back into stock.",
+      "type": "text",
+      "layout": {
+        "row": "Row_intro"
+      },
+      "id": "Field_intro"
+    },
+    {
+      "values": [
+        {
+          "label": "Try again with another sandbox payment method",
+          "value": "RETRY"
+        },
+        {
+          "label": "Cancel the order",
+          "value": "CANCEL"
+        }
+      ],
+      "label": "What do you want to do?",
+      "type": "radio",
+      "layout": {
+        "row": "Row_choice"
+      },
+      "id": "Field_retryChoice",
+      "key": "retryChoice",
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "type": "default",
+  "id": "retry-or-cancel",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 16
+}

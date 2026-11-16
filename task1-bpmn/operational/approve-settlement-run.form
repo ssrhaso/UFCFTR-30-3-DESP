@@ -1,0 +1,86 @@
+{
+  "components": [
+    {
+      "id": "Field_intro",
+      "type": "text",
+      "layout": {
+        "row": "Row_intro"
+      },
+      "text": "## Approve the settlement run\n\nRun **{{settlementRunId}}** pays the producers for the payments of **{{periodStart}}** to **{{periodEnd}}**.\n\nThe run total is over the approval limit of £10,000 (draft rule DR2). A second person must approve the run before any money leaves the network. Check the totals against the payment and settlement records (DS3)."
+    },
+    {
+      "id": "Table_producerSettlements",
+      "type": "table",
+      "label": "Amount for each producer",
+      "layout": {
+        "row": "Row_table"
+      },
+      "rowCount": 10,
+      "dataSource": "=for s in producerSettlements return {producer: s.producerName, net: {c: floor(abs(s.netAmount) * 100 + 0.5), t: (if s.netAmount < 0 then \"-\" else \"\") + string(floor(c / 100)) + \".\" + substring(string(c - floor(c / 100) * 100 + 100), 2)}.t, bankDetails: if s.bankDetailsOnFile = true then \"Yes\" else \"No\"}",
+      "columns": [
+        {
+          "label": "Producer",
+          "key": "producer"
+        },
+        {
+          "label": "Net amount (£)",
+          "key": "net"
+        },
+        {
+          "label": "Bank details on file",
+          "key": "bankDetails"
+        }
+      ]
+    },
+    {
+      "id": "Field_total",
+      "type": "text",
+      "layout": {
+        "row": "Row_total"
+      },
+      "text": "### Run total: £{{string(floor(floor(runTotal * 100 + 0.5) / 100)) + \".\" + substring(string(floor(runTotal * 100 + 0.5) - floor(floor(runTotal * 100 + 0.5) / 100) * 100 + 100), 2)}}"
+    },
+    {
+      "id": "Field_runDecision",
+      "type": "radio",
+      "key": "runDecision",
+      "label": "What do you want to do?",
+      "layout": {
+        "row": "Row_decision"
+      },
+      "validate": {
+        "required": true
+      },
+      "values": [
+        {
+          "label": "Approve the run and pay the producers",
+          "value": "APPROVE"
+        },
+        {
+          "label": "Stop the run so that finance can correct the records",
+          "value": "STOP"
+        }
+      ]
+    },
+    {
+      "id": "Field_approvalNote",
+      "type": "textarea",
+      "key": "approvalNote",
+      "label": "Why do you stop the run?",
+      "layout": {
+        "row": "Row_note"
+      },
+      "validate": {
+        "required": true
+      },
+      "conditional": {
+        "hide": "=runDecision != \"STOP\""
+      }
+    }
+  ],
+  "type": "default",
+  "id": "approve-settlement-run",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 16
+}

@@ -19,7 +19,7 @@ The backlog has the functional stories of FN1 (section 6), of FN2 (section 7) an
 
 The document also holds the functional requirements (section 3) and the non-functional requirements (section 4) that the stories realise, and the traceability from the case study to the requirements, the stories, the models and the Task 2 services (section 10). [#90](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/90) asks for the two kinds of requirement in separate sections. The week 9 lecture decides the list that a sentence of the case study goes in: a behaviour of the system is a functional requirement, and a property that the system must exhibit or a constraint that it must respect is a non-functional requirement (UWE Bristol, 2026e, slides 14 and 15).
 
-Source keys: CS is the case study (UWE Bristol, 2026a), with the page number. UC1, UC2 and UC3 are the three use cases (UWE Bristol, 2026b). **Proposal** marks a design choice of the group that the sources do not state. The IDs of the actors (A01 to A07, E01 to E06), the processes (P01 to P11) and the functions (F01 to F05) come from [actors.md](strategic/actors.md) and [processes.md](strategic/processes.md). The message IDs (M01 to M22, O01 to O04) and the relationship IDs (R01 to R17) come from [interactions.md](strategic/interactions.md). The requirement IDs (FR01 to FR20 and NFR01 to NFR13) are defined in sections 3 and 4 of this document. The week 9 lecture on requirements handling is UWE Bristol (2026e).
+Source keys: CS is the case study (UWE Bristol, 2026a), with the page number. UC1, UC2 and UC3 are the three use cases (UWE Bristol, 2026b). **Proposal** marks a design choice of the group that the sources do not state. The IDs of the actors (A01 to A07, E01 to E06), the processes (P01 to P11) and the functions (F01 to F05) come from [actors.md](strategic/actors.md) and [processes.md](strategic/processes.md). The message IDs (M01 to M22, O01 to O04) and the relationship IDs (R01 to R17) come from [interactions.md](strategic/interactions.md). The requirement IDs (FR01 to FR21 and NFR01 to NFR14) are defined in sections 3 and 4 of this document. The week 9 lecture on requirements handling is UWE Bristol (2026e).
 
 ## 2. Conventions
 
@@ -63,11 +63,12 @@ The list covers the whole case study, so that the Task 1 scope is visible agains
 | FR13 | After a successful payment, the order is confirmed, the stock is updated and each producer is notified of its order element | UC2 (U8) | P05 | FN2 | B14, B15, B16 |
 | FR14 | For a multi-vendor order, the system calculates the amount of each producer and the 5% commission of the marketplace | CS p. 2 (Core functionality), UC2 (U11) | P05, P07 | FN2 | B13 |
 | FR15 | Each producer has visibility of its incoming orders, with the lead time of NFR07 | CS p. 1 (Producers) | P05, P06 | FN2 (the notification). P06 is Task 2 | B16, B04 |
-| FR16 | The network settles each producer weekly, less the commission, with a transparent audit trail for tax reporting and accounting | CS p. 2 (Producers, Core functionality) | P07 | Task 2. B13 supplies its data (R09) | None |
+| FR16 | The network settles each producer weekly, less the commission, with a transparent audit trail for tax reporting and accounting | CS p. 2 (Producers, Core functionality) | P07 | Task 2. The extra operational model `settle_producer_payments` (5.5, [#167](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/167)) models it. B13 supplies its data (R09) | None |
 | FR17 | The system keeps records that link customers, products and producers, so that a quality or food safety concern reaches everyone affected | CS p. 2 (Quality assurance) | P04 (creates), P08 (uses) | FN1 creates the record. P08 is Task 2 (UC3) | B06 |
 | FR18 | The system shows food miles from postcode-based distances | CS p. 2 (Environmental reporting) | P09 | FN1, optional (Could) | B09 |
 | FR19 | A producer publishes a surplus produce offer with a last-minute discount, and the interested customers are told | CS p. 2 (Community features) | P10 | Task 2 | None |
 | FR20 | A producer shares seasonal recipes, storage guidance and farm stories next to its products | CS p. 2 (Educational components) | P11 | Task 2 | None |
+| FR21 | After the order is confirmed, a customer can report a delivery problem or ask for a refund, and order management resolves it | **Proposal** (D8 in interactions.md); consumer law for distance sales | P12 | Task 2 | None |
 
 FR15 states the visibility. The 48 hours are NFR07, because they are a measurable constraint on FR13 and FR15 and not a behaviour of their own.
 
@@ -92,6 +93,7 @@ The sources give no performance or capacity target: the network has about forty 
 | NFR11 | Deployability: both processes deploy and run on the module's Camunda 8 organisation, the job workers and the mock services run in Docker, `bpmnlint` passes, and each model has a `.png` or `.svg` export | Implementation constraint | Brief pp. 5 to 6; README definition of done; `.bpmnlintrc` | The deploy-and-run step of B22 succeeds from a clean checkout, and the BPMN lint check is green after the merge | The GitHub Actions check "BPMN lint"; the B22 script | All stories; B22 | None (platform constraint) |
 | NFR12 | Maintainability: the process IDs, the file names, the job types, the error codes and the variables follow the naming rules of functionalities.md section 4.4, and each task has a documentation field (proposal, with NFR09) | Design constraint | functionalities.md section 4.4; week 10 lab | A name check over the `.bpmn` files finds no rule break, and every task has documentation | PR review; a small script in B22 | All stories; B22 | None |
 | NFR13 | Replaceable external interfaces: each external service (E01 payment, E03 notification, and the stock service of W1) is behind its own job types, which carry the message contents of interactions.md section 3.1 (M05, M06, M08) and decision D6, so that the Task 2 service replaces the sandbox or mock without a change to the model | External interface | Brief p. 6 ("readiness of Task 1 components for integration into Task 2"); interactions.md sections 3.1 and 6.2 | A change of the worker's endpoint from the mock to another implementation needs no change to the `.bpmn` file | Review of the worker configuration; a demonstration with two endpoints | B10, B16, B20, B21, B23 | Readiness for Task 2 (A05) |
+| NFR14 | **Proposal.** Payout integrity: no producer balance is lost or paid twice. Each balance belongs to one open settlement run at most. A payout is tried again only after the payment service confirms that it did not pay, and each new attempt has its own idempotency key | Business rule (financial integrity) | CS p. 2 (Core functionality: payment to the producers "according to agreed timeframes"); FR16 | Two runs in the same week settle each balance once. A payout that the service confirms after the 1-hour timeout is recorded as paid and is not paid again | A run in Camunda 8 with the mock set to "slow" and to "fail"; the attempt records in DS3 | P07 (`settle_producer_payments`); no story yet | Fair and accurate payment (A04); trust (A05) |
 
 ## 5. Summary
 
@@ -126,7 +128,7 @@ The sources give no performance or capacity target: the network has about forty 
 
 ## 6. FN1 Process order (P04)
 
-Owning function: F02 Orders. The process starts when the customer proceeds to checkout (M04) and ends when the marketplace order and its producer order elements exist (R06).
+Owning function: F02 Order management. The process starts when the customer proceeds to checkout (M04) and ends when the marketplace order and its producer order elements exist (R06).
 
 ### B01 Check the stock at checkout
 
@@ -219,7 +221,7 @@ Priority: Could. Points: 2. Sprint: 3. Traces to: R14, M16 to M18, CS p. 2. Plan
 
 ## 7. FN2 Process payment (P05)
 
-Owning function: F03 Finance, with F01 (the stock) and F02 (the producer notifications). The process starts when FN1 gives a confirmed order that needs payment (R06).
+Owning function: F03 Finance and settlements, with F01 (the stock) and F02 (the producer notifications). The process starts when FN1 gives a confirmed order that needs payment (R06).
 
 ### B10 Pay through the sandbox payment service
 
@@ -394,7 +396,7 @@ Each story sits on one chain. The chain starts at a page of the case study, pass
 | Case study | CS p. 2: checkout for single-vendor and multi-vendor orders, the aggregation of multi-vendor orders, and the records that link customers, products and producers | CS p. 2: secure payment for single and multiple vendor orders, and the 5% commission. CS p. 1: order visibility for the producers |
 | Requirements | FR06 to FR09, FR15 (B04), FR17 and FR18 (optional); NFR01, NFR04 to NFR07 and NFR09 to NFR13 | FR10 to FR15; NFR01 to NFR13 |
 | UC2 | U2 to U6 | U7 to U12 |
-| Strategic model | P04 in the F02 Orders lane; M04, O01, O02; R04, R06 | P05 in the F03 Finance lane, with F01 and F02; M05 to M09, O03, O04; R06 to R09 |
+| Strategic model | P04 in the F02 Order management lane; M04, O01, O02; R04, R06 | P05 in the F03 Finance and settlements lane, with F01 and F02; M05 to M09, O03, O04; R06 to R09 |
 | Stories | B01 to B09 | B10 to B17 |
 | Operational model | `process_order`, the call activity that 1.6 ([#84](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/84)) adds to Figure 1; the job types `check-stock`, `identify-producers`, `create-order` and `split-order`; a timer boundary event (B08) | `process_payment`, the other call activity of 1.6; the job types `submit-payment`, `confirm-order`, `update-stock` and `notify-producer`; the errors `PAYMENT_DECLINED` and `PAYMENT_SERVICE_UNAVAILABLE` |
 | Enablers | B21, B22, B24 | B20, B22, B23 |
@@ -409,7 +411,7 @@ The Stories column of section 3 and the Applies to column of section 4 give the 
 
 - Every functional requirement in Task 1 scope (FR06 to FR15, FR17 and FR18) has at least one story.
 - Every functional story (B01 to B19) realises at least one functional requirement. Every enabler story (B20 to B24) supports at least one.
-- Eight functional requirements have no Task 1 story. FR03, FR04 and FR05 are B18 and B19, which the group does not plan. FR01, FR02, FR16, FR19 and FR20 are Task 2, and each names its process and is marked Task 2. None is lost.
+- Nine functional requirements have no Task 1 story. FR03, FR04 and FR05 are B18 and B19, which the group does not plan. FR01, FR02, FR16, FR19, FR20 and FR21 are Task 2, and each names its process and is marked Task 2. None is lost.
 - Every non-functional requirement applies to at least one story, or to the definition of done (NFR09, NFR11 and NFR12).
 - Every strategic element of UC2 (M04 to M09, O01 to O04 and R04 to R09) appears in the Traces to of at least one story.
 
@@ -426,7 +428,7 @@ The traces above hold for the current answers to the open questions. The module 
 | S1 (the reservation) | functionalities.md section 7 | "No reservation" removes B07 and B08, and NFR06 keeps only the check and the update |
 | S3 (the retries) | functionalities.md section 7 | Sets the attempts and the wait in B12 and NFR04. "No cancellation" removes B17 |
 | S4 (the rounding) | functionalities.md section 7 | Sets the rule in B13 and NFR05 |
-| Q2 (who pays the settlements) | actors.md section 5 | Changes FR16 only (Task 2) |
+| Q2 (who pays the settlements) | actors.md section 5 | Changes FR16 (Task 2) and draft rule DR7 of [settle-producer-payments.md](../task1-bpmn/operational/settle-producer-payments.md) |
 
 ## 11. References
 
