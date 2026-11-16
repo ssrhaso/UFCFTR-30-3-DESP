@@ -898,11 +898,12 @@
       "x": 4051,
       "y": 2086,
       "customProperties": {
+        "ID": "SD15",
+        "Depender note": "Starts at \"Prepare and hand over orders\" since 16 Nov 2026 (follow-up of task 4.2, #149). Before, it started at \"Enough time to prepare\". iStar 2.0 does not allow a refined or contributed element as a depender (iStar 2.0 Guide, page 14), so the dependency starts at a leaf element. The producer needs the lead time to prepare the orders (P06, NFR07).",
         "OpenOME source": "sr-model-draft.ood",
-        "OpenOME depender element": "Enough time to prepare",
-        "Conversion note": "piStar does not allow a depender element that is contributed to. The depender is now the actor."
+        "OpenOME depender element": "Enough time to prepare"
       },
-      "source": "ce153a62-82ef-5b11-91a9-f1e678376fae",
+      "source": "6e4a2770-30ee-5018-8790-7c0b1088468b",
       "target": "7371b1af-1281-54ed-a40c-19744a136721"
     },
     {
@@ -1013,11 +1014,12 @@
       "x": 1676,
       "y": 1376,
       "customProperties": {
+        "ID": "SD23",
+        "Depender note": "Starts at \"Retry, then cancel and release stock\" since 16 Nov 2026 (follow-up of task 4.2, #149). Before, it started at \"Payment service failure handled\". iStar 2.0 does not allow a refined or contributed element as a depender (iStar 2.0 Guide, page 14), so the dependency starts at a leaf element. The retry is the chosen means for the goal, and it needs the service to be available again (B12, U10).",
         "OpenOME source": "sr-model-draft.ood",
-        "OpenOME depender element": "Payment service failure handled",
-        "Conversion note": "piStar does not allow a depender element that is refined. The depender is now the actor."
+        "OpenOME depender element": "Payment service failure handled"
       },
-      "source": "e75bbd0c-cec6-5007-8f9d-89f271580217",
+      "source": "34618c5a-30b0-5c0e-9a9b-e20519b859cb",
       "target": "2497f8d9-3be8-50ad-83c5-4a0001f8f529"
     },
     {
@@ -1039,10 +1041,12 @@
       "x": 4004,
       "y": 964,
       "customProperties": {
+        "ID": "SD18",
+        "Depender note": "Starts at \"Weekly settlement received\" since 16 Nov 2026 (follow-up of task 4.2, #149). Before, it started at \"Tax-ready accounts\". iStar 2.0 does not allow a refined or contributed element as a depender (iStar 2.0 Guide, page 14), so the dependency starts at a leaf element. The audit trail comes with the weekly settlement, which helps Tax-ready accounts (CS p. 2, NFR08).",
         "Change": "Producer refinement (4.3), Nov 2026",
         "Reason": "SD18. PR14 Tax-ready accounts depends on NW06 Settle producers weekly (NFR08)"
       },
-      "source": "b0d36146-3e0f-539c-804c-ce5b6ef30ac0",
+      "source": "703cbf7d-c77b-5078-9aa6-5a67450ab1a6",
       "target": "ebaee70d-d08d-530c-9ff6-5a6be043bdea"
     },
     {
@@ -1126,7 +1130,7 @@
     {
       "id": "a19f95f7-2fd7-46fc-97f3-2ef8df1e1936",
       "type": "istar.DependencyLink",
-      "source": "b0d36146-3e0f-539c-804c-ce5b6ef30ac0",
+      "source": "703cbf7d-c77b-5078-9aa6-5a67450ab1a6",
       "target": "11dbb3c8-cde0-4d88-9448-3c051eb85bea"
     },
     {
@@ -1150,7 +1154,7 @@
     {
       "id": "b27f4ab8-ee7d-4c8c-80bd-1abb855320af",
       "type": "istar.DependencyLink",
-      "source": "e75bbd0c-cec6-5007-8f9d-89f271580217",
+      "source": "34618c5a-30b0-5c0e-9a9b-e20519b859cb",
       "target": "1f5f99df-14f2-577c-af81-7e471aa6cac3"
     },
     {
@@ -1258,7 +1262,7 @@
     {
       "id": "e2090f01-2c7a-4440-a89f-b1b225365445",
       "type": "istar.DependencyLink",
-      "source": "ce153a62-82ef-5b11-91a9-f1e678376fae",
+      "source": "6e4a2770-30ee-5018-8790-7c0b1088468b",
       "target": "2e349a74-b5ea-5a16-84d9-c1531d168aa8"
     },
     {
@@ -2682,13 +2686,13 @@
   },
   "tool": "pistar.2.1.0",
   "istar": "2.0",
-  "saveDate": "Mon, 16 Nov 2026 05:43:12 GMT",
+  "saveDate": "Mon, 16 Nov 2026 06:03:08 GMT",
   "diagram": {
     "width": 6268,
     "height": 3420,
     "name": "istar-sr",
     "customProperties": {
-      "Description": "Converted from the OpenOME draft sr-model-draft.ood by Royden Dias. iStar 2.0. Each changed dependency has a Conversion note property. BRF Network refined on 3 Nov 2026: P09 to P11 split out, a means for \"Regulations complied with\", one new help and two new hurt contributions. New elements have a Change property. Customer part, task 4.2 (#149), 16 Nov 2026: the three segments are closed roles with is-a links and SD27 to SD29, CU18 and CU19 are new, SD02 and SD05 are open, four customer dependencies start at a leaf task, and two qualification links are new. Each customer element has an ID and a Source property.",
+      "Description": "Converted from the OpenOME draft sr-model-draft.ood by Royden Dias. iStar 2.0. Each changed dependency has a Conversion note property. BRF Network refined on 3 Nov 2026: P09 to P11 split out, a means for \"Regulations complied with\", one new help and two new hurt contributions. New elements have a Change property. Customer part, task 4.2 (#149), 16 Nov 2026: the three segments are closed roles with is-a links and SD27 to SD29, CU18 and CU19 are new, SD02 and SD05 are open, four customer dependencies start at a leaf task, and two qualification links are new. Each customer element has an ID and a Source property. Since 16 Nov 2026, SD15, SD18 and SD23 also start at a leaf element, so piStar loads the model without a rule message.",
       "Colour key": "Goal: amber (#FFE29A). Quality: pink (#F9C6D7). Task: blue (#B9DCFA). Resource: lilac (#D9CCF2). Role: green (#C9F2CF). Agent: teal (#A6E3DC). Actor: grey (#E2E2E2)."
     }
   }

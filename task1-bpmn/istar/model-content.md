@@ -319,7 +319,7 @@ This actor holds the two functionalities. Its tasks name the planned job types o
 
 ### 5.5 Dependencies in the SR model
 
-In the SR model, each UC2 dependency of section 4 starts and ends at an element inside the actors. Since 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)), each customer dependency starts at a leaf element, because iStar 2.0 does not allow a refined or contributed element as a depender (iStar 2.0 Guide, p. 14). The three segments are closed roles in the SR model, so SD27 to SD29 start at the role and end at the actor.
+In the SR model, each UC2 dependency of section 4 starts and ends at an element inside the actors. Since 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)), each dependency starts at a leaf element or at an actor, because iStar 2.0 does not allow a refined or contributed element as a depender (iStar 2.0 Guide, p. 14). piStar loads the SR model without a rule message. The three segments are closed roles in the SR model, so SD27 to SD29 start at the role and end at the actor.
 
 | SD dependency | Depender element | Dependee element |
 |---|---|---|
@@ -337,13 +337,13 @@ In the SR model, each UC2 dependency of section 4 starts and ends at an element 
 | SD12 Accurate stock levels | MP06 Check stock | PR05 Keep stock levels accurate |
 | SD13 Delivery or collection arrangements | MP08 Identify producers and arrangements | PR06 Set delivery or collection arrangements |
 | SD14 New order notification | PR08 New order notification | MP19 Notify each producer |
-| SD15 Adequate lead time | PR13 Enough time to prepare | MP08 Identify producers and arrangements |
+| SD15 Adequate lead time | PR07 Prepare and hand over orders | MP08 Identify producers and arrangements |
 | SD17 Weekly settlement with statement | PR09 Weekly settlement received | NW06 Settle producers weekly |
-| SD18 Transparent audit trail | PR14 Tax-ready accounts | NW06 Settle producers weekly |
+| SD18 Transparent audit trail | PR09 Weekly settlement received | NW06 Settle producers weekly |
 | SD19 5% commission calculated | NW04 Charge 5% commission | MP17 Calculate producer amounts and 5% commission |
-| SD21 Business rules | MP13 and MP24 | NW05 Set business rules |
+| SD21 Business rules | Marketplace platform (the actor, for MP13 and MP24) | NW05 Set business rules |
 | SD22 Payment processed | MP16 Submit payment | Payment service (closed) |
-| SD23 Payment service availability | MP23 Payment service failure handled | Payment service (closed) |
+| SD23 Payment service availability | MP24 Retry, then cancel and release stock | Payment service (closed) |
 | SD24 Notifications delivered | MP19 Notify each producer | Notification service (closed) |
 | SD27 Convenient ordering | Household customer (closed role) | Marketplace platform (the actor) |
 | SD28 Reliable, consistent suppliers | Community group buyer (closed role) | BRF Network (the actor) |
@@ -419,6 +419,7 @@ Each softgoal comes from a candidate in the last column of the non-functional re
 | DI6 | The BRF Network pays the weekly settlement | Q2 in actors.md is open |
 | DI7 | The SR model opens only the four UC2 actors. The services stay closed | Agreed scope. It keeps the SR model readable |
 | DI8 | In the SR model, the three customer segments are closed roles with SD27 to SD29, and each customer dependency starts at a leaf element. SD05 ends at MP08, not at MP10 | 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)). A refined or contributed element cannot be a depender (iStar 2.0 Guide, p. 14). MP08 gives the producers and the arrangements that the customer reviews (B03, row U4 of traceability.md) |
+| DI9 | In the SR model, SD15 starts at PR07, SD18 at PR09 and SD23 at MP24 | 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)). They started at PR13, PR14 and MP23, which are contributed or refined elements, so piStar listed four errors. PR07 needs the lead time to prepare the orders (NFR07). The audit trail comes with the weekly settlement PR09, which helps PR14 (CS p. 2). MP24 is the chosen means for MP23, and it needs the service to be available again (B12). The leads of 4.3 and 4.4 check these three |
 
 ## 9. Questions for the stand-up
 

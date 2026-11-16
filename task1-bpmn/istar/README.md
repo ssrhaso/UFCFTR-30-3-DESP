@@ -72,7 +72,7 @@ The lecture uses the classic i* notation. piStar uses iStar 2.0. The lab sheet s
 
 **Rules of iStar 2.0 that piStar enforces:**
 
-- A refined element or a contributed element cannot be a depender (Dalpiaz, Franch and Horkoff, 2016, p. 14). Thus each customer dependency in the SR model starts at a leaf task since 4.2 (section 10.4), and SD21 Business rules starts at the actor. Three dependencies of the other parts start at a refined or contributed element since #161: SD15 at PR13, SD18 at PR14 and SD23 at MP23. piStar lists them in an "Invalid model" message when it loads the SR model (four errors). 4.2 does not change them, because they are outside the customer part.
+- A refined element or a contributed element cannot be a depender (Dalpiaz, Franch and Horkoff, 2016, p. 14). Thus each dependency in the SR model starts at a leaf element or at an actor. SD21 Business rules starts at the Marketplace platform, and SD27 to SD29 start at the closed roles. Before 4.2, seven dependencies started at a refined or contributed element, and piStar listed nine errors in an "Invalid model" message when it loaded the SR model. 4.2 moved each of them to a leaf element (section 10.4). Now piStar loads the SR model without a message. The "Depender note" property of each moved dependum gives the element that it started at.
 - Do not mix AND-refinement and OR-refinement under one parent.
 - Put each dependum outside the actor boundaries.
 
@@ -338,6 +338,7 @@ Each row has one depender, one dependum and one dependee. The fifth column gives
 **Changes of 4.2:**
 
 - **Leaf dependers.** SD01 and SD03 started at CU05, SD04 at CU09 and SD06 at CU17. These are refined or contributed elements, which iStar 2.0 does not allow as dependers (Dalpiaz, Franch and Horkoff, 2016, p. 14). piStar listed five errors for the customer part when it loaded the SR model. Each of the four dependencies now starts at a leaf task, and piStar lists no error for the customer part.
+- **Other parts.** SD15, SD18 and SD23 also started at a refined or contributed element (PR13, PR14 and MP23), and piStar listed four errors for them. They are outside the customer part, but 4.2 moved them too, so that piStar loads the SR model without a message. SD15 starts at PR07 Prepare and hand over orders, SD18 at PR09 Weekly settlement received, and SD23 at MP24 Retry, then cancel and release stock (decision DI9 in model-content.md). The leads of 4.3 and 4.4 check these three.
 - **SD02 and SD05** are now in the SR model. SD05 ends at MP08 Identify producers and arrangements. The issue proposed MP10 Create and split marketplace order. MP08 is the task that gives the producers and the arrangements that the customer reviews (B03, row U4 of [traceability.md](../../requirements/traceability.md)).
 - **Segments.** The three segments are closed roles in the SR model, with their is-a links and SD27 to SD29.
 - **Qualification links.** CU16 Quick delivery qualifies CU12 Goods received, and CU17 Safe payment and personal data qualifies CU09 Pay for the order. CU16 had no link before.
