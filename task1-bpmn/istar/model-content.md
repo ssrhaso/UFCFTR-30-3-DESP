@@ -109,9 +109,9 @@ These show why the three segments are separate in actors.md: each one has a diff
 
 | ID | Depender | Dependum | Type | Dependee | Source | Scope |
 |---|---|---|---|---|---|---|
-| SD27 | Household customer | Convenient ordering (not limited to farm shop hours) | Softgoal | Marketplace platform | CS p. 1 | UC2 |
-| SD28 | Community group buyer | Reliable, consistent suppliers | Softgoal | BRF Network | CS p. 1 | UC2 |
-| SD29 | Restaurant or café buyer | Low supplier admin | Softgoal | Marketplace platform | CS p. 1 | UC2 |
+| SD27 | Household customer | Convenient ordering (not limited to farm shop hours) | Softgoal | Marketplace platform | CS p. 1, A01 in actors.md | UC2 |
+| SD28 | Community group buyer | Reliable, consistent suppliers | Softgoal | BRF Network | CS p. 1, A02 in actors.md | UC2 |
+| SD29 | Restaurant or café buyer | Low supplier admin | Softgoal | Marketplace platform | CS p. 1, A03 in actors.md | UC2 |
 
 ### 4.6 Compliance and quality
 
@@ -134,6 +134,9 @@ These show why the three segments are separate in actors.md: each one has a diff
 | SD39 | BRF Network | Educational content | Resource | Producer | M22, P11 | Wider |
 | SD40 | Customer | Food miles information | Resource | Marketplace platform | M16, P09, B09 | Wider |
 | SD41 | Customer | Order issue resolved (redelivery or refund) | Goal | Marketplace platform | P12, M24, M25, D8 | Wider |
+| SD42 | Customer | Surplus produce offer | Resource | BRF Network | CS p. 2, P10, M21 | Wider |
+
+SD41 and SD42 are in the SD model since 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)). SD41 was in this table since 7 Nov 2026, but not in the model. SD42 is new: the customer receives the surplus offer in P10 (processes.md, section 4).
 
 ## 5. Strategic Rationale model
 
@@ -147,20 +150,23 @@ The SR model opens Customer, Producer, BRF Network and Marketplace platform. The
 | CU02 | Buy through the marketplace | Task | Means-end to CU01 | P03 to P05 |
 | CU03 | Buy from farm shops and markets | Task | Means-end to CU01 (the current practice) | CS p. 1 |
 | CU04 | Products found | Goal | Decomposes CU02 | P03, B18 |
-| CU05 | Check out the order | Task | Decomposes CU02 | FN1 |
+| CU05 | Check out the order | Task | Decomposes CU02 | P04, FN1 |
 | CU06 | Basket | Resource | Decomposes CU05 | B19 |
 | CU07 | Review and confirm order | Task | Decomposes CU05 | B05 |
 | CU08 | Amend unavailable items | Task | Decomposes CU05 | B02 |
-| CU09 | Pay for the order | Task | Decomposes CU02 | FN2 |
+| CU09 | Pay for the order | Task | Decomposes CU02 | P05, FN2 |
 | CU10 | Give sandbox payment reference | Task | Decomposes CU09 | B10 |
 | CU11 | Retry or cancel after decline | Task | Decomposes CU09 | B11 |
 | CU12 | Goods received | Goal | Decomposes CU02 | P06 |
-| CU13 | Convenience | Softgoal | Mainly A01 | CS p. 1 |
-| CU14 | Reliable local supply | Softgoal | Mainly A02 | CS p. 1 |
-| CU15 | Low supplier admin | Softgoal | Mainly A03 | CS p. 1 |
-| CU16 | Quick delivery | Softgoal | All segments | Assumption (TN4) |
-| CU17 | Safe payment and personal data | Softgoal | All segments | NFR01, NFR03 |
+| CU13 | Convenience | Softgoal | Mainly A01 | CS p. 1, A01 in actors.md |
+| CU14 | Reliable local supply | Softgoal | Mainly A02 | CS p. 1, A02 in actors.md |
+| CU15 | Low supplier admin | Softgoal | Mainly A03 | CS p. 1, A03 in actors.md |
+| CU16 | Quick delivery | Softgoal | All segments. Qualifies CU12 | Assumption, not in the case study (TN4) |
+| CU17 | Safe payment and personal data | Softgoal | All segments. Qualifies CU09 | NFR01, NFR03 |
 | CU18 | Order problems put right | Goal | Decomposes CU02 | P12, D8 |
+| CU19 | Browse and search the catalogue | Task | Means-end to CU04 | P03, CS p. 2, B18 |
+
+CU18 and CU19 are in the SR model since 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)). CU18 was in this table since 7 Nov 2026, but not in the model. CU19 is the P03 task of the customer. In piStar, each customer element has its ID and its source as properties.
 
 **Contributions:**
 
@@ -174,6 +180,13 @@ The SR model opens Customer, Producer, BRF Network and Marketplace platform. The
 | CU03 | CU15 | Break | Admin of many small suppliers is "prohibitively time-consuming" (CS p. 1) |
 | CU08 Amend unavailable items | CU13 | Hurt | Extra effort when stock runs out |
 | CU10 Give sandbox payment reference | CU17 | Help | No card data in the forms (NFR03) |
+
+**Qualifications** (4.2, [#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)):
+
+| Softgoal | Qualifies | Reason |
+|---|---|---|
+| CU16 Quick delivery | CU12 Goods received | The customer wants the goods soon after the order (assumption, TN4) |
+| CU17 Safe payment and personal data | CU09 Pay for the order | The payment step must protect the payment and the personal data (NFR01, NFR03) |
 
 ### 5.2 Producer
 
@@ -306,14 +319,16 @@ This actor holds the two functionalities. Its tasks name the planned job types o
 
 ### 5.5 Dependencies in the SR model
 
-In the SR model, each UC2 dependency of section 4 starts and ends at an element inside the actors.
+In the SR model, each UC2 dependency of section 4 starts and ends at an element inside the actors. Since 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)), each customer dependency starts at a leaf element, because iStar 2.0 does not allow a refined or contributed element as a depender (iStar 2.0 Guide, p. 14). The three segments are closed roles in the SR model, so SD27 to SD29 start at the role and end at the actor.
 
 | SD dependency | Depender element | Dependee element |
 |---|---|---|
-| SD01 Multi-vendor order processed | CU05 Check out the order | MP05 Process order |
-| SD03 Accurate availability | CU05 Check out the order | MP13 Reserve stock for a time limit |
-| SD04 Order confirmation | CU09 Pay for the order | MP18 Confirm order and update stock |
-| SD06 Secure payment | CU17 Safe payment and personal data | MP16 Submit payment |
+| SD01 Multi-vendor order processed | CU07 Review and confirm order | MP05 Process order |
+| SD02 Product information | CU19 Browse and search the catalogue | MP11 Product catalogue and stock |
+| SD03 Accurate availability | CU08 Amend unavailable items | MP13 Reserve stock for a time limit |
+| SD04 Order confirmation | CU10 Give sandbox payment reference | MP18 Confirm order and update stock |
+| SD05 Clear supplier responsibilities | CU07 Review and confirm order | MP08 Identify producers and arrangements |
+| SD06 Secure payment | CU10 Give sandbox payment reference | MP16 Submit payment |
 | SD07 Review and confirm order | MP09 Get customer confirmation | CU07 Review and confirm order |
 | SD08 Amend unavailable items | MP07 Ask customer to amend order | CU08 Amend unavailable items |
 | SD09 Sandbox payment reference | MP16 Submit payment | CU10 Give sandbox payment reference |
@@ -330,6 +345,9 @@ In the SR model, each UC2 dependency of section 4 starts and ends at an element 
 | SD22 Payment processed | MP16 Submit payment | Payment service (closed) |
 | SD23 Payment service availability | MP23 Payment service failure handled | Payment service (closed) |
 | SD24 Notifications delivered | MP19 Notify each producer | Notification service (closed) |
+| SD27 Convenient ordering | Household customer (closed role) | Marketplace platform (the actor) |
+| SD28 Reliable, consistent suppliers | Community group buyer (closed role) | BRF Network (the actor) |
+| SD29 Low supplier admin | Restaurant or café buyer (closed role) | Marketplace platform (the actor) |
 
 ## 6. Tensions and competing goals
 
@@ -400,13 +418,15 @@ Each softgoal comes from a candidate in the last column of the non-functional re
 | DI5 | The notification and postcode distance services are external agents | Assumption Q3 in actors.md. The tutor has not answered yet |
 | DI6 | The BRF Network pays the weekly settlement | Q2 in actors.md is open |
 | DI7 | The SR model opens only the four UC2 actors. The services stay closed | Agreed scope. It keeps the SR model readable |
+| DI8 | In the SR model, the three customer segments are closed roles with SD27 to SD29, and each customer dependency starts at a leaf element. SD05 ends at MP08, not at MP10 | 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)). A refined or contributed element cannot be a depender (iStar 2.0 Guide, p. 14). MP08 gives the producers and the arrangements that the customer reviews (B03, row U4 of traceability.md) |
 
 ## 9. Questions for the stand-up
 
 1. Does the group agree DI2 and DI3?
-2. CU16 Quick delivery is an assumption, not a statement of the case study. Keep it for TN4, or remove it?
+2. CU16 Quick delivery is an assumption, not a statement of the case study. Keep it for TN4, or remove it? **4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)):** kept as a stated assumption. It now qualifies CU12 Goods received, so it has a link. The group can still remove it.
 3. Should the regulators (E05) be one actor or two (data protection and financial services)?
 4. Who checks the models against the operational BPMN models when they are drawn?
+5. NW15 and MP33 (P12, D8) are in sections 5.3 and 5.4 since 7 Nov 2026, but not in the SR model. CU18 and SD41 are in the models since 4.2. Who adds NW15 and MP33?
 
 ## 10. Source keys
 
