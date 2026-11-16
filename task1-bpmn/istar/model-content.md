@@ -369,14 +369,16 @@ In the SR model, each UC2 dependency of section 4 starts and ends at an element 
 
 The operational models are not built yet. The last two columns use the planned elements of functionalities.md section 4.
 
+Since 9 Nov 2026, Figure 1 is the happy path with no gateways (D1 in interactions.md, tutor feedback at the stand-up). Thus an element of an exception path has no element in Figure 1, and its row says so.
+
 | i* element | Strategic BPMN (Figure 1) | Operational BPMN (planned) | Stories |
 |---|---|---|---|
 | CU07 Review and confirm order | Place order (Customer pool), Order message (M04) | `process_order`: user task with a Camunda Form | B05 |
-| CU08 Amend unavailable items | Items in stock? gateway, Amend order message (M23) | `process_order`: user task and a loop back to the stock check | B02 |
+| CU08 Amend unavailable items | Not in Figure 1 (happy path, D1). The amend exchange is O01 and O02 of the operational model | `process_order`: user task and a loop back to the stock check | B02 |
 | CU10 Give sandbox payment reference | Customer pool | `process_payment`: user task with a Camunda Form | B10 |
 | CU11 Retry or cancel after decline | Customer pool (O03, O04) | `process_payment`: user task after `PAYMENT_DECLINED` | B11 |
-| MP06 Check stock | Items in stock? gateway (Catalogue management lane), before Process order | Service task `check-stock` | B01, B21 |
-| MP07 Ask customer to amend order | Amend order requested event, Amend order message (M23) | `process_order`: user task after the stock check | B02 |
+| MP06 Check stock | Process order (Order management lane). The check is inside it | Service task `check-stock` | B01, B21 |
+| MP07 Ask customer to amend order | Not in Figure 1 (happy path, D1). The request to amend is O01 of the operational model | `process_order`: user task after the stock check | B02 |
 | MP11 Product catalogue and stock | Not drawn; DS1 in interactions.md section 4.1 | Product service (W1) | B01 |
 | MP13 Reserve stock for a time limit | Process order (Order management lane) | Reservation, with a timer boundary event on the review task | B07, B08 |
 | MP08 Identify producers and arrangements | Process order (Order management lane) | Service task `identify-producers` | B03, B04 |
@@ -385,8 +387,8 @@ The operational models are not built yet. The last two columns use the planned e
 | MP17 Calculate producer amounts and 5% commission | Process payment (Finance and settlements lane) | FEEL expressions in output mappings | B13 |
 | MP18 Confirm order and update stock | Process payment (Finance and settlements lane), Order confirmation (M07) | Service tasks `confirm-order` and `update-stock` | B14, B15 |
 | MP19 Notify each producer | Process payment (Finance and settlements lane), Notification service (M08, M09) | Multi-instance service task `notify-producer` | B16, B23 |
-| MP22 Let customer retry or cancel | Payment successful? gateway | Error boundary event `PAYMENT_DECLINED` | B11 |
-| MP24 Retry, then cancel and release stock | Payment not completed end event | Retry loop, then cancellation (`PAYMENT_SERVICE_UNAVAILABLE`) | B12, B17 |
+| MP22 Let customer retry or cancel | Not in Figure 1 (happy path, D1). The payment decision is in the operational model | Error boundary event `PAYMENT_DECLINED` | B11 |
+| MP24 Retry, then cancel and release stock | Not in Figure 1 (happy path, D1). The failure path is in the operational model | Retry loop, then cancellation (`PAYMENT_SERVICE_UNAVAILABLE`) | B12, B17 |
 | PR07 Prepare and hand over orders | Fulfil order (Producer lane) | Out of scope | None |
 | NW06 Settle producers weekly | Settle producer payments (Finance and settlements lane), a call activity since 5.5 | `settle_producer_payments`, the extra operational model: multi-instance sub-process "Settle each producer" | None (FR16 is Task 2) |
 | NW07 Handle quality incidents | Handle quality incident (Quality and traceability lane) | Out of scope | None |
