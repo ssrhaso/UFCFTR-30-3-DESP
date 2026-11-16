@@ -94,6 +94,10 @@
       "type": "istar.Role",
       "x": 388,
       "y": 692,
+      "customProperties": {
+        "ID": "A01 to A03",
+        "BPMN element": "Customer pool"
+      },
       "nodes": []
     },
     {
@@ -102,6 +106,10 @@
       "type": "istar.Role",
       "x": 228,
       "y": 452,
+      "customProperties": {
+        "ID": "A02",
+        "BPMN element": "Customer pool (shared)"
+      },
       "nodes": []
     },
     {
@@ -110,6 +118,10 @@
       "type": "istar.Role",
       "x": 228,
       "y": 964,
+      "customProperties": {
+        "ID": "A03",
+        "BPMN element": "Customer pool (shared)"
+      },
       "nodes": []
     },
     {
@@ -118,6 +130,10 @@
       "type": "istar.Role",
       "x": 402,
       "y": 984,
+      "customProperties": {
+        "ID": "A01",
+        "BPMN element": "Customer pool (shared)"
+      },
       "nodes": []
     }
   ],
@@ -166,6 +182,8 @@
       "x": 1394,
       "y": 1648,
       "customProperties": {
+        "ID": "SD10",
+        "Source": "P06, actors.md section 4",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "de005d64-cb25-52c4-8944-b85794f4a573",
@@ -238,6 +256,8 @@
       "x": 938,
       "y": 52,
       "customProperties": {
+        "ID": "SD34",
+        "Source": "M11, UC3",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "2ee955bf-6012-510d-a869-d614c65fa893",
@@ -430,6 +450,8 @@
       "x": 916,
       "y": 396,
       "customProperties": {
+        "ID": "SD07",
+        "Source": "M04, B05",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "c85cb79a-c95b-51ef-8756-a98fb9262baa",
@@ -442,6 +464,8 @@
       "x": 916,
       "y": 492,
       "customProperties": {
+        "ID": "SD08",
+        "Source": "O01, O02, B02",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "c85cb79a-c95b-51ef-8756-a98fb9262baa",
@@ -454,6 +478,8 @@
       "x": 916,
       "y": 588,
       "customProperties": {
+        "ID": "SD09",
+        "Source": "B10, NFR03 (no card data)",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "c85cb79a-c95b-51ef-8756-a98fb9262baa",
@@ -466,6 +492,8 @@
       "x": 668,
       "y": 636,
       "customProperties": {
+        "ID": "SD01",
+        "Source": "P04, M04, UC2",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "de005d64-cb25-52c4-8944-b85794f4a573",
@@ -478,6 +506,8 @@
       "x": 668,
       "y": 740,
       "customProperties": {
+        "ID": "SD02",
+        "Source": "P03, CS p. 2",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "de005d64-cb25-52c4-8944-b85794f4a573",
@@ -490,6 +520,8 @@
       "x": 668,
       "y": 836,
       "customProperties": {
+        "ID": "SD03",
+        "Source": "NFR06, B01, B07",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "de005d64-cb25-52c4-8944-b85794f4a573",
@@ -502,6 +534,8 @@
       "x": 668,
       "y": 940,
       "customProperties": {
+        "ID": "SD04",
+        "Source": "M07, B14",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "de005d64-cb25-52c4-8944-b85794f4a573",
@@ -514,6 +548,8 @@
       "x": 668,
       "y": 1036,
       "customProperties": {
+        "ID": "SD05",
+        "Source": "CS p. 2, B03",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "de005d64-cb25-52c4-8944-b85794f4a573",
@@ -526,6 +562,8 @@
       "x": 668,
       "y": 1132,
       "customProperties": {
+        "ID": "SD06",
+        "Source": "NFR03, B10",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "de005d64-cb25-52c4-8944-b85794f4a573",
@@ -538,6 +576,8 @@
       "x": 668,
       "y": 1228,
       "customProperties": {
+        "ID": "SD40",
+        "Source": "M16, P09, B09",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "de005d64-cb25-52c4-8944-b85794f4a573",
@@ -550,6 +590,8 @@
       "x": 596,
       "y": 1348,
       "customProperties": {
+        "ID": "SD29",
+        "Source": "CS p. 1, A03 in actors.md",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "6351c854-7eb6-5c0a-a433-bfaa8694c24d",
@@ -562,6 +604,8 @@
       "x": 804,
       "y": 1396,
       "customProperties": {
+        "ID": "SD27",
+        "Source": "CS p. 1, A01 in actors.md",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "9d9efde6-49e2-58f4-b66b-dfa7584c162c",
@@ -574,6 +618,8 @@
       "x": 378,
       "y": 209,
       "customProperties": {
+        "ID": "SD28",
+        "Source": "CS p. 1, A02 in actors.md",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "70dcec17-ef87-51f8-8bfe-26d5d9ff603c",
@@ -586,6 +632,8 @@
       "x": 484,
       "y": 307,
       "customProperties": {
+        "ID": "SD36",
+        "Source": "M14, M15, UC3",
         "OpenOME source": "sd-model-draft.ood"
       },
       "source": "de005d64-cb25-52c4-8944-b85794f4a573",
@@ -598,7 +646,37 @@
       "x": 594,
       "y": 397,
       "customProperties": {
+        "ID": "SD30",
+        "Source": "NFR01",
         "OpenOME source": "sd-model-draft.ood"
+      },
+      "source": "de005d64-cb25-52c4-8944-b85794f4a573",
+      "target": "f2d99c8d-4ff8-57f9-a0c3-e4b3798a3ade"
+    },
+    {
+      "id": "c4f911e0-8eba-5dd0-9606-a07a772dd4cf",
+      "text": "Order issue resolved",
+      "type": "istar.Goal",
+      "x": 800,
+      "y": 680,
+      "customProperties": {
+        "ID": "SD41",
+        "Source": "P12, M24, M25, D8",
+        "Change": "Customer part, task 4.2 (#149). In model-content.md since 7 Nov 2026"
+      },
+      "source": "de005d64-cb25-52c4-8944-b85794f4a573",
+      "target": "c85cb79a-c95b-51ef-8756-a98fb9262baa"
+    },
+    {
+      "id": "e77811c2-dd1a-5d36-81a2-b3e809bf5c2d",
+      "text": "Surplus produce offer",
+      "type": "istar.Resource",
+      "x": 380,
+      "y": 380,
+      "customProperties": {
+        "ID": "SD42",
+        "Source": "CS p. 2, P10, M21",
+        "Change": "Customer part, task 4.2 (#149)"
       },
       "source": "de005d64-cb25-52c4-8944-b85794f4a573",
       "target": "f2d99c8d-4ff8-57f9-a0c3-e4b3798a3ade"
@@ -1114,6 +1192,30 @@
       "type": "istar.ParticipatesInLink",
       "source": "2ee955bf-6012-510d-a869-d614c65fa893",
       "target": "f2d99c8d-4ff8-57f9-a0c3-e4b3798a3ade"
+    },
+    {
+      "id": "5b5f424f-2aea-5f6a-a8d9-614a4a99e2ff",
+      "type": "istar.DependencyLink",
+      "source": "de005d64-cb25-52c4-8944-b85794f4a573",
+      "target": "c4f911e0-8eba-5dd0-9606-a07a772dd4cf"
+    },
+    {
+      "id": "0684384a-0e4e-5ffe-a7d6-c2797673b50c",
+      "type": "istar.DependencyLink",
+      "source": "c4f911e0-8eba-5dd0-9606-a07a772dd4cf",
+      "target": "c85cb79a-c95b-51ef-8756-a98fb9262baa"
+    },
+    {
+      "id": "1c1d2d32-9f98-5576-a2f1-ac8935007f06",
+      "type": "istar.DependencyLink",
+      "source": "de005d64-cb25-52c4-8944-b85794f4a573",
+      "target": "e77811c2-dd1a-5d36-81a2-b3e809bf5c2d"
+    },
+    {
+      "id": "e90c5638-6afd-58d2-9a6b-ded057063c05",
+      "type": "istar.DependencyLink",
+      "source": "e77811c2-dd1a-5d36-81a2-b3e809bf5c2d",
+      "target": "f2d99c8d-4ff8-57f9-a0c3-e4b3798a3ade"
     }
   ],
   "display": {
@@ -1432,17 +1534,27 @@
     "9d9efde6-49e2-58f4-b66b-dfa7584c162c": {
       "collapsed": true,
       "backgroundColor": "#C9F2CF"
+    },
+    "c4f911e0-8eba-5dd0-9606-a07a772dd4cf": {
+      "width": 110,
+      "height": 44,
+      "backgroundColor": "#FFE29A"
+    },
+    "e77811c2-dd1a-5d36-81a2-b3e809bf5c2d": {
+      "width": 110,
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
     }
   },
   "tool": "pistar.2.1.0",
   "istar": "2.0",
-  "saveDate": "Sat, 14 Nov 2026 13:51:33 GMT",
+  "saveDate": "Mon, 16 Nov 2026 05:43:12 GMT",
   "diagram": {
     "width": 3076,
     "height": 1768,
     "name": "istar-sd",
     "customProperties": {
-      "Description": "Converted from the OpenOME draft sd-model-draft.ood by Royden Dias. iStar 2.0. Each changed dependency has a Conversion note property.",
+      "Description": "Converted from the OpenOME draft sd-model-draft.ood by Royden Dias. iStar 2.0. Each changed dependency has a Conversion note property. Customer part, task 4.2 (#149), 16 Nov 2026: SD41 Order issue resolved and SD42 Surplus produce offer are new. The customer, its three segments and each of their dependencies have an ID and a Source property.",
       "Colour key": "Goal: amber (#FFE29A). Quality: pink (#F9C6D7). Task: blue (#B9DCFA). Resource: lilac (#D9CCF2). Role: green (#C9F2CF). Agent: teal (#A6E3DC). Actor: grey (#E2E2E2)."
     }
   }

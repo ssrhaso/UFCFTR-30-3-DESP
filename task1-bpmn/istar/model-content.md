@@ -109,9 +109,9 @@ These show why the three segments are separate in actors.md: each one has a diff
 
 | ID | Depender | Dependum | Type | Dependee | Source | Scope |
 |---|---|---|---|---|---|---|
-| SD27 | Household customer | Convenient ordering (not limited to farm shop hours) | Softgoal | Marketplace platform | CS p. 1 | UC2 |
-| SD28 | Community group buyer | Reliable, consistent suppliers | Softgoal | BRF Network | CS p. 1 | UC2 |
-| SD29 | Restaurant or café buyer | Low supplier admin | Softgoal | Marketplace platform | CS p. 1 | UC2 |
+| SD27 | Household customer | Convenient ordering (not limited to farm shop hours) | Softgoal | Marketplace platform | CS p. 1, A01 in actors.md | UC2 |
+| SD28 | Community group buyer | Reliable, consistent suppliers | Softgoal | BRF Network | CS p. 1, A02 in actors.md | UC2 |
+| SD29 | Restaurant or café buyer | Low supplier admin | Softgoal | Marketplace platform | CS p. 1, A03 in actors.md | UC2 |
 
 ### 4.6 Compliance and quality
 
@@ -134,6 +134,9 @@ These show why the three segments are separate in actors.md: each one has a diff
 | SD39 | BRF Network | Educational content | Resource | Producer | M22, P11 | Wider |
 | SD40 | Customer | Food miles information | Resource | Marketplace platform | M16, P09, B09 | Wider |
 | SD41 | Customer | Order issue resolved (redelivery or refund) | Goal | Marketplace platform | P12, M24, M25, D8 | Wider |
+| SD42 | Customer | Surplus produce offer | Resource | BRF Network | CS p. 2, P10, M21 | Wider |
+
+SD41 and SD42 are in the SD model since 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)). SD41 was in this table since 7 Nov 2026, but not in the model. SD42 is new: the customer receives the surplus offer in P10 (processes.md, section 4).
 
 ## 5. Strategic Rationale model
 
@@ -147,20 +150,23 @@ The SR model opens Customer, Producer, BRF Network and Marketplace platform. The
 | CU02 | Buy through the marketplace | Task | Means-end to CU01 | P03 to P05 |
 | CU03 | Buy from farm shops and markets | Task | Means-end to CU01 (the current practice) | CS p. 1 |
 | CU04 | Products found | Goal | Decomposes CU02 | P03, B18 |
-| CU05 | Check out the order | Task | Decomposes CU02 | FN1 |
+| CU05 | Check out the order | Task | Decomposes CU02 | P04, FN1 |
 | CU06 | Basket | Resource | Decomposes CU05 | B19 |
 | CU07 | Review and confirm order | Task | Decomposes CU05 | B05 |
 | CU08 | Amend unavailable items | Task | Decomposes CU05 | B02 |
-| CU09 | Pay for the order | Task | Decomposes CU02 | FN2 |
+| CU09 | Pay for the order | Task | Decomposes CU02 | P05, FN2 |
 | CU10 | Give sandbox payment reference | Task | Decomposes CU09 | B10 |
 | CU11 | Retry or cancel after decline | Task | Decomposes CU09 | B11 |
 | CU12 | Goods received | Goal | Decomposes CU02 | P06 |
-| CU13 | Convenience | Softgoal | Mainly A01 | CS p. 1 |
-| CU14 | Reliable local supply | Softgoal | Mainly A02 | CS p. 1 |
-| CU15 | Low supplier admin | Softgoal | Mainly A03 | CS p. 1 |
-| CU16 | Quick delivery | Softgoal | All segments | Assumption (TN4) |
-| CU17 | Safe payment and personal data | Softgoal | All segments | NFR01, NFR03 |
+| CU13 | Convenience | Softgoal | Mainly A01 | CS p. 1, A01 in actors.md |
+| CU14 | Reliable local supply | Softgoal | Mainly A02 | CS p. 1, A02 in actors.md |
+| CU15 | Low supplier admin | Softgoal | Mainly A03 | CS p. 1, A03 in actors.md |
+| CU16 | Quick delivery | Softgoal | All segments. Qualifies CU12 | Assumption, not in the case study (TN4) |
+| CU17 | Safe payment and personal data | Softgoal | All segments. Qualifies CU09 | NFR01, NFR03 |
 | CU18 | Order problems put right | Goal | Decomposes CU02 | P12, D8 |
+| CU19 | Browse and search the catalogue | Task | Means-end to CU04 | P03, CS p. 2, B18 |
+
+CU18 and CU19 are in the SR model since 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)). CU18 was in this table since 7 Nov 2026, but not in the model. CU19 is the P03 task of the customer. In piStar, each customer element has its ID and its source as properties.
 
 **Contributions:**
 
@@ -172,8 +178,15 @@ The SR model opens Customer, Producer, BRF Network and Marketplace platform. The
 | CU03 Buy from farm shops and markets | CU13 | Hurt | Restricted opening hours (CS p. 1) |
 | CU03 | CU14 | Hurt | Hard to find reliable sources (CS p. 1) |
 | CU03 | CU15 | Break | Admin of many small suppliers is "prohibitively time-consuming" (CS p. 1) |
-| CU08 Amend unavailable items | Customer pool; not in Figure 1 (happy path, D1) | Hurt | Extra effort when stock runs out |
+| CU08 Amend unavailable items | CU13 | Hurt | Extra effort when stock runs out |
 | CU10 Give sandbox payment reference | CU17 | Help | No card data in the forms (NFR03) |
+
+**Qualifications** (4.2, [#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)):
+
+| Softgoal | Qualifies | Reason |
+|---|---|---|
+| CU16 Quick delivery | CU12 Goods received | The customer wants the goods soon after the order (assumption, TN4) |
+| CU17 Safe payment and personal data | CU09 Pay for the order | The payment step must protect the payment and the personal data (NFR01, NFR03) |
 
 ### 5.2 Producer
 
@@ -295,41 +308,46 @@ This actor holds the two functionalities. Its tasks name the planned job types o
 | MP13 | MP27 Stock open to other buyers | Hurt | Abandoned checkouts hold stock until the time limit (TN3) |
 | MP14 Check stock only at payment | MP26 | Hurt | Two customers can buy the last unit |
 | MP14 | MP27 | Help | No stock is held |
-| MP24 Retry, then cancel and release stock | Not in Figure 1 (happy path, D1) | Help | Every failure ends in a modelled state (NFR04) |
+| MP24 Retry, then cancel and release stock | MP28 Reliable checkout | Help | Every failure ends in a modelled state (NFR04) |
 | MP24 | MP29 Quick checkout | Hurt | The customer waits during the retries (TN5) |
 | MP25 End the process at once | MP28 | Break | Against UC2 |
 | MP25 | MP29 | Help | No wait |
 | MP16 Submit payment | MP30 Secure payment | Help | Sandbox reference only, no card data (NFR03) |
 | MP17 Calculate producer amounts and 5% commission | MP31 Accurate amounts | Make | Amounts plus commission equal the total (NFR05) |
 | MP20 Record every payment attempt | MP32 Auditability | Make | NFR08 |
-| MP22 Let customer retry or cancel | Not in Figure 1 (happy path, D1) | Help | A decline does not lose the order |
+| MP22 Let customer retry or cancel | MP28 | Help | A decline does not lose the order |
 
 ### 5.5 Dependencies in the SR model
 
-In the SR model, each UC2 dependency of section 4 starts and ends at an element inside the actors.
+In the SR model, each UC2 dependency of section 4 starts and ends at an element inside the actors. Since 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)), each dependency starts at a leaf element or at an actor, because iStar 2.0 does not allow a refined or contributed element as a depender (iStar 2.0 Guide, p. 14). piStar loads the SR model without a rule message. The three segments are closed roles in the SR model, so SD27 to SD29 start at the role and end at the actor.
 
 | SD dependency | Depender element | Dependee element |
 |---|---|---|
-| SD01 Multi-vendor order processed | CU05 Check out the order | MP05 Process order |
-| SD03 Accurate availability | CU05 Check out the order | MP13 Reserve stock for a time limit |
-| SD04 Order confirmation | CU09 Pay for the order | MP18 Confirm order and update stock |
-| SD06 Secure payment | CU17 Safe payment and personal data | MP16 Submit payment |
+| SD01 Multi-vendor order processed | CU07 Review and confirm order | MP05 Process order |
+| SD02 Product information | CU19 Browse and search the catalogue | MP11 Product catalogue and stock |
+| SD03 Accurate availability | CU08 Amend unavailable items | MP13 Reserve stock for a time limit |
+| SD04 Order confirmation | CU10 Give sandbox payment reference | MP18 Confirm order and update stock |
+| SD05 Clear supplier responsibilities | CU07 Review and confirm order | MP08 Identify producers and arrangements |
+| SD06 Secure payment | CU10 Give sandbox payment reference | MP16 Submit payment |
 | SD07 Review and confirm order | MP09 Get customer confirmation | CU07 Review and confirm order |
-| SD08 Amend unavailable items | MP07 Ask customer to amend order | Not in Figure 1 (happy path, D1) |
+| SD08 Amend unavailable items | MP07 Ask customer to amend order | CU08 Amend unavailable items |
 | SD09 Sandbox payment reference | MP16 Submit payment | CU10 Give sandbox payment reference |
 | SD10 Goods delivered or collected | CU12 Goods received | PR07 Prepare and hand over orders |
 | SD11 Product listing and updates | MP11 Product catalogue and stock | PR04 List and update products |
-| SD12 Accurate stock levels | MP06 Check stock | Process order (Order management lane); the check is inside it |
+| SD12 Accurate stock levels | MP06 Check stock | PR05 Keep stock levels accurate |
 | SD13 Delivery or collection arrangements | MP08 Identify producers and arrangements | PR06 Set delivery or collection arrangements |
 | SD14 New order notification | PR08 New order notification | MP19 Notify each producer |
-| SD15 Adequate lead time | PR13 Enough time to prepare | MP08 Identify producers and arrangements |
+| SD15 Adequate lead time | PR07 Prepare and hand over orders | MP08 Identify producers and arrangements |
 | SD17 Weekly settlement with statement | PR09 Weekly settlement received | NW06 Settle producers weekly |
-| SD18 Transparent audit trail | PR14 Tax-ready accounts | NW06 Settle producers weekly |
+| SD18 Transparent audit trail | PR09 Weekly settlement received | NW06 Settle producers weekly |
 | SD19 5% commission calculated | NW04 Charge 5% commission | MP17 Calculate producer amounts and 5% commission |
-| SD21 Business rules | MP13 and MP24 | NW05 Set business rules |
+| SD21 Business rules | Marketplace platform (the actor, for MP13 and MP24) | NW05 Set business rules |
 | SD22 Payment processed | MP16 Submit payment | Payment service (closed) |
-| SD23 Payment service availability | MP23 Payment service failure handled | Payment service (closed) |
+| SD23 Payment service availability | MP24 Retry, then cancel and release stock | Payment service (closed) |
 | SD24 Notifications delivered | MP19 Notify each producer | Notification service (closed) |
+| SD27 Convenient ordering | Household customer (closed role) | Marketplace platform (the actor) |
+| SD28 Reliable, consistent suppliers | Community group buyer (closed role) | BRF Network (the actor) |
+| SD29 Low supplier admin | Restaurant or café buyer (closed role) | Marketplace platform (the actor) |
 
 ## 6. Tensions and competing goals
 
@@ -351,14 +369,16 @@ In the SR model, each UC2 dependency of section 4 starts and ends at an element 
 
 The operational models are not built yet. The last two columns use the planned elements of functionalities.md section 4.
 
+Since 9 Nov 2026, Figure 1 is the happy path with no gateways (D1 in interactions.md, tutor feedback at the stand-up). Thus an element of an exception path has no element in Figure 1, and its row says so.
+
 | i* element | Strategic BPMN (Figure 1) | Operational BPMN (planned) | Stories |
 |---|---|---|---|
 | CU07 Review and confirm order | Place order (Customer pool), Order message (M04) | `process_order`: user task with a Camunda Form | B05 |
-| CU08 Amend unavailable items | Items in stock? gateway, Amend order message (M23) | `process_order`: user task and a loop back to the stock check | B02 |
+| CU08 Amend unavailable items | Not in Figure 1 (happy path, D1). The amend exchange is O01 and O02 of the operational model | `process_order`: user task and a loop back to the stock check | B02 |
 | CU10 Give sandbox payment reference | Customer pool | `process_payment`: user task with a Camunda Form | B10 |
 | CU11 Retry or cancel after decline | Customer pool (O03, O04) | `process_payment`: user task after `PAYMENT_DECLINED` | B11 |
-| MP06 Check stock | Items in stock? gateway (Catalogue management lane), before Process order | Service task `check-stock` | B01, B21 |
-| MP07 Ask customer to amend order | Amend order requested event, Amend order message (M23) | `process_order`: user task after the stock check | B02 |
+| MP06 Check stock | Process order (Order management lane). The check is inside it | Service task `check-stock` | B01, B21 |
+| MP07 Ask customer to amend order | Not in Figure 1 (happy path, D1). The request to amend is O01 of the operational model | `process_order`: user task after the stock check | B02 |
 | MP11 Product catalogue and stock | Not drawn; DS1 in interactions.md section 4.1 | Product service (W1) | B01 |
 | MP13 Reserve stock for a time limit | Process order (Order management lane) | Reservation, with a timer boundary event on the review task | B07, B08 |
 | MP08 Identify producers and arrangements | Process order (Order management lane) | Service task `identify-producers` | B03, B04 |
@@ -367,8 +387,8 @@ The operational models are not built yet. The last two columns use the planned e
 | MP17 Calculate producer amounts and 5% commission | Process payment (Finance and settlements lane) | FEEL expressions in output mappings | B13 |
 | MP18 Confirm order and update stock | Process payment (Finance and settlements lane), Order confirmation (M07) | Service tasks `confirm-order` and `update-stock` | B14, B15 |
 | MP19 Notify each producer | Process payment (Finance and settlements lane), Notification service (M08, M09) | Multi-instance service task `notify-producer` | B16, B23 |
-| MP22 Let customer retry or cancel | Payment successful? gateway | Error boundary event `PAYMENT_DECLINED` | B11 |
-| MP24 Retry, then cancel and release stock | Payment not completed end event | Retry loop, then cancellation (`PAYMENT_SERVICE_UNAVAILABLE`) | B12, B17 |
+| MP22 Let customer retry or cancel | Not in Figure 1 (happy path, D1). The payment decision is in the operational model | Error boundary event `PAYMENT_DECLINED` | B11 |
+| MP24 Retry, then cancel and release stock | Not in Figure 1 (happy path, D1). The failure path is in the operational model | Retry loop, then cancellation (`PAYMENT_SERVICE_UNAVAILABLE`) | B12, B17 |
 | PR07 Prepare and hand over orders | Fulfil order (Producer lane) | Out of scope | None |
 | NW06 Settle producers weekly | Settle producer payments (Finance and settlements lane), a call activity since 5.5 | `settle_producer_payments`, the extra operational model: multi-instance sub-process "Settle each producer" | None (FR16 is Task 2) |
 | NW07 Handle quality incidents | Handle quality incident (Quality and traceability lane) | Out of scope | None |
@@ -400,13 +420,16 @@ Each softgoal comes from a candidate in the last column of the non-functional re
 | DI5 | The notification and postcode distance services are external agents | Assumption Q3 in actors.md. The tutor has not answered yet |
 | DI6 | The BRF Network pays the weekly settlement | Q2 in actors.md is open |
 | DI7 | The SR model opens only the four UC2 actors. The services stay closed | Agreed scope. It keeps the SR model readable |
+| DI8 | In the SR model, the three customer segments are closed roles with SD27 to SD29, and each customer dependency starts at a leaf element. SD05 ends at MP08, not at MP10 | 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)). A refined or contributed element cannot be a depender (iStar 2.0 Guide, p. 14). MP08 gives the producers and the arrangements that the customer reviews (B03, row U4 of traceability.md) |
+| DI9 | In the SR model, SD15 starts at PR07, SD18 at PR09 and SD23 at MP24 | 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)). They started at PR13, PR14 and MP23, which are contributed or refined elements, so piStar listed four errors. PR07 needs the lead time to prepare the orders (NFR07). The audit trail comes with the weekly settlement PR09, which helps PR14 (CS p. 2). MP24 is the chosen means for MP23, and it needs the service to be available again (B12). The leads of 4.3 and 4.4 check these three |
 
 ## 9. Questions for the stand-up
 
 1. Does the group agree DI2 and DI3?
-2. CU16 Quick delivery is an assumption, not a statement of the case study. Keep it for TN4, or remove it?
+2. CU16 Quick delivery is an assumption, not a statement of the case study. Keep it for TN4, or remove it? **4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)):** kept as a stated assumption. It now qualifies CU12 Goods received, so it has a link. The group can still remove it.
 3. Should the regulators (E05) be one actor or two (data protection and financial services)?
 4. Who checks the models against the operational BPMN models when they are drawn?
+5. NW15 and MP33 (P12, D8) are in sections 5.3 and 5.4 since 7 Nov 2026, but not in the SR model. CU18 and SD41 are in the models since 4.2. Who adds NW15 and MP33?
 
 ## 10. Source keys
 
