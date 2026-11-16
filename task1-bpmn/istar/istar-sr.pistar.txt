@@ -280,125 +280,221 @@
       "type": "istar.Role",
       "x": 60,
       "y": 1180,
+      "customProperties": {
+        "ID": "A01 to A03",
+        "BPMN element": "Customer pool"
+      },
       "nodes": [
         {
           "id": "023c9aeb-5bd3-57c3-b393-0602ae86c345",
           "text": "Goods received",
           "type": "istar.Goal",
           "x": 465,
-          "y": 2878
+          "y": 2878,
+          "customProperties": {
+            "ID": "CU12",
+            "Source": "P06"
+          }
         },
         {
           "id": "72cf8700-8c18-5c1d-84a4-65044112e1ba",
           "text": "Buy from farm shops and markets",
           "type": "istar.Task",
           "x": 84,
-          "y": 2084
+          "y": 2084,
+          "customProperties": {
+            "ID": "CU03",
+            "Source": "CS p. 1"
+          }
         },
         {
           "id": "d65b85f5-af80-512c-9af5-78b30dfb3bba",
           "text": "Low supplier admin",
           "type": "istar.Quality",
           "x": 364,
-          "y": 1884
+          "y": 1884,
+          "customProperties": {
+            "ID": "CU15",
+            "Source": "CS p. 1, A03 in actors.md"
+          }
         },
         {
           "id": "e51e7449-5a4c-5e1d-82a3-376b06ad1e16",
           "text": "Reliable local supply",
           "type": "istar.Quality",
           "x": 412,
-          "y": 2084
+          "y": 2084,
+          "customProperties": {
+            "ID": "CU14",
+            "Source": "CS p. 1, A02 in actors.md"
+          }
         },
         {
           "id": "3aada161-37bc-5206-a21d-c75c0d7369b9",
           "text": "Convenience",
           "type": "istar.Quality",
           "x": 364,
-          "y": 2276
+          "y": 2276,
+          "customProperties": {
+            "ID": "CU13",
+            "Source": "CS p. 1, A01 in actors.md"
+          }
         },
         {
           "id": "5948a6c3-e070-55ba-8d9a-127e768761fa",
           "text": "Local produce bought",
           "type": "istar.Goal",
           "x": 380,
-          "y": 1564
+          "y": 1564,
+          "customProperties": {
+            "ID": "CU01",
+            "Source": "CS p. 1"
+          }
         },
         {
           "id": "13f28e66-f649-5386-ab9e-ae9be139552f",
           "text": "Buy through the marketplace",
           "type": "istar.Task",
           "x": 740,
-          "y": 2076
+          "y": 2076,
+          "customProperties": {
+            "ID": "CU02",
+            "Source": "P03 to P05"
+          }
         },
         {
           "id": "e9a7afc6-7130-5d7e-80fc-20d3126433bc",
           "text": "Products found",
           "type": "istar.Goal",
-          "x": 668,
-          "y": 1708
+          "x": 609,
+          "y": 2718,
+          "customProperties": {
+            "ID": "CU04",
+            "Source": "P03, B18"
+          }
         },
         {
           "id": "cddba23d-2ec8-5908-9097-b79389ed917e",
           "text": "Safe payment and personal data",
           "type": "istar.Quality",
           "x": 1036,
-          "y": 1540
+          "y": 1540,
+          "customProperties": {
+            "ID": "CU17",
+            "Source": "NFR01, NFR03"
+          }
         },
         {
           "id": "5255569f-8a54-5555-bcd3-a042bfcea55c",
           "text": "Give sandbox payment reference",
           "type": "istar.Task",
           "x": 1148,
-          "y": 1716
+          "y": 1716,
+          "customProperties": {
+            "ID": "CU10",
+            "Source": "B10"
+          }
         },
         {
           "id": "637ba513-69c6-5938-ac8e-cbff01808465",
           "text": "Pay for the order",
           "type": "istar.Task",
           "x": 932,
-          "y": 1868
+          "y": 1868,
+          "customProperties": {
+            "ID": "CU09",
+            "Source": "P05, FN2"
+          }
         },
         {
           "id": "fe99ee34-1edf-5f0b-88a1-7a5ec74aebd1",
           "text": "Retry or cancel after decline",
           "type": "istar.Task",
           "x": 1140,
-          "y": 2068
+          "y": 2068,
+          "customProperties": {
+            "ID": "CU11",
+            "Source": "B11"
+          }
         },
         {
           "id": "bfd4bba1-b7f8-5eec-a917-e08b58d11e9b",
           "text": "Quick delivery",
           "type": "istar.Quality",
           "x": 276,
-          "y": 2604
+          "y": 2604,
+          "customProperties": {
+            "ID": "CU16",
+            "Source": "Assumption, not in the case study (TN4)"
+          }
         },
         {
           "id": "bef23b13-5f1f-55dd-b39b-9d5e7018bbe7",
           "text": "Check out the order",
           "type": "istar.Task",
           "x": 890,
-          "y": 2322
+          "y": 2322,
+          "customProperties": {
+            "ID": "CU05",
+            "Source": "P04, FN1"
+          }
         },
         {
           "id": "b4c7f0a3-b997-557b-874e-d2ce707ca9e1",
           "text": "Basket",
           "type": "istar.Resource",
           "x": 702,
-          "y": 2609
+          "y": 2609,
+          "customProperties": {
+            "ID": "CU06",
+            "Source": "B19"
+          }
         },
         {
           "id": "83603a69-3f10-580d-97ae-cc1a20a79e58",
           "text": "Review and confirm order",
           "type": "istar.Task",
           "x": 1102,
-          "y": 2572
+          "y": 2572,
+          "customProperties": {
+            "ID": "CU07",
+            "Source": "B05"
+          }
         },
         {
           "id": "478e4d1e-43e7-52c8-97c4-e2fa5fb98bb4",
           "text": "Amend unavailable items",
           "type": "istar.Task",
           "x": 1204,
-          "y": 2180
+          "y": 2180,
+          "customProperties": {
+            "ID": "CU08",
+            "Source": "B02"
+          }
+        },
+        {
+          "id": "54ea0c7c-6bbf-59b0-bc02-5d11a294263e",
+          "text": "Browse and search the catalogue",
+          "type": "istar.Task",
+          "x": 800,
+          "y": 2800,
+          "customProperties": {
+            "ID": "CU19",
+            "Source": "P03, CS p. 2, B18",
+            "Change": "Customer part, task 4.2 (#149)"
+          }
+        },
+        {
+          "id": "fc96e726-5d30-52c6-8839-6328bcfa0704",
+          "text": "Order problems put right",
+          "type": "istar.Goal",
+          "x": 668,
+          "y": 1708,
+          "customProperties": {
+            "ID": "CU18",
+            "Source": "P12, D8",
+            "Change": "Customer part, task 4.2 (#149). In model-content.md since 7 Nov 2026"
+          }
         }
       ]
     },
@@ -634,6 +730,45 @@
           "y": 2732
         }
       ]
+    },
+    {
+      "id": "25d32a55-c6cc-5313-9df2-c28b75b30282",
+      "text": "Community group buyer",
+      "type": "istar.Role",
+      "x": 150,
+      "y": 860,
+      "customProperties": {
+        "ID": "A02",
+        "BPMN element": "Customer pool (shared)",
+        "Change": "Customer part, task 4.2 (#149)"
+      },
+      "nodes": []
+    },
+    {
+      "id": "bab02b15-80cb-5b5d-9393-8d3c1b053c57",
+      "text": "Household customer",
+      "type": "istar.Role",
+      "x": 370,
+      "y": 940,
+      "customProperties": {
+        "ID": "A01",
+        "BPMN element": "Customer pool (shared)",
+        "Change": "Customer part, task 4.2 (#149)"
+      },
+      "nodes": []
+    },
+    {
+      "id": "1870af2f-da82-5891-a268-ac34fa3d8253",
+      "text": "Restaurant or café buyer",
+      "type": "istar.Role",
+      "x": 590,
+      "y": 1020,
+      "customProperties": {
+        "ID": "A03",
+        "BPMN element": "Customer pool (shared)",
+        "Change": "Customer part, task 4.2 (#149)"
+      },
+      "nodes": []
     }
   ],
   "orphans": [],
@@ -645,11 +780,13 @@
       "x": 1548,
       "y": 1636,
       "customProperties": {
+        "ID": "SD06",
+        "Source": "NFR03, B10",
+        "Depender note": "Starts at \"Give sandbox payment reference\" since task 4.2 (#149). Before, it started at \"Safe payment and personal data\". iStar 2.0 does not allow a refined or contributed element as a depender (iStar 2.0 Guide, page 14), so the dependency starts at a leaf task.",
         "OpenOME source": "sr-model-draft.ood",
-        "OpenOME depender element": "Safe payment and personal data",
-        "Conversion note": "piStar does not allow a depender element that is contributed to. The depender is now the actor."
+        "OpenOME depender element": "Safe payment and personal data"
       },
-      "source": "cddba23d-2ec8-5908-9097-b79389ed917e",
+      "source": "5255569f-8a54-5555-bcd3-a042bfcea55c",
       "target": "d00a033d-e8f5-558e-be8d-d64994afb06e"
     },
     {
@@ -659,6 +796,8 @@
       "x": 1548,
       "y": 1860,
       "customProperties": {
+        "ID": "SD09",
+        "Source": "B10, NFR03 (no card data)",
         "OpenOME source": "sr-model-draft.ood"
       },
       "source": "d00a033d-e8f5-558e-be8d-d64994afb06e",
@@ -671,11 +810,13 @@
       "x": 1548,
       "y": 2132,
       "customProperties": {
+        "ID": "SD04",
+        "Source": "M07, B14",
+        "Depender note": "Starts at \"Give sandbox payment reference\" since task 4.2 (#149). Before, it started at \"Pay for the order\". iStar 2.0 does not allow a refined or contributed element as a depender (iStar 2.0 Guide, page 14), so the dependency starts at a leaf task.",
         "OpenOME source": "sr-model-draft.ood",
-        "OpenOME depender element": "Pay for the order",
-        "Conversion note": "piStar does not allow a depender element that is refined. The depender is now the actor."
+        "OpenOME depender element": "Pay for the order"
       },
-      "source": "637ba513-69c6-5938-ac8e-cbff01808465",
+      "source": "5255569f-8a54-5555-bcd3-a042bfcea55c",
       "target": "aabed2c0-e7c2-5073-8623-5bc5c6d0718b"
     },
     {
@@ -685,11 +826,13 @@
       "x": 1548,
       "y": 2356,
       "customProperties": {
+        "ID": "SD03",
+        "Source": "NFR06, B01, B07",
+        "Depender note": "Starts at \"Amend unavailable items\" since task 4.2 (#149). Before, it started at \"Check out the order\". iStar 2.0 does not allow a refined or contributed element as a depender (iStar 2.0 Guide, page 14), so the dependency starts at a leaf task.",
         "OpenOME source": "sr-model-draft.ood",
-        "OpenOME depender element": "Check out the order",
-        "Conversion note": "piStar does not allow a depender element that is refined. The depender is now the actor."
+        "OpenOME depender element": "Check out the order"
       },
-      "source": "bef23b13-5f1f-55dd-b39b-9d5e7018bbe7",
+      "source": "478e4d1e-43e7-52c8-97c4-e2fa5fb98bb4",
       "target": "a117cbdd-d0ac-542f-8d46-c909b8ca374c"
     },
     {
@@ -699,6 +842,8 @@
       "x": 1548,
       "y": 2556,
       "customProperties": {
+        "ID": "SD08",
+        "Source": "O01, O02, B02",
         "OpenOME source": "sr-model-draft.ood"
       },
       "source": "2e234924-007b-56ad-b87d-b1ec040356b3",
@@ -711,6 +856,8 @@
       "x": 1548,
       "y": 2732,
       "customProperties": {
+        "ID": "SD07",
+        "Source": "M04, B05",
         "OpenOME source": "sr-model-draft.ood"
       },
       "source": "2b6f8a22-a71f-5a46-8b55-a7ac5df5aa10",
@@ -723,11 +870,13 @@
       "x": 1548,
       "y": 2456,
       "customProperties": {
+        "ID": "SD01",
+        "Source": "P04, M04, UC2",
+        "Depender note": "Starts at \"Review and confirm order\" since task 4.2 (#149). Before, it started at \"Check out the order\". iStar 2.0 does not allow a refined or contributed element as a depender (iStar 2.0 Guide, page 14), so the dependency starts at a leaf task.",
         "OpenOME source": "sr-model-draft.ood",
-        "OpenOME depender element": "Check out the order",
-        "Conversion note": "piStar does not allow a depender element that is refined. The depender is now the actor."
+        "OpenOME depender element": "Check out the order"
       },
-      "source": "bef23b13-5f1f-55dd-b39b-9d5e7018bbe7",
+      "source": "83603a69-3f10-580d-97ae-cc1a20a79e58",
       "target": "36da1065-c258-5e5c-856d-e9f85865ef1b"
     },
     {
@@ -835,6 +984,8 @@
       "x": 2972,
       "y": 3278,
       "customProperties": {
+        "ID": "SD10",
+        "Source": "P06, actors.md section 4",
         "OpenOME source": "sr-model-draft.ood",
         "Change": "BRF Network refinement, 3 Nov 2026: moved below all actors so its lines do not cross the BRF Network"
       },
@@ -893,6 +1044,76 @@
       },
       "source": "b0d36146-3e0f-539c-804c-ce5b6ef30ac0",
       "target": "ebaee70d-d08d-530c-9ff6-5a6be043bdea"
+    },
+    {
+      "id": "55abd812-df55-513c-bd59-fb34fcb2b6af",
+      "text": "Product information",
+      "type": "istar.Resource",
+      "x": 3516,
+      "y": 3120,
+      "customProperties": {
+        "ID": "SD02",
+        "Source": "P03, CS p. 2",
+        "Change": "Opened in the SR model in task 4.2 (#149)"
+      },
+      "source": "54ea0c7c-6bbf-59b0-bc02-5d11a294263e",
+      "target": "5e411c59-9351-5252-8ade-f01d68a1bf5f"
+    },
+    {
+      "id": "57d24c0c-02bd-5428-b85a-2c8d2e58995a",
+      "text": "Clear supplier responsibilities",
+      "type": "istar.Quality",
+      "x": 3692,
+      "y": 3040,
+      "customProperties": {
+        "ID": "SD05",
+        "Source": "CS p. 2, B03",
+        "Change": "Opened in the SR model in task 4.2 (#149)"
+      },
+      "source": "83603a69-3f10-580d-97ae-cc1a20a79e58",
+      "target": "7371b1af-1281-54ed-a40c-19744a136721"
+    },
+    {
+      "id": "4cbe0b5a-dd5b-5a59-90fa-c89ebafeeffd",
+      "text": "Convenient ordering",
+      "type": "istar.Quality",
+      "x": 1473,
+      "y": 906,
+      "customProperties": {
+        "ID": "SD27",
+        "Source": "CS p. 1, A01 in actors.md",
+        "Change": "Opened in the SR model in task 4.2 (#149)"
+      },
+      "source": "bab02b15-80cb-5b5d-9393-8d3c1b053c57",
+      "target": "05db5b6d-9981-52b4-8cd1-86dbff857d78"
+    },
+    {
+      "id": "be2446b5-8672-5894-9ee4-3754ca524ee0",
+      "text": "Reliable, consistent suppliers",
+      "type": "istar.Quality",
+      "x": 928,
+      "y": 544,
+      "customProperties": {
+        "ID": "SD28",
+        "Source": "CS p. 1, A02 in actors.md",
+        "Change": "Opened in the SR model in task 4.2 (#149)"
+      },
+      "source": "25d32a55-c6cc-5313-9df2-c28b75b30282",
+      "target": "dbea0e75-7fd1-5b56-b867-6f444ff8a455"
+    },
+    {
+      "id": "c03f1f0f-e377-5e8c-9cc5-9031795cf128",
+      "text": "Low supplier admin",
+      "type": "istar.Quality",
+      "x": 1408,
+      "y": 989,
+      "customProperties": {
+        "ID": "SD29",
+        "Source": "CS p. 1, A03 in actors.md",
+        "Change": "Opened in the SR model in task 4.2 (#149)"
+      },
+      "source": "1870af2f-da82-5891-a268-ac34fa3d8253",
+      "target": "05db5b6d-9981-52b4-8cd1-86dbff857d78"
     }
   ],
   "links": [
@@ -1061,7 +1282,7 @@
     {
       "id": "eb8fd20f-f2d0-4257-ac45-2bd59ee34a2d",
       "type": "istar.DependencyLink",
-      "source": "bef23b13-5f1f-55dd-b39b-9d5e7018bbe7",
+      "source": "83603a69-3f10-580d-97ae-cc1a20a79e58",
       "target": "71235d77-14fa-535c-8ab0-843d6afb6919"
     },
     {
@@ -1097,7 +1318,7 @@
     {
       "id": "ec97bbf4-d795-4bc7-99e1-1e982e4d0f6c",
       "type": "istar.DependencyLink",
-      "source": "bef23b13-5f1f-55dd-b39b-9d5e7018bbe7",
+      "source": "478e4d1e-43e7-52c8-97c4-e2fa5fb98bb4",
       "target": "016de832-5466-56ea-8e08-eb71491bf036"
     },
     {
@@ -1109,7 +1330,7 @@
     {
       "id": "da7cbf26-d76d-41cd-97c3-6f856f90f3f2",
       "type": "istar.DependencyLink",
-      "source": "637ba513-69c6-5938-ac8e-cbff01808465",
+      "source": "5255569f-8a54-5555-bcd3-a042bfcea55c",
       "target": "d45ca71b-629e-5c42-af6e-693798cd70a8"
     },
     {
@@ -1133,7 +1354,7 @@
     {
       "id": "702d8bec-dc1d-4546-81ab-8f6669330733",
       "type": "istar.DependencyLink",
-      "source": "cddba23d-2ec8-5908-9097-b79389ed917e",
+      "source": "5255569f-8a54-5555-bcd3-a042bfcea55c",
       "target": "8c835423-1e1b-5fa5-9e64-dcf15878c53c"
     },
     {
@@ -1730,6 +1951,108 @@
       "source": "015007c9-0565-5f54-adf2-67616e19c9d6",
       "target": "597149ed-775f-5ca1-b0a2-8e096b8f7342",
       "label": "hurt"
+    },
+    {
+      "id": "e58e3bd2-a709-50a8-bf2f-90101a3f2fd5",
+      "type": "istar.OrRefinementLink",
+      "source": "54ea0c7c-6bbf-59b0-bc02-5d11a294263e",
+      "target": "e9a7afc6-7130-5d7e-80fc-20d3126433bc"
+    },
+    {
+      "id": "440cdf95-0a1a-5484-90e9-7c002c4103a0",
+      "type": "istar.AndRefinementLink",
+      "source": "fc96e726-5d30-52c6-8839-6328bcfa0704",
+      "target": "13f28e66-f649-5386-ab9e-ae9be139552f"
+    },
+    {
+      "id": "8618e2a9-5609-586f-9b47-aec957d91cf6",
+      "type": "istar.DependencyLink",
+      "source": "54ea0c7c-6bbf-59b0-bc02-5d11a294263e",
+      "target": "55abd812-df55-513c-bd59-fb34fcb2b6af"
+    },
+    {
+      "id": "ddc063f8-5bcb-587f-9766-a2ee2465468e",
+      "type": "istar.DependencyLink",
+      "source": "55abd812-df55-513c-bd59-fb34fcb2b6af",
+      "target": "5e411c59-9351-5252-8ade-f01d68a1bf5f"
+    },
+    {
+      "id": "393533a1-7216-5601-9a3a-ce5bb916934b",
+      "type": "istar.DependencyLink",
+      "source": "83603a69-3f10-580d-97ae-cc1a20a79e58",
+      "target": "57d24c0c-02bd-5428-b85a-2c8d2e58995a"
+    },
+    {
+      "id": "fb257306-e74f-5d4f-8816-ee82cb23f449",
+      "type": "istar.DependencyLink",
+      "source": "57d24c0c-02bd-5428-b85a-2c8d2e58995a",
+      "target": "7371b1af-1281-54ed-a40c-19744a136721"
+    },
+    {
+      "id": "e4e6e308-e7ea-5161-b020-c3d900fd2cc8",
+      "type": "istar.QualificationLink",
+      "source": "bfd4bba1-b7f8-5eec-a917-e08b58d11e9b",
+      "target": "023c9aeb-5bd3-57c3-b393-0602ae86c345"
+    },
+    {
+      "id": "fcd6127b-fcd9-5212-a1c3-ef5d75ee3edc",
+      "type": "istar.QualificationLink",
+      "source": "cddba23d-2ec8-5908-9097-b79389ed917e",
+      "target": "637ba513-69c6-5938-ac8e-cbff01808465"
+    },
+    {
+      "id": "50d8be0b-2385-56e7-a1f9-ec605277b269",
+      "type": "istar.IsALink",
+      "source": "25d32a55-c6cc-5313-9df2-c28b75b30282",
+      "target": "379c2925-5fd5-5231-8d64-a649cff95a40"
+    },
+    {
+      "id": "c463d0a7-bccc-5f8b-80e3-499e1c85f549",
+      "type": "istar.IsALink",
+      "source": "bab02b15-80cb-5b5d-9393-8d3c1b053c57",
+      "target": "379c2925-5fd5-5231-8d64-a649cff95a40"
+    },
+    {
+      "id": "67a30572-3796-5ac3-9f75-f8e55b8317d2",
+      "type": "istar.IsALink",
+      "source": "1870af2f-da82-5891-a268-ac34fa3d8253",
+      "target": "379c2925-5fd5-5231-8d64-a649cff95a40"
+    },
+    {
+      "id": "b0725997-713c-56af-bf5f-8d902189cbab",
+      "type": "istar.DependencyLink",
+      "source": "bab02b15-80cb-5b5d-9393-8d3c1b053c57",
+      "target": "4cbe0b5a-dd5b-5a59-90fa-c89ebafeeffd"
+    },
+    {
+      "id": "95afe184-68b9-520b-b7fe-9247967d86bc",
+      "type": "istar.DependencyLink",
+      "source": "4cbe0b5a-dd5b-5a59-90fa-c89ebafeeffd",
+      "target": "05db5b6d-9981-52b4-8cd1-86dbff857d78"
+    },
+    {
+      "id": "b97f387c-a49a-5453-b3f3-1365ac0305a0",
+      "type": "istar.DependencyLink",
+      "source": "25d32a55-c6cc-5313-9df2-c28b75b30282",
+      "target": "be2446b5-8672-5894-9ee4-3754ca524ee0"
+    },
+    {
+      "id": "e6ec6a35-53dd-5ff1-a77d-11c331c7e64b",
+      "type": "istar.DependencyLink",
+      "source": "be2446b5-8672-5894-9ee4-3754ca524ee0",
+      "target": "dbea0e75-7fd1-5b56-b867-6f444ff8a455"
+    },
+    {
+      "id": "ac584b87-f371-57b8-86c8-49ce3781b927",
+      "type": "istar.DependencyLink",
+      "source": "1870af2f-da82-5891-a268-ac34fa3d8253",
+      "target": "c03f1f0f-e377-5e8c-9cc5-9031795cf128"
+    },
+    {
+      "id": "1dc19359-1953-56a6-85a7-677c024df2b1",
+      "type": "istar.DependencyLink",
+      "source": "c03f1f0f-e377-5e8c-9cc5-9031795cf128",
+      "target": "05db5b6d-9981-52b4-8cd1-86dbff857d78"
     }
   ],
   "display": {
@@ -2269,10 +2592,6 @@
       ]
     },
     "bfffacaf-b2fe-4806-8d7f-24efb946fa5f": {},
-    "eb8fd20f-f2d0-4257-ac45-2bd59ee34a2d": {},
-    "ec97bbf4-d795-4bc7-99e1-1e982e4d0f6c": {},
-    "da7cbf26-d76d-41cd-97c3-6f856f90f3f2": {},
-    "702d8bec-dc1d-4546-81ab-8f6669330733": {},
     "0b2721ac-387d-54fd-ba63-fd75a14e70e3": {
       "collapsed": true,
       "backgroundColor": "#A6E3DC"
@@ -2280,17 +2599,96 @@
     "2497f8d9-3be8-50ad-83c5-4a0001f8f529": {
       "collapsed": true,
       "backgroundColor": "#A6E3DC"
+    },
+    "54ea0c7c-6bbf-59b0-bc02-5d11a294263e": {
+      "width": 140,
+      "height": 52,
+      "backgroundColor": "#B9DCFA"
+    },
+    "fc96e726-5d30-52c6-8839-6328bcfa0704": {
+      "width": 110,
+      "height": 44,
+      "backgroundColor": "#FFE29A"
+    },
+    "55abd812-df55-513c-bd59-fb34fcb2b6af": {
+      "width": 110,
+      "height": 44,
+      "backgroundColor": "#D9CCF2"
+    },
+    "8618e2a9-5609-586f-9b47-aec957d91cf6": {
+      "vertices": [
+        {
+          "x": 1500,
+          "y": 3040
+        },
+        {
+          "x": 1900,
+          "y": 3128
+        },
+        {
+          "x": 2500,
+          "y": 3138
+        }
+      ]
+    },
+    "57d24c0c-02bd-5428-b85a-2c8d2e58995a": {
+      "width": 140,
+      "height": 52,
+      "backgroundColor": "#F9C6D7"
+    },
+    "393533a1-7216-5601-9a3a-ce5bb916934b": {
+      "vertices": [
+        {
+          "x": 1560,
+          "y": 2880
+        },
+        {
+          "x": 1900,
+          "y": 3052
+        },
+        {
+          "x": 2400,
+          "y": 3062
+        }
+      ]
+    },
+    "25d32a55-c6cc-5313-9df2-c28b75b30282": {
+      "collapsed": true,
+      "backgroundColor": "#C9F2CF"
+    },
+    "bab02b15-80cb-5b5d-9393-8d3c1b053c57": {
+      "collapsed": true,
+      "backgroundColor": "#C9F2CF"
+    },
+    "1870af2f-da82-5891-a268-ac34fa3d8253": {
+      "collapsed": true,
+      "backgroundColor": "#C9F2CF"
+    },
+    "4cbe0b5a-dd5b-5a59-90fa-c89ebafeeffd": {
+      "width": 110,
+      "height": 44,
+      "backgroundColor": "#F9C6D7"
+    },
+    "be2446b5-8672-5894-9ee4-3754ca524ee0": {
+      "width": 140,
+      "height": 52,
+      "backgroundColor": "#F9C6D7"
+    },
+    "c03f1f0f-e377-5e8c-9cc5-9031795cf128": {
+      "width": 110,
+      "height": 44,
+      "backgroundColor": "#F9C6D7"
     }
   },
   "tool": "pistar.2.1.0",
   "istar": "2.0",
-  "saveDate": "Sat, 14 Nov 2026 13:51:33 GMT",
+  "saveDate": "Mon, 16 Nov 2026 05:43:12 GMT",
   "diagram": {
     "width": 6268,
     "height": 3420,
     "name": "istar-sr",
     "customProperties": {
-      "Description": "Converted from the OpenOME draft sr-model-draft.ood by Royden Dias. iStar 2.0. Each changed dependency has a Conversion note property. BRF Network refined on 3 Nov 2026: P09 to P11 split out, a means for \"Regulations complied with\", one new help and two new hurt contributions. New elements have a Change property.",
+      "Description": "Converted from the OpenOME draft sr-model-draft.ood by Royden Dias. iStar 2.0. Each changed dependency has a Conversion note property. BRF Network refined on 3 Nov 2026: P09 to P11 split out, a means for \"Regulations complied with\", one new help and two new hurt contributions. New elements have a Change property. Customer part, task 4.2 (#149), 16 Nov 2026: the three segments are closed roles with is-a links and SD27 to SD29, CU18 and CU19 are new, SD02 and SD05 are open, four customer dependencies start at a leaf task, and two qualification links are new. Each customer element has an ID and a Source property.",
       "Colour key": "Goal: amber (#FFE29A). Quality: pink (#F9C6D7). Task: blue (#B9DCFA). Resource: lilac (#D9CCF2). Role: green (#C9F2CF). Agent: teal (#A6E3DC). Actor: grey (#E2E2E2)."
     }
   }
