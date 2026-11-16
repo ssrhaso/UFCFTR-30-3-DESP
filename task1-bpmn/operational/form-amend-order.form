@@ -1,0 +1,80 @@
+{
+  "components": [
+    {
+      "id": "Field_intro",
+      "type": "text",
+      "layout": {
+        "row": "Row_intro"
+      },
+      "text": "## Some items are not available\n\nThe stock changed after you added these items to your basket. You have 30 minutes to amend the order. After that, the order ends."
+    },
+    {
+      "id": "Table_unavailable",
+      "type": "table",
+      "label": "Items that are not available",
+      "layout": {
+        "row": "Row_unavailable"
+      },
+      "dataSource": "=unavailableItems",
+      "rowCount": 10,
+      "columns": [
+        {
+          "label": "Product",
+          "key": "productName"
+        },
+        {
+          "label": "Producer",
+          "key": "producerName"
+        },
+        {
+          "label": "You asked for",
+          "key": "requestedQuantity"
+        },
+        {
+          "label": "In stock",
+          "key": "availableQuantity"
+        }
+      ]
+    },
+    {
+      "id": "Field_substitutes",
+      "type": "checklist",
+      "key": "acceptedSubstitutes",
+      "label": "Similar products from other producers (optional)",
+      "layout": {
+        "row": "Row_substitutes"
+      },
+      "valuesExpression": "=for s in substitutes return {label: s.productName + \" from \" + s.producerName + \", £\" + string(floor(s.unitPrice)) + \".\" + substring(string(floor(s.unitPrice * 100 + 0.5) - floor(s.unitPrice) * 100 + 100), 2), value: s.productId}",
+      "conditional": {
+        "hide": "=substitutes = null or count(substitutes) = 0"
+      }
+    },
+    {
+      "id": "Field_amendDecision",
+      "type": "radio",
+      "key": "amendDecision",
+      "label": "What do you want to do?",
+      "layout": {
+        "row": "Row_decision"
+      },
+      "validate": {
+        "required": true
+      },
+      "values": [
+        {
+          "label": "Amend the order: remove the unavailable items, add my selection",
+          "value": "amend"
+        },
+        {
+          "label": "Cancel the order",
+          "value": "cancel"
+        }
+      ]
+    }
+  ],
+  "type": "default",
+  "id": "form-amend-order",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 16
+}
