@@ -1,4 +1,12 @@
 {
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "64767e4"
+  },
+  "schemaVersion": 16,
+  "id": "payment-details",
   "components": [
     {
       "text": "## Pay for your order\n\nOrder **{{orderId}}**. Total: **£{{orderTotal}}**.\n\nThis is a sandbox payment. Do not enter real card details.",
@@ -31,9 +39,5 @@
       }
     }
   ],
-  "type": "default",
-  "id": "payment-details",
-  "executionPlatform": "Camunda Cloud",
-  "executionPlatformVersion": "8.6.0",
-  "schemaVersion": 16
+  "type": "default"
 }
