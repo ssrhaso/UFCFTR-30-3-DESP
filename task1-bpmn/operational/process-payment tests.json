@@ -1,0 +1,1788 @@
+{
+  "processId": "process_payment",
+  "testCases": [
+    {
+      "name": "P1 Main path: the payment succeeds",
+      "description": "Sandbox card succeeds. Service tasks completed by hand in Test mode until the 6.3 workers exist.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "variables": {
+            "orderId": "ORD-1042",
+            "customerId": "royden",
+            "orderTotal": 48.6,
+            "producerOrders": [
+              {
+                "producerOrderId": "ORD-1042-P1",
+                "producerId": "PR-01",
+                "subtotal": 30
+              },
+              {
+                "producerOrderId": "ORD-1042-P2",
+                "producerId": "PR-02",
+                "subtotal": 18.6
+              }
+            ],
+            "reservationExpiresAt": "2026-11-20T23:30:00Z"
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "EndEvent_OrderConfirmed"
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_GivePaymentDetails"
+          },
+          "variables": {
+            "paymentMethod": "pm_card_visa"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_SubmitPayment",
+            "jobType": "submit-payment"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "elementSelector": {
+            "elementId": "Event_PaymentConfirmed"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "payment-confirmed",
+          "correlationKey": "ORD-1042"
+        },
+        {
+          "type": "UPDATE_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "variables": {
+            "paymentReference": "pi_test_1042"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_ConfirmOrder",
+            "jobType": "confirm-order"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_RecordPayment",
+            "jobType": "record-payment"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_UpdateStock",
+            "jobType": "update-stock"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_NotifyProducer",
+            "jobType": "notify-producer"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_NotifyProducer",
+            "jobType": "notify-producer"
+          }
+        }
+      ],
+      "metadata": {
+        "processInstanceId": "2251799868174390",
+        "coveredFlowNodes": [
+          {
+            "flowNodeId": "StartEvent_OrderAwaitingPayment",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Task_CalculateAmounts",
+            "elementType": "bpmn:ScriptTask"
+          },
+          {
+            "flowNodeId": "SubProcess_TakePayment",
+            "elementType": "bpmn:SubProcess"
+          },
+          {
+            "flowNodeId": "StartEvent_PaymentRequested",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Gateway_JoinDetails",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "UserTask_GivePaymentDetails",
+            "elementType": "bpmn:UserTask"
+          },
+          {
+            "flowNodeId": "Gateway_JoinSubmit",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_SubmitPayment",
+            "elementType": "bpmn:SendTask"
+          },
+          {
+            "flowNodeId": "Gateway_PaymentResult",
+            "elementType": "bpmn:EventBasedGateway"
+          },
+          {
+            "flowNodeId": "Event_PaymentConfirmed",
+            "elementType": "bpmn:IntermediateCatchEvent"
+          },
+          {
+            "flowNodeId": "EndEvent_PaymentAccepted",
+            "elementType": "bpmn:EndEvent"
+          },
+          {
+            "flowNodeId": "Gateway_PaymentSuccessful",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_ConfirmOrder",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "Gateway_SplitSuccess",
+            "elementType": "bpmn:ParallelGateway"
+          },
+          {
+            "flowNodeId": "SubProcess_NotifyProducers",
+            "elementType": "bpmn:SubProcess"
+          },
+          {
+            "flowNodeId": "ServiceTask_RecordPayment",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "ServiceTask_UpdateStock",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "StartEvent_NotifyProducer",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "ServiceTask_NotifyProducer",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "Gateway_JoinStock",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "EndEvent_ProducerNotified",
+            "elementType": "bpmn:EndEvent"
+          },
+          {
+            "flowNodeId": "Gateway_JoinSuccess",
+            "elementType": "bpmn:ParallelGateway"
+          },
+          {
+            "flowNodeId": "EndEvent_OrderConfirmed",
+            "elementType": "bpmn:EndEvent"
+          }
+        ],
+        "coveredSequenceFlows": [
+          "Flow_Start_Calculate",
+          "Flow_Calculate_Sub",
+          "Flow_SubStart_JoinDetails",
+          "Flow_JoinDetails_Details",
+          "Flow_Details_JoinSubmit",
+          "Flow_JoinSubmit_Submit",
+          "Flow_Submit_Accepted",
+          "Flow_Confirmed_Accepted",
+          "Flow_Sub_PaymentSuccessful",
+          "Flow_PaymentSuccessful_Confirm",
+          "Flow_Confirm_Split",
+          "Flow_Split_Notify",
+          "Flow_Split_Record",
+          "Flow_Split_Update",
+          "Flow_NotifyStart_Notify",
+          "Flow_Update_JoinStock",
+          "Flow_JoinStock_Join",
+          "Flow_Record_Join",
+          "Flow_Notify_Notified",
+          "Flow_Notify_Join",
+          "Flow_Join_Confirmed"
+        ]
+      }
+    },
+    {
+      "name": "P2 Decline, retry, then success",
+      "description": "Sandbox card declined once. The customer chooses \"Try again\" (the form shows 1 of 3), then the payment succeeds. Checks the decline counter, the retry loop and the confirmation path. Service tasks completed by hand in Test mode until the 6.3 workers exist.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "variables": {
+            "orderId": "ORD-1043",
+            "customerId": "royden",
+            "orderTotal": 48.6,
+            "producerOrders": [
+              {
+                "producerOrderId": "ORD-1043-P1",
+                "producerId": "PR-01",
+                "subtotal": 30
+              },
+              {
+                "producerOrderId": "ORD-1043-P2",
+                "producerId": "PR-02",
+                "subtotal": 18.6
+              }
+            ],
+            "reservationExpiresAt": "2026-11-20T23:59:00Z"
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "EndEvent_OrderConfirmed"
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_GivePaymentDetails"
+          },
+          "variables": {
+            "paymentMethod": "pm_card_chargeDeclined"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_SubmitPayment",
+            "jobType": "submit-payment"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "elementSelector": {
+            "elementId": "Event_PaymentDeclined"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "payment-declined",
+          "correlationKey": "ORD-1043"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_RetryOrCancel"
+          },
+          "variables": {
+            "retryChoice": "RETRY"
+          }
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_GivePaymentDetails"
+          },
+          "variables": {
+            "paymentMethod": "pm_card_visa"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_SubmitPayment",
+            "jobType": "submit-payment"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "elementSelector": {
+            "elementId": "Event_PaymentConfirmed"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "payment-confirmed",
+          "correlationKey": "ORD-1043",
+          "variables": {
+            "paymentReference": "pi_test_1043"
+          },
+          "timeToLive": 0
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_ConfirmOrder",
+            "jobType": "confirm-order"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_RecordPayment",
+            "jobType": "record-payment"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_UpdateStock",
+            "jobType": "update-stock"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_NotifyProducer",
+            "jobType": "notify-producer"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_NotifyProducer",
+            "jobType": "notify-producer"
+          }
+        }
+      ],
+      "metadata": {
+        "processInstanceId": "4503599681698253",
+        "coveredFlowNodes": [
+          {
+            "flowNodeId": "StartEvent_OrderAwaitingPayment",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Task_CalculateAmounts",
+            "elementType": "bpmn:ScriptTask"
+          },
+          {
+            "flowNodeId": "SubProcess_TakePayment",
+            "elementType": "bpmn:SubProcess"
+          },
+          {
+            "flowNodeId": "StartEvent_PaymentRequested",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Gateway_JoinDetails",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "UserTask_GivePaymentDetails",
+            "elementType": "bpmn:UserTask"
+          },
+          {
+            "flowNodeId": "Gateway_JoinSubmit",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_SubmitPayment",
+            "elementType": "bpmn:SendTask"
+          },
+          {
+            "flowNodeId": "Gateway_PaymentResult",
+            "elementType": "bpmn:EventBasedGateway"
+          },
+          {
+            "flowNodeId": "Event_PaymentDeclined",
+            "elementType": "bpmn:IntermediateCatchEvent"
+          },
+          {
+            "flowNodeId": "Gateway_DeclineLimit",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "UserTask_RetryOrCancel",
+            "elementType": "bpmn:UserTask"
+          },
+          {
+            "flowNodeId": "Gateway_Retry",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "Event_PaymentConfirmed",
+            "elementType": "bpmn:IntermediateCatchEvent"
+          },
+          {
+            "flowNodeId": "EndEvent_PaymentAccepted",
+            "elementType": "bpmn:EndEvent"
+          },
+          {
+            "flowNodeId": "Gateway_PaymentSuccessful",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_ConfirmOrder",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "Gateway_SplitSuccess",
+            "elementType": "bpmn:ParallelGateway"
+          },
+          {
+            "flowNodeId": "SubProcess_NotifyProducers",
+            "elementType": "bpmn:SubProcess"
+          },
+          {
+            "flowNodeId": "ServiceTask_RecordPayment",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "ServiceTask_UpdateStock",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "StartEvent_NotifyProducer",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "ServiceTask_NotifyProducer",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "Gateway_JoinStock",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "EndEvent_ProducerNotified",
+            "elementType": "bpmn:EndEvent"
+          },
+          {
+            "flowNodeId": "Gateway_JoinSuccess",
+            "elementType": "bpmn:ParallelGateway"
+          },
+          {
+            "flowNodeId": "EndEvent_OrderConfirmed",
+            "elementType": "bpmn:EndEvent"
+          }
+        ],
+        "coveredSequenceFlows": [
+          "Flow_Start_Calculate",
+          "Flow_Calculate_Sub",
+          "Flow_SubStart_JoinDetails",
+          "Flow_Declined_DeclineLimit",
+          "Flow_DeclineLimit_Retry",
+          "Flow_Retry_RetryGateway",
+          "Flow_RetryGateway_JoinDetails",
+          "Flow_JoinDetails_Details",
+          "Flow_Details_JoinSubmit",
+          "Flow_JoinSubmit_Submit",
+          "Flow_Submit_Accepted",
+          "Flow_Confirmed_Accepted",
+          "Flow_Sub_PaymentSuccessful",
+          "Flow_PaymentSuccessful_Confirm",
+          "Flow_Confirm_Split",
+          "Flow_Split_Notify",
+          "Flow_Split_Record",
+          "Flow_Split_Update",
+          "Flow_NotifyStart_Notify",
+          "Flow_Update_JoinStock",
+          "Flow_JoinStock_Join",
+          "Flow_Record_Join",
+          "Flow_Notify_Notified",
+          "Flow_Notify_Join",
+          "Flow_Join_Confirmed"
+        ]
+      }
+    },
+    {
+      "name": "P4 The customer cancels",
+      "description": "Sandbox card declined. The customer chooses \"Cancel the order\". The run ends at \"Customer cancelled\" in Take payment, then releases the stock, cancels the order and tells the customer. paymentStatus is DECLINED. Service tasks completed by hand in Test mode.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "variables": {
+            "orderId": "ORD-1044",
+            "customerId": "royden",
+            "orderTotal": 48.6,
+            "producerOrders": [
+              {
+                "producerOrderId": "ORD-1044-P1",
+                "producerId": "PR-01",
+                "subtotal": 30
+              },
+              {
+                "producerOrderId": "ORD-1044-P2",
+                "producerId": "PR-02",
+                "subtotal": 18.6
+              }
+            ],
+            "reservationExpiresAt": "2026-11-20T23:59:00Z"
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "EndEvent_OrderCancelled"
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_GivePaymentDetails"
+          },
+          "variables": {
+            "paymentMethod": "pm_card_chargeDeclined"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_SubmitPayment",
+            "jobType": "submit-payment"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "elementSelector": {
+            "elementId": "Event_PaymentDeclined"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "payment-declined",
+          "correlationKey": "ORD-1044"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_RetryOrCancel"
+          },
+          "variables": {
+            "retryChoice": "CANCEL"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_ReleaseStock",
+            "jobType": "release-stock"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_CancelOrder",
+            "jobType": "cancel-order"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_NotifyCustomer",
+            "jobType": "notify-customer"
+          }
+        }
+      ],
+      "metadata": {
+        "processInstanceId": "6755399495382192",
+        "coveredFlowNodes": [
+          {
+            "flowNodeId": "StartEvent_OrderAwaitingPayment",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Task_CalculateAmounts",
+            "elementType": "bpmn:ScriptTask"
+          },
+          {
+            "flowNodeId": "SubProcess_TakePayment",
+            "elementType": "bpmn:SubProcess"
+          },
+          {
+            "flowNodeId": "StartEvent_PaymentRequested",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Gateway_JoinDetails",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "UserTask_GivePaymentDetails",
+            "elementType": "bpmn:UserTask"
+          },
+          {
+            "flowNodeId": "Gateway_JoinSubmit",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_SubmitPayment",
+            "elementType": "bpmn:SendTask"
+          },
+          {
+            "flowNodeId": "Gateway_PaymentResult",
+            "elementType": "bpmn:EventBasedGateway"
+          },
+          {
+            "flowNodeId": "Event_PaymentDeclined",
+            "elementType": "bpmn:IntermediateCatchEvent"
+          },
+          {
+            "flowNodeId": "Gateway_DeclineLimit",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "UserTask_RetryOrCancel",
+            "elementType": "bpmn:UserTask"
+          },
+          {
+            "flowNodeId": "Gateway_Retry",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "EndEvent_CustomerCancelled",
+            "elementType": "bpmn:EndEvent"
+          },
+          {
+            "flowNodeId": "Gateway_PaymentSuccessful",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_ReleaseStock",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "ServiceTask_CancelOrder",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "ServiceTask_NotifyCustomer",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "EndEvent_OrderCancelled",
+            "elementType": "bpmn:EndEvent"
+          }
+        ],
+        "coveredSequenceFlows": [
+          "Flow_Start_Calculate",
+          "Flow_Calculate_Sub",
+          "Flow_SubStart_JoinDetails",
+          "Flow_JoinDetails_Details",
+          "Flow_Details_JoinSubmit",
+          "Flow_JoinSubmit_Submit",
+          "Flow_Declined_DeclineLimit",
+          "Flow_DeclineLimit_Retry",
+          "Flow_Submit_Accepted",
+          "Flow_Retry_RetryGateway",
+          "Flow_RetryGateway_Cancelled",
+          "Flow_Sub_PaymentSuccessful",
+          "Flow_PaymentSuccessful_Release",
+          "Flow_Cancel_Notify",
+          "Flow_Release_Cancel",
+          "Flow_Notify_Cancelled"
+        ]
+      }
+    },
+    {
+      "name": "P3 Decline limit reached",
+      "description": "Sandbox card declined three times. The retry form shows 1 of 3, then 2 of 3. After the third decline the decline limit gateway (declineCount >= 3) ends Take payment at \"Decline limit reached\", and the order is cancelled. Service tasks completed by hand in Test mode.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "variables": {
+            "orderId": "ORD-1045",
+            "customerId": "royden",
+            "orderTotal": 48.6,
+            "producerOrders": [
+              {
+                "producerOrderId": "ORD-1045-P1",
+                "producerId": "PR-01",
+                "subtotal": 30
+              },
+              {
+                "producerOrderId": "ORD-1045-P2",
+                "producerId": "PR-02",
+                "subtotal": 18.6
+              }
+            ],
+            "reservationExpiresAt": "2026-11-20T23:59:00Z"
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "EndEvent_OrderCancelled"
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_GivePaymentDetails"
+          },
+          "variables": {
+            "paymentMethod": "pm_card_chargeDeclined"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_SubmitPayment",
+            "jobType": "submit-payment"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "elementSelector": {
+            "elementId": "Event_PaymentDeclined"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "payment-declined",
+          "correlationKey": "ORD-1045"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_RetryOrCancel"
+          },
+          "variables": {
+            "retryChoice": "RETRY"
+          }
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_GivePaymentDetails"
+          },
+          "variables": {
+            "paymentMethod": "pm_card_chargeDeclined"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_SubmitPayment",
+            "jobType": "submit-payment"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "elementSelector": {
+            "elementId": "Event_PaymentConfirmed"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "payment-declined",
+          "correlationKey": "ORD-1045",
+          "variables": {},
+          "timeToLive": 0
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_RetryOrCancel"
+          },
+          "variables": {
+            "retryChoice": "RETRY"
+          }
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_GivePaymentDetails"
+          },
+          "variables": {
+            "paymentMethod": "pm_card_chargeDeclined"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_SubmitPayment",
+            "jobType": "submit-payment"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "elementSelector": {
+            "elementId": "Event_PaymentConfirmed"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "payment-declined",
+          "correlationKey": "ORD-1045",
+          "variables": {},
+          "timeToLive": 0
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_ReleaseStock",
+            "jobType": "release-stock"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_CancelOrder",
+            "jobType": "cancel-order"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_NotifyCustomer",
+            "jobType": "notify-customer"
+          }
+        }
+      ],
+      "metadata": {
+        "processInstanceId": "2251799868183218",
+        "coveredFlowNodes": [
+          {
+            "flowNodeId": "StartEvent_OrderAwaitingPayment",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Task_CalculateAmounts",
+            "elementType": "bpmn:ScriptTask"
+          },
+          {
+            "flowNodeId": "SubProcess_TakePayment",
+            "elementType": "bpmn:SubProcess"
+          },
+          {
+            "flowNodeId": "StartEvent_PaymentRequested",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Gateway_JoinDetails",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "UserTask_GivePaymentDetails",
+            "elementType": "bpmn:UserTask"
+          },
+          {
+            "flowNodeId": "Gateway_JoinSubmit",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_SubmitPayment",
+            "elementType": "bpmn:SendTask"
+          },
+          {
+            "flowNodeId": "Gateway_PaymentResult",
+            "elementType": "bpmn:EventBasedGateway"
+          },
+          {
+            "flowNodeId": "Event_PaymentDeclined",
+            "elementType": "bpmn:IntermediateCatchEvent"
+          },
+          {
+            "flowNodeId": "Gateway_DeclineLimit",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "UserTask_RetryOrCancel",
+            "elementType": "bpmn:UserTask"
+          },
+          {
+            "flowNodeId": "Gateway_Retry",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "EndEvent_DeclineLimitReached",
+            "elementType": "bpmn:EndEvent"
+          },
+          {
+            "flowNodeId": "Gateway_PaymentSuccessful",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_ReleaseStock",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "ServiceTask_CancelOrder",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "ServiceTask_NotifyCustomer",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "EndEvent_OrderCancelled",
+            "elementType": "bpmn:EndEvent"
+          }
+        ],
+        "coveredSequenceFlows": [
+          "Flow_Start_Calculate",
+          "Flow_Calculate_Sub",
+          "Flow_SubStart_JoinDetails",
+          "Flow_Retry_RetryGateway",
+          "Flow_RetryGateway_JoinDetails",
+          "Flow_JoinDetails_Details",
+          "Flow_Details_JoinSubmit",
+          "Flow_JoinSubmit_Submit",
+          "Flow_DeclineLimit_Retry",
+          "Flow_Submit_Accepted",
+          "Flow_Declined_DeclineLimit",
+          "Flow_DeclineLimit_Reached",
+          "Flow_Sub_PaymentSuccessful",
+          "Flow_PaymentSuccessful_Release",
+          "Flow_Release_Cancel",
+          "Flow_Cancel_Notify",
+          "Flow_Notify_Cancelled"
+        ]
+      }
+    },
+    {
+      "name": "P5 Payment service unavailable",
+      "description": "Sandbox method \"the payment service is unavailable\". Send payment request throws PAYMENT_SERVICE_UNAVAILABLE twice, with the 1-minute wait between. After the second error, Try again? takes No (unavailableCount reaches 2), Take payment ends at Service unavailable, and the order is cancelled. No refund, because no request got through. Service tasks completed by hand in Test mode.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "variables": {
+            "orderId": "ORD-1046",
+            "customerId": "royden",
+            "orderTotal": 48.6,
+            "producerOrders": [
+              {
+                "producerOrderId": "ORD-1046-P1",
+                "producerId": "PR-01",
+                "subtotal": 30
+              },
+              {
+                "producerOrderId": "ORD-1046-P2",
+                "producerId": "PR-02",
+                "subtotal": 18.6
+              }
+            ],
+            "reservationExpiresAt": "2026-11-21T06:00:00Z"
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "EndEvent_OrderCancelled"
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_GivePaymentDetails"
+          },
+          "variables": {
+            "paymentMethod": "pm_simulate_unavailable"
+          }
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_SubmitPayment",
+            "jobType": "submit-payment"
+          },
+          "errorCode": "PAYMENT_SERVICE_UNAVAILABLE"
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_SubmitPayment",
+            "jobType": "submit-payment"
+          },
+          "errorCode": "PAYMENT_SERVICE_UNAVAILABLE"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_ReleaseStock",
+            "jobType": "release-stock"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_CancelOrder",
+            "jobType": "cancel-order"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_NotifyCustomer",
+            "jobType": "notify-customer"
+          }
+        }
+      ],
+      "metadata": {
+        "processInstanceId": "4503599681733486",
+        "coveredFlowNodes": [
+          {
+            "flowNodeId": "StartEvent_OrderAwaitingPayment",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Task_CalculateAmounts",
+            "elementType": "bpmn:ScriptTask"
+          },
+          {
+            "flowNodeId": "SubProcess_TakePayment",
+            "elementType": "bpmn:SubProcess"
+          },
+          {
+            "flowNodeId": "StartEvent_PaymentRequested",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Gateway_JoinDetails",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "UserTask_GivePaymentDetails",
+            "elementType": "bpmn:UserTask"
+          },
+          {
+            "flowNodeId": "Gateway_JoinSubmit",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_SubmitPayment",
+            "elementType": "bpmn:SendTask"
+          },
+          {
+            "flowNodeId": "BoundaryEvent_ServiceUnavailable",
+            "elementType": "bpmn:BoundaryEvent"
+          },
+          {
+            "flowNodeId": "Gateway_JoinUnavailable",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "Gateway_TryAgain",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "TimerEvent_WaitBeforeRetry",
+            "elementType": "bpmn:IntermediateCatchEvent"
+          },
+          {
+            "flowNodeId": "EndEvent_ServiceUnavailable",
+            "elementType": "bpmn:EndEvent"
+          },
+          {
+            "flowNodeId": "Gateway_PaymentSuccessful",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_ReleaseStock",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "ServiceTask_CancelOrder",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "ServiceTask_NotifyCustomer",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "EndEvent_OrderCancelled",
+            "elementType": "bpmn:EndEvent"
+          }
+        ],
+        "coveredSequenceFlows": [
+          "Flow_Start_Calculate",
+          "Flow_Calculate_Sub",
+          "Flow_SubStart_JoinDetails",
+          "Flow_JoinDetails_Details",
+          "Flow_Details_JoinSubmit",
+          "Flow_TryAgain_Wait",
+          "Flow_Wait_JoinSubmit",
+          "Flow_JoinSubmit_Submit",
+          "Flow_Unavailable_TryAgain",
+          "Flow_JoinUnavailable_TryAgain",
+          "Flow_TryAgain_Unavailable",
+          "Flow_Sub_PaymentSuccessful",
+          "Flow_PaymentSuccessful_Release",
+          "Flow_Release_Cancel",
+          "Flow_Cancel_Notify",
+          "Flow_Notify_Cancelled"
+        ]
+      }
+    },
+    {
+      "name": "P8 Commission rounding",
+      "description": "Three producers with subtotals 12.35, 8.10 and 4.99 (total 25.44). The script task gives 11.73, 7.70 (7.695 rounded half up) and 4.74, and commission 1.27. The parts add up to the order total. Notify each producer runs 3 times. Service tasks completed by hand in Test mode.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "variables": {
+            "orderId": "ORD-1050",
+            "customerId": "royden",
+            "orderTotal": 25.44,
+            "producerOrders": [
+              {
+                "producerOrderId": "ORD-1050-P1",
+                "producerId": "PR-01",
+                "subtotal": 12.35
+              },
+              {
+                "producerOrderId": "ORD-1050-P2",
+                "producerId": "PR-02",
+                "subtotal": 8.1
+              },
+              {
+                "producerOrderId": "ORD-1050-P3",
+                "producerId": "PR-03",
+                "subtotal": 4.99
+              }
+            ],
+            "reservationExpiresAt": "2026-11-21T06:00:00Z"
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "EndEvent_OrderConfirmed"
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_GivePaymentDetails"
+          },
+          "variables": {
+            "paymentMethod": "pm_card_visa"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_SubmitPayment",
+            "jobType": "submit-payment"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "elementSelector": {
+            "elementId": "Event_PaymentConfirmed"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "payment-confirmed",
+          "correlationKey": "ORD-1050",
+          "variables": {
+            "paymentReference": "pi_test_1050"
+          },
+          "timeToLive": 0
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_ConfirmOrder",
+            "jobType": "confirm-order"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_RecordPayment",
+            "jobType": "record-payment"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_UpdateStock",
+            "jobType": "update-stock"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_NotifyProducer",
+            "jobType": "notify-producer"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_NotifyProducer",
+            "jobType": "notify-producer"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_NotifyProducer",
+            "jobType": "notify-producer"
+          }
+        }
+      ],
+      "metadata": {
+        "processInstanceId": "4503599681735188",
+        "coveredFlowNodes": [
+          {
+            "flowNodeId": "StartEvent_OrderAwaitingPayment",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Task_CalculateAmounts",
+            "elementType": "bpmn:ScriptTask"
+          },
+          {
+            "flowNodeId": "SubProcess_TakePayment",
+            "elementType": "bpmn:SubProcess"
+          },
+          {
+            "flowNodeId": "StartEvent_PaymentRequested",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Gateway_JoinDetails",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "UserTask_GivePaymentDetails",
+            "elementType": "bpmn:UserTask"
+          },
+          {
+            "flowNodeId": "Gateway_JoinSubmit",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_SubmitPayment",
+            "elementType": "bpmn:SendTask"
+          },
+          {
+            "flowNodeId": "Gateway_PaymentResult",
+            "elementType": "bpmn:EventBasedGateway"
+          },
+          {
+            "flowNodeId": "Event_PaymentConfirmed",
+            "elementType": "bpmn:IntermediateCatchEvent"
+          },
+          {
+            "flowNodeId": "EndEvent_PaymentAccepted",
+            "elementType": "bpmn:EndEvent"
+          },
+          {
+            "flowNodeId": "Gateway_PaymentSuccessful",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_ConfirmOrder",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "Gateway_SplitSuccess",
+            "elementType": "bpmn:ParallelGateway"
+          },
+          {
+            "flowNodeId": "SubProcess_NotifyProducers",
+            "elementType": "bpmn:SubProcess"
+          },
+          {
+            "flowNodeId": "ServiceTask_RecordPayment",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "ServiceTask_UpdateStock",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "StartEvent_NotifyProducer",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "ServiceTask_NotifyProducer",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "Gateway_JoinStock",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "EndEvent_ProducerNotified",
+            "elementType": "bpmn:EndEvent"
+          },
+          {
+            "flowNodeId": "Gateway_JoinSuccess",
+            "elementType": "bpmn:ParallelGateway"
+          },
+          {
+            "flowNodeId": "EndEvent_OrderConfirmed",
+            "elementType": "bpmn:EndEvent"
+          }
+        ],
+        "coveredSequenceFlows": [
+          "Flow_Start_Calculate",
+          "Flow_Calculate_Sub",
+          "Flow_SubStart_JoinDetails",
+          "Flow_JoinDetails_Details",
+          "Flow_Details_JoinSubmit",
+          "Flow_JoinSubmit_Submit",
+          "Flow_Submit_Accepted",
+          "Flow_Confirm_Split",
+          "Flow_Split_Notify",
+          "Flow_Split_Record",
+          "Flow_Split_Update",
+          "Flow_NotifyStart_Notify",
+          "Flow_Confirmed_Accepted",
+          "Flow_Sub_PaymentSuccessful",
+          "Flow_PaymentSuccessful_Confirm",
+          "Flow_Record_Join",
+          "Flow_Update_JoinStock",
+          "Flow_JoinStock_Join",
+          "Flow_Notify_Notified",
+          "Flow_Notify_Join",
+          "Flow_Join_Confirmed"
+        ]
+      }
+    },
+    {
+      "name": "P7 Reservation expires",
+      "description": "reservationExpiresAt set 4 minutes after the start. The payment request is sent but no answer comes. At the expiry time the event sub-process \"Handle reservation expiry\" interrupts Take payment, compensation runs \"Refund payment\" for the request that was sent, and the order is cancelled. paymentStatus is RESERVATION_EXPIRED. Service tasks completed by hand in Test mode.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "variables": {
+            "orderId": "ORD-1048",
+            "customerId": "royden",
+            "orderTotal": 48.6,
+            "producerOrders": [
+              {
+                "producerOrderId": "ORD-1048-P1",
+                "producerId": "PR-01",
+                "subtotal": 30
+              },
+              {
+                "producerOrderId": "ORD-1048-P2",
+                "producerId": "PR-02",
+                "subtotal": 18.6
+              }
+            ],
+            "reservationExpiresAt": "2026-11-21T04:12:00Z"
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "EndEvent_OrderCancelled"
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_GivePaymentDetails"
+          },
+          "variables": {
+            "paymentMethod": "pm_card_visa"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_SubmitPayment",
+            "jobType": "submit-payment"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_RefundPayment",
+            "jobType": "refund-payment"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_ReleaseStock",
+            "jobType": "release-stock"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_CancelOrder",
+            "jobType": "cancel-order"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_NotifyCustomer",
+            "jobType": "notify-customer"
+          }
+        }
+      ],
+      "metadata": {
+        "processInstanceId": "6755399495419270",
+        "coveredFlowNodes": [
+          {
+            "flowNodeId": "StartEvent_OrderAwaitingPayment",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Task_CalculateAmounts",
+            "elementType": "bpmn:ScriptTask"
+          },
+          {
+            "flowNodeId": "SubProcess_TakePayment",
+            "elementType": "bpmn:SubProcess"
+          },
+          {
+            "flowNodeId": "StartEvent_PaymentRequested",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Gateway_JoinDetails",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "UserTask_GivePaymentDetails",
+            "elementType": "bpmn:UserTask"
+          },
+          {
+            "flowNodeId": "Gateway_JoinSubmit",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_SubmitPayment",
+            "elementType": "bpmn:SendTask"
+          },
+          {
+            "flowNodeId": "Gateway_PaymentResult",
+            "elementType": "bpmn:EventBasedGateway"
+          },
+          {
+            "flowNodeId": "SubProcess_ReservationExpired",
+            "elementType": "bpmn:SubProcess"
+          },
+          {
+            "flowNodeId": "StartEvent_ReservationExpired",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Event_RefundAnyPayment",
+            "elementType": "bpmn:IntermediateThrowEvent"
+          },
+          {
+            "flowNodeId": "BoundaryEvent_RefundPayment",
+            "elementType": "bpmn:BoundaryEvent"
+          },
+          {
+            "flowNodeId": "ServiceTask_RefundPayment",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "EndEvent_PaymentStopped",
+            "elementType": "bpmn:EndEvent"
+          },
+          {
+            "flowNodeId": "Gateway_PaymentSuccessful",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_ReleaseStock",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "ServiceTask_CancelOrder",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "ServiceTask_NotifyCustomer",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "EndEvent_OrderCancelled",
+            "elementType": "bpmn:EndEvent"
+          }
+        ],
+        "coveredSequenceFlows": [
+          "Flow_Start_Calculate",
+          "Flow_Calculate_Sub",
+          "Flow_SubStart_JoinDetails",
+          "Flow_JoinDetails_Details",
+          "Flow_Details_JoinSubmit",
+          "Flow_JoinSubmit_Submit",
+          "Flow_Submit_Accepted",
+          "Flow_Refund_Stopped",
+          "Flow_Sub_PaymentSuccessful",
+          "Flow_PaymentSuccessful_Release",
+          "Flow_Expiry_Refund",
+          "Flow_Release_Cancel",
+          "Flow_Cancel_Notify",
+          "Flow_Notify_Cancelled"
+        ]
+      }
+    },
+    {
+      "name": "P6 No answer",
+      "description": "Sandbox method \"the payment service does not answer\". Send payment request completes twice and no message arrives. \"No answer in 5 minutes\" fires twice, with the 1-minute wait between. After the second timeout Try again? takes No, Take payment ends at Service unavailable, compensation runs Refund payment once for each request sent (2 times), and the order is cancelled. Service tasks completed by hand in Test mode.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "process_payment"
+          },
+          "variables": {
+            "orderId": "ORD-1047",
+            "customerId": "royden",
+            "orderTotal": 48.6,
+            "producerOrders": [
+              {
+                "producerOrderId": "ORD-1047-P1",
+                "producerId": "PR-01",
+                "subtotal": 30
+              },
+              {
+                "producerOrderId": "ORD-1047-P2",
+                "producerId": "PR-02",
+                "subtotal": 18.6
+              }
+            ],
+            "reservationExpiresAt": "2026-11-21T06:00:00Z"
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "EndEvent_OrderCancelled"
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_GivePaymentDetails"
+          },
+          "variables": {
+            "paymentMethod": "pm_simulate_no_answer"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_SubmitPayment",
+            "jobType": "submit-payment"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_SubmitPayment",
+            "jobType": "submit-payment"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_RefundPayment",
+            "jobType": "refund-payment"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_RefundPayment",
+            "jobType": "refund-payment"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_ReleaseStock",
+            "jobType": "release-stock"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_CancelOrder",
+            "jobType": "cancel-order"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ServiceTask_NotifyCustomer",
+            "jobType": "notify-customer"
+          }
+        }
+      ],
+      "metadata": {
+        "processInstanceId": "2251799868236273",
+        "coveredFlowNodes": [
+          {
+            "flowNodeId": "StartEvent_OrderAwaitingPayment",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Task_CalculateAmounts",
+            "elementType": "bpmn:ScriptTask"
+          },
+          {
+            "flowNodeId": "SubProcess_TakePayment",
+            "elementType": "bpmn:SubProcess"
+          },
+          {
+            "flowNodeId": "StartEvent_PaymentRequested",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Gateway_JoinDetails",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "UserTask_GivePaymentDetails",
+            "elementType": "bpmn:UserTask"
+          },
+          {
+            "flowNodeId": "Gateway_JoinSubmit",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_SubmitPayment",
+            "elementType": "bpmn:SendTask"
+          },
+          {
+            "flowNodeId": "Gateway_PaymentResult",
+            "elementType": "bpmn:EventBasedGateway"
+          },
+          {
+            "flowNodeId": "Event_NoAnswer",
+            "elementType": "bpmn:IntermediateCatchEvent"
+          },
+          {
+            "flowNodeId": "Gateway_JoinUnavailable",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "Gateway_TryAgain",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "TimerEvent_WaitBeforeRetry",
+            "elementType": "bpmn:IntermediateCatchEvent"
+          },
+          {
+            "flowNodeId": "EndEvent_ServiceUnavailable",
+            "elementType": "bpmn:EndEvent"
+          },
+          {
+            "flowNodeId": "BoundaryEvent_RefundPayment",
+            "elementType": "bpmn:BoundaryEvent"
+          },
+          {
+            "flowNodeId": "ServiceTask_RefundPayment",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "Gateway_PaymentSuccessful",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "ServiceTask_ReleaseStock",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "ServiceTask_CancelOrder",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "ServiceTask_NotifyCustomer",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "EndEvent_OrderCancelled",
+            "elementType": "bpmn:EndEvent"
+          }
+        ],
+        "coveredSequenceFlows": [
+          "Flow_Start_Calculate",
+          "Flow_Calculate_Sub",
+          "Flow_SubStart_JoinDetails",
+          "Flow_JoinDetails_Details",
+          "Flow_Details_JoinSubmit",
+          "Flow_TryAgain_Wait",
+          "Flow_Wait_JoinSubmit",
+          "Flow_JoinSubmit_Submit",
+          "Flow_Submit_Accepted",
+          "Flow_Timeout_JoinUnavailable",
+          "Flow_JoinUnavailable_TryAgain",
+          "Flow_TryAgain_Unavailable",
+          "Flow_Sub_PaymentSuccessful",
+          "Flow_PaymentSuccessful_Release",
+          "Flow_Cancel_Notify",
+          "Flow_Release_Cancel",
+          "Flow_Notify_Cancelled"
+        ]
+      }
+    }
+  ]
+}

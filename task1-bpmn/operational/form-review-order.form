@@ -1,4 +1,12 @@
 {
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "64767e4"
+  },
+  "schemaVersion": 16,
+  "id": "form-review-order",
   "components": [
     {
       "id": "Field_intro",
@@ -82,9 +90,5 @@
       ]
     }
   ],
-  "type": "default",
-  "id": "form-review-order",
-  "executionPlatform": "Camunda Cloud",
-  "executionPlatformVersion": "8.6.0",
-  "schemaVersion": 16
+  "type": "default"
 }

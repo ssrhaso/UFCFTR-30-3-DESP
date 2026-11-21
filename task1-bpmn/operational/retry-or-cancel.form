@@ -1,4 +1,12 @@
 {
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "64767e4"
+  },
+  "schemaVersion": 16,
+  "id": "retry-or-cancel",
   "components": [
     {
       "text": "## Your payment was declined\n\nOrder **{{orderId}}**. Declined attempts: **{{declineCount}}** of 3.\n\nYou can try again with another sandbox payment method, or cancel the order. If you cancel, the reserved items go back into stock.",
@@ -31,9 +39,5 @@
       }
     }
   ],
-  "type": "default",
-  "id": "retry-or-cancel",
-  "executionPlatform": "Camunda Cloud",
-  "executionPlatformVersion": "8.6.0",
-  "schemaVersion": 16
+  "type": "default"
 }
