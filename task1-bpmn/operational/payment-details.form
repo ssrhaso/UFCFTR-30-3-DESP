@@ -3,9 +3,9 @@
   "executionPlatformVersion": "8.6.0",
   "exporter": {
     "name": "Camunda Web Modeler",
-    "version": "64767e4"
+    "version": "ffa1f04"
   },
-  "schemaVersion": 16,
+  "schemaVersion": 19,
   "id": "payment-details",
   "components": [
     {
@@ -17,6 +17,7 @@
       "id": "Field_intro"
     },
     {
+      "label": "Sandbox payment method",
       "values": [
         {
           "label": "Sandbox card: the payment succeeds",
@@ -25,9 +26,16 @@
         {
           "label": "Sandbox card: the payment is declined",
           "value": "pm_card_chargeDeclined"
+        },
+        {
+          "label": "Sandbox: the payment service is unavailable",
+          "value": "pm_simulate_unavailable"
+        },
+        {
+          "label": "Sandbox: the payment service does not answer",
+          "value": "pm_simulate_no_answer"
         }
       ],
-      "label": "Sandbox payment method",
       "type": "radio",
       "layout": {
         "row": "Row_method"
