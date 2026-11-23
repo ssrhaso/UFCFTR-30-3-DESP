@@ -143,7 +143,7 @@ The operational models decide the pools and the lanes in Sprint 2. **Proposal:**
 
 | Point | Example | Source | Planned element |
 |---|---|---|---|
-| User interaction | The customer selects a simulated payment option or gives a sandbox payment reference. The form does not collect card numbers or card security codes | UC2 (the sandbox or simulated payment). Proposal (the form fields) | User task with a Camunda Form. Sprint 2 agrees the fields |
+| User interaction | The customer selects a simulated payment option. The form does not collect card numbers or card security codes | UC2 (the sandbox or simulated payment). Proposal (the form fields) | User task with a Camunda Form. Sprint 2 agrees the fields |
 | User interaction | After a decline, the customer chooses to retry or to cancel (O03, O04) | UC2 | User task with a Camunda Form |
 | Automated processing | The system submits the payment (M05) and reads the response (M06) | UC2 | Service task, job type `submit-payment` |
 | Automated processing | The system confirms the order, updates the stock and notifies each producer (M07, M08, M09, R07) | UC2 | Service tasks `confirm-order` and `update-stock`. A multi-instance service task `notify-producer`, with one instance for each producer order element |
@@ -158,7 +158,7 @@ The operational models decide the pools and the lanes in Sprint 2. **Proposal:**
 | Alternative or exception flows | The payment is declined: the customer is told and can retry (O03, O04) | UC2 | **Proposal:** the worker explicitly throws the BPMN error `PAYMENT_DECLINED`. An error boundary event catches it and starts the user task in which the customer chooses to retry or to cancel |
 | Alternative or exception flows | The customer cancels after a decline: the stock is released and the order is cancelled | Proposal | Exclusive gateway and an end event |
 
-**Constraint:** the payment form and the process variables must not hold card numbers or card security codes. This rule also applies to sandbox card details. Use a simulated payment choice or a sandbox payment reference instead. The process can keep the payment reference, the payment status and the order and accounting data above, but not the card details. Development and testing use no live payment system and no real financial data (CS p. 1). All financial transactions must obey the data protection and financial services regulations (CS p. 2).
+**Constraint:** the payment form and the process variables must not hold card numbers or card security codes. This rule also applies to sandbox card details. Use a simulated payment choice instead. The process can keep the payment reference, the payment status and the order and accounting data above, but not the card details. Development and testing use no live payment system and no real financial data (CS p. 1). All financial transactions must obey the data protection and financial services regulations (CS p. 2).
 
 ### 4.4 Naming rules
 

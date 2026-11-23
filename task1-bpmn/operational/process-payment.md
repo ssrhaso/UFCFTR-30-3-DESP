@@ -172,7 +172,7 @@ The strategic model shows only the happy path (decision D1 of the strategic READ
 
 | Element | i* element ([model-content.md](../istar/model-content.md)) | Strategic BPMN | Stories |
 |---|---|---|---|
-| Give payment details | CU10 Give sandbox payment reference, MP16 | Customer pool, through P05 Process payment | B10 |
+| Give payment details | CU10 Give payment details, MP16 | Customer pool, through P05 Process payment | B10 |
 | Send payment request, Payment result? | MP16 Submit payment, MP20 Record every payment attempt | P05, M05 and M06 with the Payment service | B10, B20 |
 | Payment declined, Decline limit reached?, Choose to retry or cancel, Retry? | MP21, MP22 Let customer retry or cancel, CU11 | None (happy path) | B11 |
 | Payment service unavailable, No answer in 5 minutes, Try again?, Wait before the next attempt | MP23, MP24 Retry, then cancel and release stock | None (happy path) | B12, B17 |
