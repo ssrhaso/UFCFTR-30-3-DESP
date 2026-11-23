@@ -1,0 +1,254 @@
+{
+  "processId": "process_order",
+  "testCases": [
+    {
+      "name": "F1 Main path: the order is confirmed",
+      "description": "All items available, the customer confirms. \n\nService tasks completed by hand in Test mode.\n\nChecks the 48 hour date (earliestFulfilmentAt) and the end at Order awaiting payment",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "process_order"
+          },
+          "variables": {
+            "customerId": "shamy",
+            "basket": [
+              {
+                "productId": "P-101",
+                "quantity": 2
+              },
+              {
+                "productId": "P-102",
+                "quantity": 1
+              }
+            ],
+            "postcode": "BS16 1QY",
+            "allAvailable": true,
+            "reservationId": "RES-2001",
+            "reservationExpiresAt": "2026-11-23T14:30:00Z",
+            "reservationReminderAt": "2026-11-23T14:25:00Z",
+            "producers": [
+              {
+                "producerId": "PR-01",
+                "producerName": "Chew Valley Farm"
+              },
+              {
+                "producerId": "PR-02",
+                "producerName": "Mendip Dairy"
+              }
+            ],
+            "addOnSuggestions": [],
+            "arrangements": [
+              {
+                "producerId": "PR-01",
+                "producerName": "Chew Valley Farm",
+                "method": "delivery",
+                "earliestDate": "2026-11-25T14:00:00Z"
+              },
+              {
+                "producerId": "PR-02",
+                "producerName": "Mendip Dairy",
+                "method": "delivery",
+                "earliestDate": "2026-11-25T14:00:00Z"
+              }
+            ],
+            "foodMiles": 12.4,
+            "orderLines": [
+              {
+                "productName": "Vegetable box",
+                "producerName": "Chew Valley Farm",
+                "producerId": "PR-01",
+                "quantity": 2,
+                "lineTotal": 30
+              },
+              {
+                "productName": "Farmhouse cheddar 250 g",
+                "producerName": "Mendip Dairy",
+                "producerId": "PR-02",
+                "quantity": 1,
+                "lineTotal": 18.6
+              }
+            ],
+            "orderTotal": 48.6,
+            "orderId": "ORD-2001",
+            "producerOrders": [
+              {
+                "producerOrderId": "ORD-2001-P1",
+                "producerId": "PR-01",
+                "subtotal": 30
+              },
+              {
+                "producerOrderId": "ORD-2001-P2",
+                "producerId": "PR-02",
+                "subtotal": 18.6
+              }
+            ]
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "End_OrderAwaitingPayment"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "process_order"
+          },
+          "state": "IS_CREATED",
+          "hasActiveIncidents": false
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Task_CheckStock",
+            "jobType": "check-stock"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Task_ReserveStock",
+            "jobType": "reserve-stock"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Task_IdentifyProducers",
+            "jobType": "identify-producers"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Task_DetermineArrangements",
+            "jobType": "determine-arrangements"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Task_CalculateFoodMiles",
+            "jobType": "calculate-food-miles"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Task_CalculateTotal",
+            "jobType": "calculate-order-total"
+          }
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Task_ReviewOrder"
+          },
+          "variables": {
+            "reviewDecision": "confirm"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Task_CreateOrder",
+            "jobType": "create-order"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Task_SplitOrder",
+            "jobType": "split-order"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "process_order"
+          },
+          "state": "IS_COMPLETED",
+          "hasActiveIncidents": false
+        }
+      ],
+      "metadata": {
+        "processInstanceId": "4503599682092728",
+        "coveredFlowNodes": [
+          {
+            "flowNodeId": "Start_Checkout",
+            "elementType": "bpmn:StartEvent"
+          },
+          {
+            "flowNodeId": "Gateway_CheckMerge",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "Task_CheckStock",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "Gateway_ItemsAvailable",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "Task_ReserveStock",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "Task_IdentifyProducers",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "Task_DetermineArrangements",
+            "elementType": "bpmn:BusinessRuleTask"
+          },
+          {
+            "flowNodeId": "Task_CalculateFoodMiles",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "Task_CalculateTotal",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "Task_ReviewOrder",
+            "elementType": "bpmn:UserTask"
+          },
+          {
+            "flowNodeId": "Gateway_Confirmed",
+            "elementType": "bpmn:ExclusiveGateway"
+          },
+          {
+            "flowNodeId": "Task_CreateOrder",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "Task_SplitOrder",
+            "elementType": "bpmn:ServiceTask"
+          },
+          {
+            "flowNodeId": "End_OrderAwaitingPayment",
+            "elementType": "bpmn:EndEvent"
+          }
+        ],
+        "coveredSequenceFlows": [
+          "Flow_01",
+          "Flow_19",
+          "Flow_02",
+          "Flow_04",
+          "Flow_08",
+          "Flow_09",
+          "Flow_12",
+          "Flow_13",
+          "Flow_10",
+          "Flow_33",
+          "Flow_34",
+          "Flow_17",
+          "Flow_18"
+        ]
+      }
+    }
+  ]
+}
