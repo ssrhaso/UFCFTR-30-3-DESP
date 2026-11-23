@@ -19,22 +19,27 @@ from connection import create_channel
 PAYMENT_HOLD_MINUTES = 30
 
 
+def customer_id() -> str:
+    customer = os.getenv("CUSTOMER_ID")
+    if not customer:
+        raise SystemExit("Set CUSTOMER_ID in .env to the Tasklist user who plays the customer. "
+                         "The user tasks of process_order and process_payment are assigned to this user.")
+    return customer
+
+
 def order_variables(args) -> dict:
     basket = [{"productId": "P-101", "quantity": 2}, {"productId": "P-102", "quantity": 1},
               {"productId": "P-201", "quantity": 1}]
     if args.unavailable:
         basket.append({"productId": "P-202", "quantity": 1})
-    variables = {"customerId": os.getenv("CUSTOMER_ID") or "customer-demo", "basket": basket}
+    variables = {"customerId": customer_id(), "basket": basket}
     if not args.no_postcode:
         variables["postcode"] = "BS16 1QY"
     return variables
 
 
 def payment_variables() -> dict:
-    customer = os.getenv("CUSTOMER_ID")
-    if not customer:
-        raise SystemExit("Set CUSTOMER_ID in .env to the Tasklist user who plays the customer. "
-                         "The two user tasks of process_payment are assigned to this user.")
+    customer = customer_id()
     order_id = mock.new_id("ORD")
     return {
         "orderId": order_id,

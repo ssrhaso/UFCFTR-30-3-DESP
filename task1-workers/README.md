@@ -101,7 +101,7 @@ A mock service that is down fails the job until no retries remain. Then the work
 
 - The stock levels of the mock catalogue do not change. A reservation does not reduce the stock.
 - The workers do not cover `settle-producer-payments.bpmn` (task 5.5).
-- `customerId` must be the login of a Tasklist user, because `process_payment` assigns its user tasks to `=customerId`.
+- `customerId` must be the login of a Tasklist user, because `process_order` and `process_payment` assign their user tasks to `=customerId`. `start.py` stops if `CUSTOMER_ID` is not set.
 - The retry counters `declineCount` and `unavailableCount` and the commission are FEEL in the diagram, not worker code. The unit tests check the commission rule against runs P1 and P8. Runs P2, P3, P5 and P6 check the counters on the cluster.
 
 ## 9. Job types
