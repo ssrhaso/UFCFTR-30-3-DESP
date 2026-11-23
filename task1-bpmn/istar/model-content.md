@@ -67,7 +67,7 @@ Each row is one dependency. "UC2" in the last column marks the dependencies that
 | SD06 | Customer | Secure payment | Softgoal | Marketplace platform | NFR03, B10 | UC2 |
 | SD07 | Marketplace platform | Review and confirm order | Task | Customer | M04, B05 | UC2 |
 | SD08 | Marketplace platform | Amend unavailable items | Task | Customer | O01, O02, B02 | UC2 |
-| SD09 | Marketplace platform | Sandbox payment reference | Resource | Customer | B10, NFR03 (no card data) | UC2 |
+| SD09 | Marketplace platform | Give payment details | Task | Customer | O05, B10, NFR03 (no card data) | UC2 |
 
 ### 4.2 Producer
 
@@ -102,6 +102,7 @@ These dependencies are the socio-technical boundary: what the organisation expec
 | SD24 | Marketplace platform | Notifications delivered | Goal | Notification service | M08, M14, M20 | UC2 |
 | SD25 | Marketplace platform | Organic certification verified | Goal | Organic certification verification service | M02, M03, P02 | Wider |
 | SD26 | Marketplace platform | Postcode distance | Resource | Postcode distance service | M17, M18, P09 | Wider |
+| SD43 | Marketplace platform | Payment reference | Resource | Payment service | M06, NFR01, NFR08 | UC2 |
 
 ### 4.5 Customer segments
 
@@ -155,7 +156,7 @@ The SR model opens Customer, Producer, BRF Network and Marketplace platform. The
 | CU07 | Review and confirm order | Task | Decomposes CU05 | B05 |
 | CU08 | Amend unavailable items | Task | Decomposes CU05 | B02 |
 | CU09 | Pay for the order | Task | Decomposes CU02 | P05, FN2 |
-| CU10 | Give sandbox payment reference | Task | Decomposes CU09 | B10 |
+| CU10 | Give payment details | Task | Decomposes CU09 | B10, O05 |
 | CU11 | Retry or cancel after decline | Task | Decomposes CU09 | B11 |
 | CU12 | Goods received | Goal | Decomposes CU02 | P06 |
 | CU13 | Convenience | Softgoal | Mainly A01 | CS p. 1, A01 in actors.md |
@@ -179,7 +180,7 @@ CU18 and CU19 are in the SR model since 4.2 ([#149](https://github.com/ssrhaso/U
 | CU03 | CU14 | Hurt | Hard to find reliable sources (CS p. 1) |
 | CU03 | CU15 | Break | Admin of many small suppliers is "prohibitively time-consuming" (CS p. 1) |
 | CU08 Amend unavailable items | CU13 | Hurt | Extra effort when stock runs out |
-| CU10 Give sandbox payment reference | CU17 | Help | No card data in the forms (NFR03) |
+| CU10 Give payment details | CU17 | Help | No card data in the forms (NFR03) |
 
 **Qualifications** (4.2, [#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)):
 
@@ -312,7 +313,7 @@ This actor holds the two functionalities. Its tasks name the planned job types o
 | MP24 | MP29 Quick checkout | Hurt | The customer waits during the retries (TN5) |
 | MP25 End the process at once | MP28 | Break | Against UC2 |
 | MP25 | MP29 | Help | No wait |
-| MP16 Submit payment | MP30 Secure payment | Help | Sandbox reference only, no card data (NFR03) |
+| MP16 Submit payment | MP30 Secure payment | Help | A payment reference only, no card data (NFR03) |
 | MP17 Calculate producer amounts and 5% commission | MP31 Accurate amounts | Make | Amounts plus commission equal the total (NFR05) |
 | MP20 Record every payment attempt | MP32 Auditability | Make | NFR08 |
 | MP22 Let customer retry or cancel | MP28 | Help | A decline does not lose the order |
@@ -326,12 +327,12 @@ In the SR model, each UC2 dependency of section 4 starts and ends at an element 
 | SD01 Multi-vendor order processed | CU07 Review and confirm order | MP05 Process order |
 | SD02 Product information | CU19 Browse and search the catalogue | MP11 Product catalogue and stock |
 | SD03 Accurate availability | CU08 Amend unavailable items | MP13 Reserve stock for a time limit |
-| SD04 Order confirmation | CU10 Give sandbox payment reference | MP18 Confirm order and update stock |
+| SD04 Order confirmation | CU10 Give payment details | MP18 Confirm order and update stock |
 | SD05 Clear supplier responsibilities | CU07 Review and confirm order | MP08 Identify producers and arrangements |
-| SD06 Secure payment | CU10 Give sandbox payment reference | MP16 Submit payment |
+| SD06 Secure payment | CU10 Give payment details | MP16 Submit payment |
 | SD07 Review and confirm order | MP09 Get customer confirmation | CU07 Review and confirm order |
 | SD08 Amend unavailable items | MP07 Ask customer to amend order | CU08 Amend unavailable items |
-| SD09 Sandbox payment reference | MP16 Submit payment | CU10 Give sandbox payment reference |
+| SD09 Give payment details | MP16 Submit payment | CU10 Give payment details |
 | SD10 Goods delivered or collected | CU12 Goods received | PR07 Prepare and hand over orders |
 | SD11 Product listing and updates | MP11 Product catalogue and stock | PR04 List and update products |
 | SD12 Accurate stock levels | MP06 Check stock | PR05 Keep stock levels accurate |
@@ -348,6 +349,7 @@ In the SR model, each UC2 dependency of section 4 starts and ends at an element 
 | SD27 Convenient ordering | Household customer (closed role) | Marketplace platform (the actor) |
 | SD28 Reliable, consistent suppliers | Community group buyer (closed role) | BRF Network (the actor) |
 | SD29 Low supplier admin | Restaurant or café buyer (closed role) | Marketplace platform (the actor) |
+| SD43 Payment reference | MP16 Submit payment | Payment service (closed) |
 
 ## 6. Tensions and competing goals
 
@@ -358,7 +360,7 @@ In the SR model, each UC2 dependency of section 4 starts and ends at an element 
 | TN3 | Reserving stock stops overselling, but abandoned checkouts hold stock that others could buy | MP13 and MP14 against MP26 and MP27 | A reservation with a time limit (B07, B08). The limit is open (S1) |
 | TN4 | Producers need 48 hours to prepare, but customers may want quick delivery | SD15 against CU16 | Arrangement dates are at least 48 hours ahead (B04). The confirmation states the dates (M07) |
 | TN5 | Retrying a failed payment keeps the sale, but the customer waits | MP24 against MP28 and MP29 | A limited retry policy, then cancellation and stock release (B12, B17). The limits are open (S3) |
-| TN6 | Payment must be secure and compliant, but easy for customers | SD06, MP16, MP30, SD31 | A sandbox payment reference, with no card data in forms or variables (NFR02, NFR03) |
+| TN6 | Payment must be secure and compliant, but easy for customers | SD06, MP16, MP30, SD31 | The customer gives payment details with no card data, and the payment reference comes from the payment service (NFR02, NFR03) |
 | TN7 | One checkout for many producers is convenient, but each producer keeps its own delivery or collection responsibilities | SD05, SD13, CU15 | The order is split by producer, and the confirmation lists each producer's arrangement (B03, B06, M07) |
 | TN8 | Quality incident handling protects customers, but incident requests and product suspensions put a load on producers | NW07 helps NW14 and hurts NW11 | None in FN1 or FN2. P08 belongs to Use Case 3, which the group did not choose |
 | TN9 | The network must comply with data protection and financial regulations, but compliance adds cost | NW19 is the means for NW09. NW09 helps NW14 and hurts NW10 | FN2 keeps no card data and records each payment attempt (NFR03, NFR08) |
@@ -375,7 +377,7 @@ Since 9 Nov 2026, Figure 1 is the happy path with no gateways (D1 in interaction
 |---|---|---|---|
 | CU07 Review and confirm order | Place order (Customer pool), Order message (M04) | `process_order`: user task with a Camunda Form | B05 |
 | CU08 Amend unavailable items | Not in Figure 1 (happy path, D1). The amend exchange is O01 and O02 of the operational model | `process_order`: user task and a loop back to the stock check | B02 |
-| CU10 Give sandbox payment reference | Customer pool | `process_payment`: user task with a Camunda Form | B10 |
+| CU10 Give payment details | Customer pool | `process_payment`: user task with a Camunda Form | B10 |
 | CU11 Retry or cancel after decline | Customer pool (O03, O04) | `process_payment`: user task after `PAYMENT_DECLINED` | B11 |
 | MP06 Check stock | Process order (Order management lane). The check is inside it | Service task `check-stock` | B01, B21 |
 | MP07 Ask customer to amend order | Not in Figure 1 (happy path, D1). The request to amend is O01 of the operational model | `process_order`: user task after the stock check | B02 |
@@ -422,6 +424,7 @@ Each softgoal comes from a candidate in the last column of the non-functional re
 | DI7 | The SR model opens only the four UC2 actors. The services stay closed | Agreed scope. It keeps the SR model readable |
 | DI8 | In the SR model, the three customer segments are closed roles with SD27 to SD29, and each customer dependency starts at a leaf element. SD05 ends at MP08, not at MP10 | 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)). A refined or contributed element cannot be a depender (iStar 2.0 Guide, p. 14). MP08 gives the producers and the arrangements that the customer reviews (B03, row U4 of traceability.md) |
 | DI9 | In the SR model, SD15 starts at PR07, SD18 at PR09 and SD23 at MP24 | 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)). They started at PR13, PR14 and MP23, which are contributed or refined elements, so piStar listed four errors. PR07 needs the lead time to prepare the orders (NFR07). The audit trail comes with the weekly settlement PR09, which helps PR14 (CS p. 2). MP24 is the chosen means for MP23, and it needs the service to be available again (B12). The leads of 4.3 and 4.4 check these three |
+| DI10 | The customer gives payment details (CU10, and SD09 as a task dependency). The payment reference is a resource that the Marketplace platform gets from the Payment service (SD43). No element name says "sandbox" | Sprint 2 Review feedback of 19 Nov 2026, applied in a follow-up to 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)). The reference belongs to the system side, for confidentiality, privacy and security. FN2 already takes `paymentReference` from the message `payment-confirmed` |
 
 ## 9. Questions for the stand-up
 

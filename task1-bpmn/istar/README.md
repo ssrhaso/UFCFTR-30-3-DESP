@@ -88,6 +88,7 @@ The lecture uses the classic i* notation. piStar uses iStar 2.0. The lab sheet s
 | Resource | An entity: noun phrase | Order confirmation |
 | Actor | The name in [actors.md](../../requirements/strategic/actors.md) and in the strategic BPMN model | Producer, Payment service |
 | Platform task that becomes a service task | Task name, then the planned job type in brackets | Check stock (`check-stock`) |
+| Platform task that stands for a whole process | Task name, then the process ID in brackets, as in section 4.1 of [functionalities.md](../../requirements/scope/functionalities.md) | Process order (`process_order`), Process payment (`process_payment`) |
 
 The job types follow section 4.4 of [functionalities.md](../../requirements/scope/functionalities.md). A statement that is not in the case study is an assumption. Mark it as an assumption in model-content.md, for example CU16 Quick delivery (lab sheet, Task 1).
 
@@ -149,6 +150,7 @@ Each dependency gives the depender a capability. It also makes the depender vuln
 |---|---|---|---|---|---|
 | E01 | SD22: Marketplace platform depends on Payment service for **Payment processed** (goal) | MP04 Payment processed | The platform cannot confirm the order, and the reserved stock stays held | FN2 decline path: the message `payment-declined`, then retry or cancel (B11) | Required. Sandbox or mock only (NFR02) |
 | E01 | SD23: Marketplace platform depends on Payment service for **Payment service availability** (softgoal) | MP28 Reliable checkout | No answer from the service | FN2 unavailable path: retries, then cancel and release the stock (MP24, B12, B17) | As above |
+| E01 | SD43: Marketplace platform depends on Payment service for **Payment reference** (resource) | MP20 Record every payment attempt | The platform cannot record the payment for the weekly settlement and the audit trail (NFR08) | The message `payment-confirmed` gives `paymentReference`, and `record-payment` stores it. The record holds the reference, not the card (NFR01) | As above |
 | E02 | SD25: Marketplace platform depends on Organic certification verification service for **Organic certification verified** (goal) | Trust in the listings (P02) | An organic claim stays unverified | "Listing not published" end event in the strategic model | Only if P02 stays (T3 in processes.md). Not in UC2 |
 | E03 | SD24: Marketplace platform depends on Notification service for **Notifications delivered** (goal) | PR13 Enough time to prepare, through SD14 | A producer does not learn of a paid order and misses the 48-hour lead time (NFR07) | Multi-instance `notify-producer` (B16) and a stub (B23). A failure is recorded, and the order stays confirmed (R2, answered in #166) | External (assumption Q3, decision DI5) |
 | E04 | SD26: Marketplace platform depends on Postcode distance service for **Postcode distance** (resource) | NW12 Sustainability (P09) | The customer does not see the food miles | Not in FN1 or FN2. B09 is a Could story | External (assumption Q3) |
@@ -171,7 +173,7 @@ The table maps each task of the SR model. "Out of scope" means that the task is 
 | CU07 | Review and confirm order | Order message to Process order | `process_order`: user task with a Camunda Form | B05 |
 | CU08 | Amend unavailable items | Customer pool (O01, O02) | `process_order`: user task and a loop back to the stock check | B02 |
 | CU09 | Pay for the order | P05 Process payment (F03 Finance and settlements) | `process_payment`: the user tasks "Give payment details" and "Choose to retry or cancel" | B10, B11 |
-| CU10 | Give sandbox payment reference | Customer pool, Payment request through Process payment | User task "Give payment details", form `payment-details` | B10 |
+| CU10 | Give payment details | Customer pool, Payment request through Process payment | User task "Give payment details", form `payment-details` | B10 |
 | CU11 | Retry or cancel after decline | None (happy path, D1 of the strategic README) | User task "Choose to retry or cancel" after the message event "Payment declined", form `retry-or-cancel` | B11 |
 | CU19 | Browse and search the catalogue | Browse and search catalogue (P03, Catalogue management lane), after the start event "Customer opens the marketplace" | None. Out of scope: B18 is not planned | B18 |
 
@@ -299,13 +301,13 @@ In the SR model, the three segments are closed roles above the Customer boundary
 |---|---|---|
 | P03 Browse and search catalogue | Browses by category, searches, reads the product information and fills the basket | CU04 Products found (goal), CU19 Browse and search the catalogue (task), CU06 Basket (resource) |
 | P04 Process order | Proceeds to checkout, amends the order when an item is unavailable, reviews the order and confirms | CU05 Check out the order (task), with CU08 Amend unavailable items and CU07 Review and confirm order |
-| P05 Process payment | Submits the payment and retries after a decline | CU09 Pay for the order (task), with CU10 Give sandbox payment reference and CU11 Retry or cancel after decline |
+| P05 Process payment | Submits the payment and retries after a decline | CU09 Pay for the order (task), with CU10 Give payment details and CU11 Retry or cancel after decline |
 | P06 Fulfil order | Receives the delivery or collects the goods | CU12 Goods received (goal) |
 | P12 Handle order issue | Reports the problem and receives the resolution | CU18 Order problems put right (goal) |
 
 **Resources that the customer receives:** SD02 Product information, SD04 Order confirmation, SD36 Food safety notification, SD40 Food miles information and SD42 Surplus produce offer. SD02 and SD04 are in both models, because they belong to Use Case 2. The others are only in the SD model, because they are outside Use Case 2 (the Scope column in section 4 of model-content.md).
 
-**Resources that the customer gives:** SD09 Sandbox payment reference and SD34 Quality concern report.
+**Resources that the customer gives:** SD34 Quality concern report. SD09 Give payment details is not a resource: it is a task that the platform needs from the customer, as SD07 and SD08 are.
 
 The educational content of P11 has no dependum of its own. The platform shows it with the products, so it is part of SD02 Product information (interactions.md, section 7.1).
 
@@ -318,12 +320,12 @@ Each row has one depender, one dependum and one dependee. The fifth column gives
 | SD01 | Customer | Multi-vendor order processed (goal) | Marketplace platform | CU07 Review and confirm order to MP05 Process order | P04, M04, UC2 |
 | SD02 | Customer | Product information (resource) | Marketplace platform | CU19 Browse and search the catalogue to MP11 Product catalogue and stock | P03, CS p. 2 |
 | SD03 | Customer | Accurate availability (softgoal) | Marketplace platform | CU08 Amend unavailable items to MP13 Reserve stock for a time limit | NFR06, B01, B07 |
-| SD04 | Customer | Order confirmation (resource) | Marketplace platform | CU10 Give sandbox payment reference to MP18 Confirm order and update stock | M07, B14 |
+| SD04 | Customer | Order confirmation (resource) | Marketplace platform | CU10 Give payment details to MP18 Confirm order and update stock | M07, B14 |
 | SD05 | Customer | Clear supplier responsibilities (softgoal) | Marketplace platform | CU07 Review and confirm order to MP08 Identify producers and arrangements | CS p. 2, B03 |
-| SD06 | Customer | Secure payment (softgoal) | Marketplace platform | CU10 Give sandbox payment reference to MP16 Submit payment | NFR03, B10 |
+| SD06 | Customer | Secure payment (softgoal) | Marketplace platform | CU10 Give payment details to MP16 Submit payment | NFR03, B10 |
 | SD07 | Marketplace platform | Review and confirm order (task) | Customer | MP09 Get customer confirmation to CU07 Review and confirm order | M04, B05 |
 | SD08 | Marketplace platform | Amend unavailable items (task) | Customer | MP07 Ask customer to amend order to CU08 Amend unavailable items | O01, O02, B02 |
-| SD09 | Marketplace platform | Sandbox payment reference (resource) | Customer | MP16 Submit payment to CU10 Give sandbox payment reference | B10, NFR03 (no card data) |
+| SD09 | Marketplace platform | Give payment details (task) | Customer | MP16 Submit payment to CU10 Give payment details | O05, B10, NFR03 (no card data) |
 | SD10 | Customer | Goods delivered or collected (goal) | Producer | CU12 Goods received to PR07 Prepare and hand over orders | P06, actors.md section 4 |
 | SD27 | Household customer | Convenient ordering (softgoal) | Marketplace platform | The closed role to the actor | CS p. 1, A01 in actors.md |
 | SD28 | Community group buyer | Reliable, consistent suppliers (softgoal) | BRF Network | The closed role to the actor | CS p. 1, A02 in actors.md |
@@ -352,7 +354,7 @@ Each row has one depender, one dependum and one dependee. The fifth column gives
 | ID | Tension | Customer side | Other side | Source |
 |---|---|---|---|---|
 | TN4 | Customers may want the goods quickly, but producers need 48 hours to prepare | CU16 Quick delivery, which qualifies CU12 | SD15 Adequate lead time, PR13 Enough time to prepare | CS pp. 1 to 2, B04, NFR07. CU16 is an assumption |
-| TN6 | The payment must be secure, but easy for the customer | CU13 Convenience, CU10 Give sandbox payment reference | SD06 Secure payment, MP30 Secure payment | CS p. 2, NFR03 |
+| TN6 | The payment must be secure, but easy for the customer | CU13 Convenience, CU10 Give payment details | SD06 Secure payment, MP30 Secure payment | CS p. 2, NFR03 |
 | TN7 | One checkout is less administration, but each producer keeps its own delivery or collection | CU15 Low supplier admin | SD05 Clear supplier responsibilities, SD13 Delivery or collection arrangements | CS pp. 1 to 2, B03 |
 
 TN7 is the candidate tension "supplier transparency and reduced administration" of interactions.md (section 7.1).
@@ -369,6 +371,18 @@ TN7 is the candidate tension "supplier transparency and reduced administration" 
 | The names of the actors and the roles are the same as in actors.md and the strategic BPMN model | Customer, Household customer, Community group buyer and Restaurant or café buyer. The BPMN pool is Customer |
 | The reviewer has checked the part, and each point is fixed | Open |
 | Merged through the pull request of 4.1 | Open. Each part of 4.1 has its own pull request (#160, #161 and #163) |
+
+### 10.7 Changes after the Sprint 2 Review
+
+**Feedback (Sprint 2 Review, 19 Nov 2026):** the element with "sandbox" in its name was badly named, and the payment reference belongs on the system side, not on the customer side. A follow-up to 4.2 ([#149](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/149)) applies it to both models (decision DI10 in model-content.md).
+
+| Element | Before | After |
+|---|---|---|
+| CU10, task in Customer | Give sandbox payment reference | Give payment details |
+| SD09, Marketplace platform on Customer | Sandbox payment reference (resource) | Give payment details (task) |
+| SD43, Marketplace platform on Payment service | None | Payment reference (resource) |
+
+**Reason:** FN2 already works this way. The customer gives the payment details in the user task "Give payment details", and `paymentReference` comes from the payment service with the message `payment-confirmed`. NFR01 says that the payment record holds a payment reference, not the card, and NFR03 forbids card data in the forms and the variables. Thus the reference is now between the Marketplace platform and the Payment service. NFR03 and section 4.3 of functionalities.md no longer name a sandbox payment reference as something the customer gives.
 
 ## 11. References
 
