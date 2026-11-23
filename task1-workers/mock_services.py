@@ -82,6 +82,15 @@ def check_lines(basket: list) -> list:
     return unavailable
 
 
+def taken_lines(basket: list) -> list:
+    """Return the lines that another customer took after the stock check (MOCK_STOCK_TAKEN)."""
+    taken = {pid.strip() for pid in os.getenv("MOCK_STOCK_TAKEN", "").split(",") if pid.strip()}
+    return [{"productId": line["productId"], "productName": CATALOGUE[line["productId"]]["productName"],
+             "producerName": CATALOGUE[line["productId"]]["producerName"],
+             "requestedQuantity": line["quantity"], "availableQuantity": 0}
+            for line in basket if line["productId"] in taken]
+
+
 def substitutes_for(unavailable: list) -> list:
     found = []
     for item in unavailable:

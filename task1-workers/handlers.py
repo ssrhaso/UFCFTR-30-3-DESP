@@ -22,6 +22,7 @@ log = logging.getLogger("workers")
 _client: ZeebeClient | None = None
 _background: set = set()
 payment_attempts: list = []  # record of each payment attempt (NFR08)
+_stock_taken: dict = {}  # process instance key -> lines taken between check-stock and reserve-stock
 
 
 def set_client(client) -> None:
@@ -65,6 +66,12 @@ async def check_stock(job: Job) -> dict:
 async def reserve_stock(job: Job) -> dict:
     if mock.stock_service_down():
         service_failure(job, "STOCK_SERVICE_UNAVAILABLE", "stock service")
+    taken = mock.taken_lines(job.variables.get("basket") or [])
+    if taken:
+        # error variables stay on the catch event (no output mapping), so find-substitutes reads them from here
+        _stock_taken[job.process_instance_key] = taken
+        info(job, f"{len(taken)} lines taken by another customer, BPMN error INSUFFICIENT_STOCK")
+        raise BusinessError("INSUFFICIENT_STOCK")
     expires = mock.now() + mock.timedelta(minutes=mock.HOLD_MINUTES)
     reminder = expires - mock.timedelta(minutes=mock.REMINDER_MINUTES_BEFORE)
     reservation_id = mock.new_id("RES")
@@ -75,9 +82,10 @@ async def reserve_stock(job: Job) -> dict:
 
 @router.task(task_type="find-substitutes")
 async def find_substitutes(job: Job) -> dict:
-    substitutes = mock.substitutes_for(job.variables.get("unavailableItems") or [])
-    info(job, f"{len(substitutes)} substitutes found")
-    return {"substitutes": substitutes}
+    unavailable = _stock_taken.pop(job.process_instance_key, None) or job.variables.get("unavailableItems") or []
+    substitutes = mock.substitutes_for(unavailable)
+    info(job, f"{len(unavailable)} unavailable lines, {len(substitutes)} substitutes found")
+    return {"unavailableItems": unavailable, "substitutes": substitutes}
 
 
 @router.task(task_type="identify-producers")
