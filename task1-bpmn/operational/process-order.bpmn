@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_ProcessOrder" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="ffa1f04" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
   <bpmn:collaboration id="Collaboration_ProcessOrder">
-    <bpmn:participant id="Participant_Customer" name="Customer" processRef="Process_Customer" />
     <bpmn:participant id="Participant_BRFNetwork" name="Bristol Regional Food Network marketplace" processRef="process_order" />
     <bpmn:participant id="Participant_StockService" name="Stock service" />
-    <bpmn:messageFlow id="M04" name="Order" sourceRef="Task_ProceedToCheckout" targetRef="Participant_BRFNetwork" />
+    <bpmn:participant id="Participant_Customer" name="Customer" />
+    <bpmn:messageFlow id="M04" name="Order" sourceRef="Participant_Customer" targetRef="Participant_BRFNetwork" />
     <bpmn:messageFlow id="O01" name="Stock unavailable notice" sourceRef="Task_AmendOrder" targetRef="Participant_Customer" />
     <bpmn:messageFlow id="O02" name="Amended order" sourceRef="Participant_Customer" targetRef="Task_AmendOrder" />
-    <bpmn:messageFlow id="Msg_OrderSummary" name="Order summary" sourceRef="Task_ReviewOrder" targetRef="Task_CustomerReview" />
-    <bpmn:messageFlow id="Msg_CustomerDecision" name="Customer decision" sourceRef="Task_CustomerReview" targetRef="Task_ReviewOrder" />
+    <bpmn:messageFlow id="Msg_OrderSummary" name="Order summary" sourceRef="Task_ReviewOrder" targetRef="Participant_Customer" />
+    <bpmn:messageFlow id="Msg_CustomerDecision" name="Customer decision" sourceRef="Participant_Customer" targetRef="Task_ReviewOrder" />
     <bpmn:messageFlow id="Msg_StockCheckRequest" name="Stock check request" sourceRef="Task_CheckStock" targetRef="Participant_StockService" />
     <bpmn:messageFlow id="Msg_StockLevels" name="Stock check result" sourceRef="Participant_StockService" targetRef="Task_CheckStock" />
     <bpmn:messageFlow id="Msg_ReserveRequest" name="Reserve request" sourceRef="Task_ReserveStock" targetRef="Participant_StockService" />
@@ -321,63 +321,10 @@
     <bpmn:sequenceFlow id="Flow_17" sourceRef="Task_CreateOrder" targetRef="Task_SplitOrder" />
     <bpmn:sequenceFlow id="Flow_18" sourceRef="Task_SplitOrder" targetRef="End_OrderAwaitingPayment" />
   </bpmn:process>
-  <bpmn:process id="Process_Customer" name="Customer" isExecutable="false">
-    <bpmn:startEvent id="Start_Customer" name="Basket ready for checkout">
-      <bpmn:outgoing>Flow_Customer_01</bpmn:outgoing>
-    </bpmn:startEvent>
-    <bpmn:task id="Task_ProceedToCheckout" name="Proceed to checkout">
-      <bpmn:incoming>Flow_Customer_01</bpmn:incoming>
-      <bpmn:outgoing>Flow_Customer_02</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="Task_CustomerReview" name="Review and confirm order">
-      <bpmn:incoming>Flow_Customer_02</bpmn:incoming>
-      <bpmn:outgoing>Flow_Customer_03</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:endEvent id="End_Customer" name="Purchase confirmed">
-      <bpmn:incoming>Flow_Customer_03</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_Customer_01" sourceRef="Start_Customer" targetRef="Task_ProceedToCheckout" />
-    <bpmn:sequenceFlow id="Flow_Customer_02" sourceRef="Task_ProceedToCheckout" targetRef="Task_CustomerReview" />
-    <bpmn:sequenceFlow id="Flow_Customer_03" sourceRef="Task_CustomerReview" targetRef="End_Customer" />
-  </bpmn:process>
   <bpmn:error id="Error_StockServiceUnavailable" name="STOCK_SERVICE_UNAVAILABLE" errorCode="STOCK_SERVICE_UNAVAILABLE" />
   <bpmn:error id="Error_InsufficientStock" name="INSUFFICIENT_STOCK" errorCode="INSUFFICIENT_STOCK" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_ProcessOrder">
     <bpmndi:BPMNPlane id="BPMNPlane_ProcessOrder" bpmnElement="Collaboration_ProcessOrder">
-      <bpmndi:BPMNShape id="Participant_Customer_di" bpmnElement="Participant_Customer" isHorizontal="true">
-        <dc:Bounds x="40" y="40" width="2290" height="160" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Start_Customer_di" bpmnElement="Start_Customer">
-        <dc:Bounds x="107" y="102" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="81.5" y="143" width="87" height="28" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_ProceedToCheckout_di" bpmnElement="Task_ProceedToCheckout">
-        <dc:Bounds x="190" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_CustomerReview_di" bpmnElement="Task_CustomerReview">
-        <dc:Bounds x="1725" y="80" width="150" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="End_Customer_di" bpmnElement="End_Customer">
-        <dc:Bounds x="1942" y="102" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1932.5" y="143" width="55" height="28" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_Customer_01_di" bpmnElement="Flow_Customer_01">
-        <di:waypoint x="143" y="120" />
-        <di:waypoint x="190" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Customer_02_di" bpmnElement="Flow_Customer_02">
-        <di:waypoint x="290" y="120" />
-        <di:waypoint x="1725" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Customer_03_di" bpmnElement="Flow_Customer_03">
-        <di:waypoint x="1875" y="120" />
-        <di:waypoint x="1942" y="120" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_BRFNetwork_di" bpmnElement="Participant_BRFNetwork" isHorizontal="true">
         <dc:Bounds x="40" y="260" width="2290" height="910" />
         <bpmndi:BPMNLabel />
@@ -738,39 +685,42 @@
         <dc:Bounds x="40" y="1230" width="2290" height="60" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_1b57nd5_di" bpmnElement="Participant_Customer" isHorizontal="true">
+        <dc:Bounds x="40" y="130" width="2290" height="60" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="M04_di" bpmnElement="M04">
-        <di:waypoint x="240" y="160" />
+        <di:waypoint x="240" y="190" />
         <di:waypoint x="240" y="260" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="248" y="212" width="35" height="15" />
+          <dc:Bounds x="248" y="224" width="35" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="O01_di" bpmnElement="O01">
         <di:waypoint x="585" y="310" />
-        <di:waypoint x="585" y="200" />
+        <di:waypoint x="585" y="190" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="490" y="212" width="90" height="28" />
+          <dc:Bounds x="490" y="205" width="90" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="O02_di" bpmnElement="O02">
-        <di:waypoint x="610" y="200" />
+        <di:waypoint x="610" y="190" />
         <di:waypoint x="610" y="310" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="618" y="212" width="82" height="15" />
+          <dc:Bounds x="618" y="204" width="82" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Msg_OrderSummary_di" bpmnElement="Msg_OrderSummary">
         <di:waypoint x="1785" y="310" />
-        <di:waypoint x="1785" y="160" />
+        <di:waypoint x="1785" y="190" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1702" y="212" width="83" height="15" />
+          <dc:Bounds x="1702" y="230" width="83" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Msg_CustomerDecision_di" bpmnElement="Msg_CustomerDecision">
-        <di:waypoint x="1815" y="160" />
+        <di:waypoint x="1815" y="190" />
         <di:waypoint x="1815" y="310" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1823" y="212" width="54" height="28" />
+          <dc:Bounds x="1823" y="229" width="54" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Msg_StockCheckRequest_di" bpmnElement="Msg_StockCheckRequest">
