@@ -3,7 +3,7 @@
   "executionPlatformVersion": "8.6.0",
   "exporter": {
     "name": "Camunda Web Modeler",
-    "version": "ffa1f04"
+    "version": "4c2418b"
   },
   "schemaVersion": 19,
   "id": "form-review-order",
@@ -57,20 +57,36 @@
       ]
     },
     {
+      "type": "table",
+      "layout": {
+        "row": "Row_01sotba",
+        "columns": null
+      },
+      "label": "Delivery or Collection",
+      "dataSource": "=for a in arrangements return {producerName: a.producerName, method: a.method, earliestDate: substring(a.earliestDate, 9, 2) + \"/\" + substring(a.earliestDate, 6, 2) + \" \" + substring(a.earliestDate, 12, 5) + \" UTC\"}",
+      "rowCount": 10,
+      "id": "Field_0dou5yl",
+      "columns": [
+        {
+          "key": "producerName",
+          "label": "Producer"
+        },
+        {
+          "label": "Method",
+          "key": "method"
+        },
+        {
+          "label": "Earliest Date",
+          "key": "earliestDate"
+        }
+      ]
+    },
+    {
       "text": "### Total: £{{string(floor(orderTotal)) + \".\" + substring(string(floor(orderTotal * 100 + 0.5) - floor(orderTotal) * 100 + 100), 2)}}",
       "id": "Field_total",
       "type": "text",
       "layout": {
         "row": "Row_total",
-        "col": 16
-      }
-    },
-    {
-      "text": "Earliest delivery or collection: **{{earliestFulfilmentAt}}**",
-      "id": "Field_earliestFulfilment",
-      "type": "text",
-      "layout": {
-        "row": "Row_earliest",
         "col": 16
       }
     },
@@ -92,10 +108,6 @@
         {
           "label": "Confirm the order and go to payment",
           "value": "confirm"
-        },
-        {
-          "label": "Add more items",
-          "value": "addItems"
         },
         {
           "label": "Cancel the order",
