@@ -1,8 +1,58 @@
 # Test runs
 
-**Task:** 6.1 ([#171](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/171)), part f. The FN2 runs are for 6.3 ([#175](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/175))
+**Task:** 6.1 ([#171](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/171)), part f. The FN1 runs are for 6.2 ([#174](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/174)), and the FN2 runs are for 6.3 ([#175](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/175))
 
 Each run records the path, the input, the result, the process instance key and an Operate screenshot. The screenshots are in [screenshots/](screenshots/). `Pn.png` shows the instance in Operate, and `Pn-test.png` shows the same run in the Test mode of the Web Modeler.
+
+## FN1 Process order (`process_order`)
+
+**Task:** 6.2 ([#174](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/174)). **Tester:** Ishaq Modassir Mushtaq.
+
+### Method
+
+The runs used version 8 of `process_order`, deployed on 27 Nov 2026 with `python deploy.py --ref origin/6.1` to the module cluster (UWE Frenchay 2026, dev). Version 8 has the fixes of 5.3 ([#172](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/172)): the review form shows the delivery or collection and the earliest date of each producer, and the "Add items" loop is removed.
+
+In each run:
+
+- `python worker.py` ran the job workers and the mock stock and postcode services. A mock switch was set in front of the command for the run that needed it, for example `MOCK_STOCK_TAKEN=P-201 python worker.py`.
+- `python start.py order` started the instance, with `--unavailable` (adds the Rye loaf, which has no stock) or `--no-postcode` where the path needs it.
+- The tester completed the user tasks in Tasklist as the customer (`CUSTOMER_ID`).
+- `On.png` shows the instance in Operate (history and variables). `On-test.png` shows the path that the instance took in the diagram.
+
+The default basket is 2 x P-101 Organic carrots, 1 x P-102 Free-range eggs and 1 x P-201 Sourdough loaf, with the postcode BS16 1QY. The total is 4.80 + 3.20 + 4.05 = 12.05, because the sourdough is surplus produce with a 10% discount (4.50 less 0.45).
+
+### Runs
+
+| Run | Path | Input | Steps | Result | Process instance key | Status | Screenshots |
+|---|---|---|---|---|---|---|---|
+| O1 | Main path: all items in stock, the customer confirms | `start.py order` | Review: "Confirm the order and go to payment" | "Order awaiting payment". `orderTotal` = 12.05, `foodMiles` = 30, `orderId` = ORD-298596B9. `arrangements`: Valley Farm and Harbourside Bakery, delivery, earliest date 48 hours after the order | 2251799869565861 | Passed | [O1](screenshots/O1.png), [path](screenshots/O1-test.png) |
+| O2 | An item is unavailable, the customer amends with a substitute | `start.py order --unavailable` | Amend: tick "Dark rye loaf from Mill Lane Bakery", "Amend". Review: "Confirm" | "Find substitutes" offered P-301 for P-202. "Check stock" ran again with the amended basket, and all items were available. "Order awaiting payment". `orderTotal` = 15.95 (12.05 + 3.90), `foodMiles` = 41, `orderId` = ORD-18B65130 | 4503599682758972 | Passed | [O2](screenshots/O2.png), [path](screenshots/O2-test.png) |
+| O3 | An item is unavailable, the customer cancels | `start.py order --unavailable` | Amend: "Cancel" | "Amend or cancel?" (Cancel), "Stock held?" (No, the stock was never reserved), "Order ended before reservation". `amendDecision` = cancel | 6755399496442330 | Passed | [O3](screenshots/O3.png), [path](screenshots/O3-test.png) |
+| O4 | The customer cancels at the review | `start.py order` | Review: "Cancel the order" | "Customer decision?" (default), "Release stock reservation", "Order not placed" | 6755399496443359 | Passed | [O4](screenshots/O4.png), [path](screenshots/O4-test.png) |
+| O5 | No postcode, so no food miles | `start.py order --no-postcode` | Review: "Confirm" | No `foodMiles` variable, and the review form hides the food miles. `arrangements` method = collection. "Order awaiting payment". `producerOrders`: 8.00 (Valley Farm) and 4.05 (Harbourside Bakery), total 12.05 | 2251799869574116 | Passed | [O5](screenshots/O5.png), [path](screenshots/O5-test.png) |
+| O6 | The stock hold expires at the review | `HOLD_MINUTES=3 REMINDER_MINUTES_BEFORE=1 python worker.py`, then `start.py order` | Review: no action | After 2 minutes "Hold about to expire" (non-interrupting), "Send hold reminder", "Reminder sent". After 3 minutes "Stock hold expired" interrupted the review, then "Release stock reservation" and "Order not placed". Start 17:11:20, end 17:14:21, `reservationExpiresAt` = 17:14:21 | 6755399496451358 | Passed | [O6](screenshots/O6.png), [path](screenshots/O6-test.png) |
+| O7 | Another customer takes the stock after the check | `MOCK_STOCK_TAKEN=P-201 python worker.py`, then `start.py order` | Amend: "Amend" (no substitute for the sourdough). Review: "Confirm" | "All items available?" (Yes), then "Reserve stock" threw `INSUFFICIENT_STOCK` and "Stock taken by another customer" caught it. "Find substitutes" found 0 substitutes for the sourdough. After "Amend", "Check stock" and "Reserve stock" ran again without the sourdough and succeeded. `orderTotal` = 8.00, 1 producer (Valley Farm), `foodMiles` = 27, `orderId` = ORD-FE298F5B. A first attempt (2251799869584123) was not valid, because another worker on the cluster completed some of its `check-stock` jobs (see Known issues) | 6755399496465271 | Passed | [O7](screenshots/O7.png), [path](screenshots/O7-test.png), [worker log of the first attempt](screenshots/insufficiant%20_stock_error.png) |
+| O8 | The stock service is unavailable | `MOCK_STOCK_SERVICE_DOWN=1 python worker.py`, then `start.py order` | None | "Check stock" failed until no retries remained, and the worker threw `STOCK_SERVICE_UNAVAILABLE`. The event sub-process "Stock service unavailable" ran "Tell customer that checkout is unavailable" and ended at "Checkout failed", 1 second after the start. No reservation and no `orderId`. A first attempt (6755399496456546) was not valid, because another worker on the cluster completed its `check-stock` jobs | 2251799869599606 | Passed | [O8](screenshots/O8.png), [path](screenshots/O8-test.png) |
+| O9 | The amend time limit passes | `start.py order --unavailable` | Amend: no action for 30 minutes | "Amend time limit reached" (interrupting) after exactly 30 minutes, "Stock held?" (No), "Order ended before reservation". Start 16:20:46, end 16:50:46 | 4503599682758231 | Passed | [O9](screenshots/O9.png), [path](screenshots/O9-test.png) |
+
+An earlier run of the main path on version 7 (2251799869555424) found that the review form and `arrangements` gave two different earliest dates. Version 8 fixes this. The "Add items at the review" path was removed with the loop in version 8, so it has no run.
+
+### Checks
+
+- [x] Each user task shows its Camunda Form, and each decision on the Form takes the expected path (O1 to O4, O9)
+- [x] The amendment changes the basket: the unavailable line is removed, and the accepted substitute is added (O2, O7)
+- [x] A stock service failure ends the checkout in the event sub-process, with no reservation and no order (O8)
+- [x] Each path that holds stock and does not continue to payment releases the reservation (O4, O6)
+- [x] The three timers fire at the expected times: the reminder, the stock hold expiry and the amend time limit (O6, O9)
+- [x] The order total includes the surplus discount, and the producer subtotals add up to the order total (O1, O5)
+- [x] O7 and O8 again, with no other worker on the cluster (the second attempts)
+- [ ] An amendment that leaves the basket empty. Known issue: the process continues with an empty order. The model needs a gateway "Anything left to order?" (5.3, #172)
+
+### Known issues
+
+- **Other workers on the cluster.** The job types (for example `check-stock`) are shared by every worker on the module cluster. A worker of another group, or another version of this code, can complete the jobs of this process. Before a test run or the demonstration, make sure that only the workers of this repository run, or give the job types a unique prefix.
+- **Empty basket after an amendment.** See the checks above.
+- **Part quantities.** When fewer items are in stock than requested, the whole line is removed. The customer cannot take the part that is in stock.
 
 ## FN2 Process payment (`process_payment`)
 
