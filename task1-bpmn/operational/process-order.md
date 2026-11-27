@@ -26,6 +26,7 @@ The scope is section 4.2 of [functionalities.md](../../requirements/scope/functi
 | 12 Nov 2026 | Shamy | The exception paths and the timers: the substitutes, the stock taken during the reservation, the amend time limit, the stock hold expiry with its reminder, the "Add items" loop, the stock service failure, the food miles and the surplus discounts. The lane and pool names of the strategic model |
 | 13 Nov 2026 | Royden Dias | Review and approval |
 | 14 Nov 2026 | Hasaan Ahmad | The PNG export. The two forms. This document |
+| 27 Nov 2026 | Ishaq Modassir Mushtaq | Fixes after the first test run ([#172](https://github.com/ssrhaso/UFCFTR-30-3-DESP/issues/172)). The review form shows the method and the earliest date of each producer from `arrangements`, and the output `earliestFulfilmentAt` is removed, because it gave a different date from the worker. The "Add items" loop is removed, because the review had no way to add products and each loop left an unreleased reservation. Adding items belongs to browsing (P03) |
 
 ## 3. How to read the model
 
@@ -41,7 +42,7 @@ The scope is section 4.2 of [functionalities.md](../../requirements/scope/functi
 | Actor | Activities |
 |---|---|
 | The customer | The two user tasks, in Camunda Tasklist, with the two forms |
-| The process engine | The gateways, the three timers, the link events "Recheck stock" and the error events |
+| The process engine | The gateways, the three timers and the error events |
 | The job workers (6.1) | The 13 service and business rule tasks (section 8) |
 | External service | The stock service checks, reserves and releases the stock |
 
@@ -71,7 +72,6 @@ The scope is section 4.2 of [functionalities.md](../../requirements/scope/functi
 | The customer cancels at the amend task, or 30 minutes pass | "Stock held?" decides | Stock held: "Release stock reservation", then "Order not placed during amendment". No stock held: "Order ended before reservation" |
 | The stock hold is about to expire | Non-interrupting timer "Hold about to expire", then "Send hold reminder" | The review task stays open |
 | The stock hold expires | Interrupting timer "Stock hold expired" | "Release stock reservation", then "Order not placed" |
-| The customer adds items at the review | "Customer decision?" (Add items), link event "Recheck stock" | Back to "Check stock" |
 | The customer cancels at the review | "Customer decision?" (default) | "Release stock reservation", then "Order not placed" |
 | The stock service is unavailable | Error `STOCK_SERVICE_UNAVAILABLE` starts the event sub-process | "Tell customer that checkout is unavailable", then "Checkout failed" |
 
@@ -82,12 +82,13 @@ The scope is section 4.2 of [functionalities.md](../../requirements/scope/functi
 | `allAvailable` | `check-stock` | "All items available?" | In the model |
 | `reservationId` | `reserve-stock` | "Stock held?" | In the model |
 | `reservationExpiresAt`, `reservationReminderAt` | `reserve-stock` | The two timers on the review task. FN2 also reads `reservationExpiresAt` | In the model |
-| `addOnSuggestions` | `identify-producers` | The order summary | In the model |
+| `addOnSuggestions` | `identify-producers` | Nothing at present, because the "Add items" loop was removed | In the model |
 | `amendDecision` | Form `form-amend-order`: `amend` or `cancel` | "Amend or cancel?" | In the model |
-| `reviewDecision` | Form `form-review-order`: `confirm`, `addItems` or `cancel` | "Customer decision?" | In the model |
+| `reviewDecision` | Form `form-review-order`: `confirm` or `cancel` | "Customer decision?" | In the model |
 | `orderLines` | `calculate-order-total`: list of `productName`, `producerName`, `quantity`, `lineTotal` | Form `form-review-order` | Proposal for 6.1 |
 | `orderTotal` | `calculate-order-total` | Form `form-review-order`, FN2 | Proposal for 6.1. FN2 uses this name |
 | `foodMiles` | `calculate-food-miles`. Absent when there is no postcode | Form `form-review-order` (hidden when absent) | Proposal for 6.1 |
+| `arrangements` | `determine-arrangements`: list of `producerId`, `producerName`, `method`, `earliestDate` | Form `form-review-order` (table "Delivery or Collection") | In the model |
 | `unavailableItems` | `check-stock` or `reserve-stock`: list of `productName`, `producerName`, `requestedQuantity`, `availableQuantity` | Form `form-amend-order` | Proposal for 6.1 |
 | `substitutes` | `find-substitutes`: list of `productId`, `productName`, `producerName`, `unitPrice` | Form `form-amend-order` (hidden when empty) | Proposal for 6.1 |
 | `acceptedSubstitutes` | Form `form-amend-order`: list of `productId` | `check-stock` on the next check | Proposal for 6.1 |
