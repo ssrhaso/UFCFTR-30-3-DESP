@@ -1,4 +1,12 @@
 {
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "ffa1f04"
+  },
+  "schemaVersion": 19,
+  "id": "payment-details",
   "components": [
     {
       "text": "## Pay for your order\n\nOrder **{{orderId}}**. Total: **£{{orderTotal}}**.\n\nThis is a sandbox payment. Do not enter real card details.",
@@ -9,6 +17,7 @@
       "id": "Field_intro"
     },
     {
+      "label": "Sandbox payment method",
       "values": [
         {
           "label": "Sandbox card: the payment succeeds",
@@ -17,9 +26,16 @@
         {
           "label": "Sandbox card: the payment is declined",
           "value": "pm_card_chargeDeclined"
+        },
+        {
+          "label": "Sandbox: the payment service is unavailable",
+          "value": "pm_simulate_unavailable"
+        },
+        {
+          "label": "Sandbox: the payment service does not answer",
+          "value": "pm_simulate_no_answer"
         }
       ],
-      "label": "Sandbox payment method",
       "type": "radio",
       "layout": {
         "row": "Row_method"
@@ -31,9 +47,5 @@
       }
     }
   ],
-  "type": "default",
-  "id": "payment-details",
-  "executionPlatform": "Camunda Cloud",
-  "executionPlatformVersion": "8.6.0",
-  "schemaVersion": 16
+  "type": "default"
 }

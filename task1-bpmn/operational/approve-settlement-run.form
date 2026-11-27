@@ -1,4 +1,12 @@
 {
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "ffa1f04"
+  },
+  "schemaVersion": 16,
+  "id": "approve-settlement-run",
   "components": [
     {
       "id": "Field_intro",
@@ -78,9 +86,5 @@
       }
     }
   ],
-  "type": "default",
-  "id": "approve-settlement-run",
-  "executionPlatform": "Camunda Cloud",
-  "executionPlatformVersion": "8.6.0",
-  "schemaVersion": 16
+  "type": "default"
 }

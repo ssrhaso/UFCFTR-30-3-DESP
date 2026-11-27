@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_ProcessOrder" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="64767e4" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_ProcessOrder" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="4c2418b" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
   <bpmn:collaboration id="Collaboration_ProcessOrder">
-    <bpmn:participant id="Participant_Customer" name="Customer" processRef="Process_Customer" />
     <bpmn:participant id="Participant_BRFNetwork" name="Bristol Regional Food Network marketplace" processRef="process_order" />
     <bpmn:participant id="Participant_StockService" name="Stock service" />
-    <bpmn:messageFlow id="M04" name="Order" sourceRef="Task_ProceedToCheckout" targetRef="Participant_BRFNetwork" />
+    <bpmn:participant id="Participant_Customer" name="Customer" />
+    <bpmn:messageFlow id="M04" name="Order" sourceRef="Participant_Customer" targetRef="Participant_BRFNetwork" />
     <bpmn:messageFlow id="O01" name="Stock unavailable notice" sourceRef="Task_AmendOrder" targetRef="Participant_Customer" />
     <bpmn:messageFlow id="O02" name="Amended order" sourceRef="Participant_Customer" targetRef="Task_AmendOrder" />
-    <bpmn:messageFlow id="Msg_OrderSummary" name="Order summary" sourceRef="Task_ReviewOrder" targetRef="Task_CustomerReview" />
-    <bpmn:messageFlow id="Msg_CustomerDecision" name="Customer decision" sourceRef="Task_CustomerReview" targetRef="Task_ReviewOrder" />
+    <bpmn:messageFlow id="Msg_OrderSummary" name="Order summary" sourceRef="Task_ReviewOrder" targetRef="Participant_Customer" />
+    <bpmn:messageFlow id="Msg_CustomerDecision" name="Customer decision" sourceRef="Participant_Customer" targetRef="Task_ReviewOrder" />
     <bpmn:messageFlow id="Msg_StockCheckRequest" name="Stock check request" sourceRef="Task_CheckStock" targetRef="Participant_StockService" />
     <bpmn:messageFlow id="Msg_StockLevels" name="Stock check result" sourceRef="Participant_StockService" targetRef="Task_CheckStock" />
     <bpmn:messageFlow id="Msg_ReserveRequest" name="Reserve request" sourceRef="Task_ReserveStock" targetRef="Participant_StockService" />
@@ -21,9 +21,6 @@
       <bpmn:lane id="Lane_F02" name="Order management">
         <bpmn:flowNodeRef>Start_Checkout</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_CheckMerge</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Link_RecheckStockCatch</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_AmendOrder</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Boundary_AmendTimer</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_AmendOrCancel</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_AmendEndMerge</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_StockHeld</bpmn:flowNodeRef>
@@ -33,29 +30,30 @@
         <bpmn:flowNodeRef>Task_CalculateFoodMiles</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_CalculateTotal</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_ReviewOrder</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Boundary_ReviewTimer</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Boundary_ReviewReminder</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_SendReminder</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_ReminderSent</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Link_RecheckStockThrow</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Confirmed</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_ReleaseMerge</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_CreateOrder</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_SplitOrder</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_OrderAwaitingPayment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AmendOrder</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>SubProcess_StockFailure</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Boundary_ReviewReminder</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Boundary_ReviewTimer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Boundary_AmendTimer</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_F01" name="Catalogue management">
         <bpmn:flowNodeRef>Task_CheckStock</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_ItemsAvailable</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_ReserveStock</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Boundary_StockTaken</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_UnavailableMerge</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_FindSubstitutes</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_ReleaseOnAmend</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_NotPlacedOnAmend</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_ReleaseReservation</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_OrderNotPlaced</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Boundary_StockTaken</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="Start_Checkout" name="Customer proceeds to checkout">
@@ -63,14 +61,9 @@
     </bpmn:startEvent>
     <bpmn:exclusiveGateway id="Gateway_CheckMerge">
       <bpmn:incoming>Flow_01</bpmn:incoming>
-      <bpmn:incoming>Flow_40</bpmn:incoming>
       <bpmn:incoming>Flow_07</bpmn:incoming>
       <bpmn:outgoing>Flow_19</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:intermediateCatchEvent id="Link_RecheckStockCatch" name="Recheck stock">
-      <bpmn:outgoing>Flow_40</bpmn:outgoing>
-      <bpmn:linkEventDefinition id="LinkDef_RecheckStockCatch" name="Recheck stock" />
-    </bpmn:intermediateCatchEvent>
     <bpmn:serviceTask id="Task_CheckStock" name="Check stock">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="check-stock" retries="3" />
@@ -107,20 +100,6 @@
       <bpmn:incoming>Flow_26</bpmn:incoming>
       <bpmn:outgoing>Flow_27</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="Task_AmendOrder" name="Amend order or cancel">
-      <bpmn:extensionElements>
-        <zeebe:userTask />
-        <zeebe:formDefinition formId="form-amend-order" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_27</bpmn:incoming>
-      <bpmn:outgoing>Flow_05</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:boundaryEvent id="Boundary_AmendTimer" name="Amend time limit reached" attachedToRef="Task_AmendOrder">
-      <bpmn:outgoing>Flow_28</bpmn:outgoing>
-      <bpmn:timerEventDefinition id="TimerDef_Amend">
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT30M</bpmn:timeDuration>
-      </bpmn:timerEventDefinition>
-    </bpmn:boundaryEvent>
     <bpmn:exclusiveGateway id="Gateway_AmendOrCancel" name="Amend or cancel?" default="Flow_06">
       <bpmn:incoming>Flow_05</bpmn:incoming>
       <bpmn:outgoing>Flow_07</bpmn:outgoing>
@@ -160,6 +139,9 @@
     <bpmn:businessRuleTask id="Task_DetermineArrangements" name="Determine delivery or collection per producer">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="determine-arrangements" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:output source="=arrangements" target="arrangements" />
+        </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_09</bpmn:incoming>
       <bpmn:outgoing>Flow_10</bpmn:outgoing>
@@ -184,6 +166,7 @@
       <bpmn:extensionElements>
         <zeebe:userTask />
         <zeebe:formDefinition formId="form-review-order" />
+        <zeebe:assignmentDefinition assignee="=customerId" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_34</bpmn:incoming>
       <bpmn:outgoing>Flow_12</bpmn:outgoing>
@@ -210,14 +193,9 @@
     <bpmn:endEvent id="End_ReminderSent" name="Reminder sent">
       <bpmn:incoming>Flow_37</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:intermediateThrowEvent id="Link_RecheckStockThrow" name="Recheck stock">
-      <bpmn:incoming>Flow_35</bpmn:incoming>
-      <bpmn:linkEventDefinition id="LinkDef_RecheckStockThrow" name="Recheck stock" />
-    </bpmn:intermediateThrowEvent>
     <bpmn:exclusiveGateway id="Gateway_Confirmed" name="Customer decision?" default="Flow_14">
       <bpmn:incoming>Flow_12</bpmn:incoming>
       <bpmn:outgoing>Flow_13</bpmn:outgoing>
-      <bpmn:outgoing>Flow_35</bpmn:outgoing>
       <bpmn:outgoing>Flow_14</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:exclusiveGateway id="Gateway_ReleaseMerge">
@@ -272,7 +250,6 @@
       <bpmn:sequenceFlow id="Flow_39" sourceRef="Task_TellCustomerUnavailable" targetRef="End_CheckoutFailed" />
     </bpmn:subProcess>
     <bpmn:sequenceFlow id="Flow_01" sourceRef="Start_Checkout" targetRef="Gateway_CheckMerge" />
-    <bpmn:sequenceFlow id="Flow_40" sourceRef="Link_RecheckStockCatch" targetRef="Gateway_CheckMerge" />
     <bpmn:sequenceFlow id="Flow_19" sourceRef="Gateway_CheckMerge" targetRef="Task_CheckStock" />
     <bpmn:sequenceFlow id="Flow_02" sourceRef="Task_CheckStock" targetRef="Gateway_ItemsAvailable" />
     <bpmn:sequenceFlow id="Flow_04" name="Yes" sourceRef="Gateway_ItemsAvailable" targetRef="Task_ReserveStock">
@@ -303,9 +280,6 @@
     <bpmn:sequenceFlow id="Flow_13" name="Confirm" sourceRef="Gateway_Confirmed" targetRef="Task_CreateOrder">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= reviewDecision = "confirm"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_35" name="Add items" sourceRef="Gateway_Confirmed" targetRef="Link_RecheckStockThrow">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= reviewDecision = "addItems"</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_14" name="Cancel" sourceRef="Gateway_Confirmed" targetRef="Gateway_ReleaseMerge" />
     <bpmn:sequenceFlow id="Flow_15" sourceRef="Boundary_ReviewTimer" targetRef="Gateway_ReleaseMerge" />
     <bpmn:sequenceFlow id="Flow_20" sourceRef="Gateway_ReleaseMerge" targetRef="Task_ReleaseReservation" />
@@ -314,64 +288,26 @@
     <bpmn:sequenceFlow id="Flow_37" sourceRef="Task_SendReminder" targetRef="End_ReminderSent" />
     <bpmn:sequenceFlow id="Flow_17" sourceRef="Task_CreateOrder" targetRef="Task_SplitOrder" />
     <bpmn:sequenceFlow id="Flow_18" sourceRef="Task_SplitOrder" targetRef="End_OrderAwaitingPayment" />
-  </bpmn:process>
-  <bpmn:process id="Process_Customer" name="Customer" isExecutable="false">
-    <bpmn:startEvent id="Start_Customer" name="Basket ready for checkout">
-      <bpmn:outgoing>Flow_Customer_01</bpmn:outgoing>
-    </bpmn:startEvent>
-    <bpmn:task id="Task_ProceedToCheckout" name="Proceed to checkout">
-      <bpmn:incoming>Flow_Customer_01</bpmn:incoming>
-      <bpmn:outgoing>Flow_Customer_02</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="Task_CustomerReview" name="Review and confirm order">
-      <bpmn:incoming>Flow_Customer_02</bpmn:incoming>
-      <bpmn:outgoing>Flow_Customer_03</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:endEvent id="End_Customer" name="Purchase confirmed">
-      <bpmn:incoming>Flow_Customer_03</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_Customer_01" sourceRef="Start_Customer" targetRef="Task_ProceedToCheckout" />
-    <bpmn:sequenceFlow id="Flow_Customer_02" sourceRef="Task_ProceedToCheckout" targetRef="Task_CustomerReview" />
-    <bpmn:sequenceFlow id="Flow_Customer_03" sourceRef="Task_CustomerReview" targetRef="End_Customer" />
+    <bpmn:boundaryEvent id="Boundary_AmendTimer" name="Amend time limit reached" attachedToRef="Task_AmendOrder">
+      <bpmn:outgoing>Flow_28</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerDef_Amend">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT30M</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:userTask id="Task_AmendOrder" name="Amend order or cancel">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition formId="form-amend-order" />
+        <zeebe:assignmentDefinition assignee="=customerId" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_27</bpmn:incoming>
+      <bpmn:outgoing>Flow_05</bpmn:outgoing>
+    </bpmn:userTask>
   </bpmn:process>
   <bpmn:error id="Error_StockServiceUnavailable" name="STOCK_SERVICE_UNAVAILABLE" errorCode="STOCK_SERVICE_UNAVAILABLE" />
   <bpmn:error id="Error_InsufficientStock" name="INSUFFICIENT_STOCK" errorCode="INSUFFICIENT_STOCK" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_ProcessOrder">
     <bpmndi:BPMNPlane id="BPMNPlane_ProcessOrder" bpmnElement="Collaboration_ProcessOrder">
-      <bpmndi:BPMNShape id="Participant_Customer_di" bpmnElement="Participant_Customer" isHorizontal="true">
-        <dc:Bounds x="40" y="40" width="2290" height="160" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Start_Customer_di" bpmnElement="Start_Customer">
-        <dc:Bounds x="107" y="102" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="81.5" y="143" width="87" height="28" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_ProceedToCheckout_di" bpmnElement="Task_ProceedToCheckout">
-        <dc:Bounds x="190" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_CustomerReview_di" bpmnElement="Task_CustomerReview">
-        <dc:Bounds x="1725" y="80" width="150" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="End_Customer_di" bpmnElement="End_Customer">
-        <dc:Bounds x="1942" y="102" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1932.5" y="143" width="55" height="28" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_Customer_01_di" bpmnElement="Flow_Customer_01">
-        <di:waypoint x="143" y="120" />
-        <di:waypoint x="190" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Customer_02_di" bpmnElement="Flow_Customer_02">
-        <di:waypoint x="290" y="120" />
-        <di:waypoint x="1725" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Customer_03_di" bpmnElement="Flow_Customer_03">
-        <di:waypoint x="1875" y="120" />
-        <di:waypoint x="1942" y="120" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_BRFNetwork_di" bpmnElement="Participant_BRFNetwork" isHorizontal="true">
         <dc:Bounds x="40" y="260" width="2290" height="910" />
         <bpmndi:BPMNLabel />
@@ -393,12 +329,6 @@
       <bpmndi:BPMNShape id="Gateway_CheckMerge_di" bpmnElement="Gateway_CheckMerge" isMarkerVisible="true">
         <dc:Bounds x="405" y="825" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Link_RecheckStockCatch_di" bpmnElement="Link_RecheckStockCatch">
-        <dc:Bounds x="502" y="832" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="466" y="808" width="78" height="15" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_CheckStock_di" bpmnElement="Task_CheckStock">
         <dc:Bounds x="510" y="1040" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -416,9 +346,6 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_FindSubstitutes_di" bpmnElement="Task_FindSubstitutes">
         <dc:Bounds x="495" y="920" width="130" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_AmendOrder_di" bpmnElement="Task_AmendOrder">
-        <dc:Bounds x="490" y="310" width="140" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_AmendOrCancel_di" bpmnElement="Gateway_AmendOrCancel" isMarkerVisible="true">
         <dc:Bounds x="405" y="325" width="50" height="50" />
@@ -472,12 +399,6 @@
         <dc:Bounds x="1632" y="592" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1548" y="602.5" width="78" height="15" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Link_RecheckStockThrow_di" bpmnElement="Link_RecheckStockThrow">
-        <dc:Bounds x="1682" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1660" y="672" width="78" height="15" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_Confirmed_di" bpmnElement="Gateway_Confirmed" isMarkerVisible="true">
@@ -536,6 +457,15 @@
         <di:waypoint x="1170" y="590" />
         <di:waypoint x="1222" y="590" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_AmendOrder_di" bpmnElement="Task_AmendOrder">
+        <dc:Bounds x="490" y="310" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Boundary_AmendTimer_di" bpmnElement="Boundary_AmendTimer">
+        <dc:Bounds x="527" y="292" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="322" y="292" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Boundary_ReviewReminder_di" bpmnElement="Boundary_ReviewReminder">
         <dc:Bounds x="1752" y="372" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -548,12 +478,6 @@
           <dc:Bounds x="1900" y="314" width="58" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Boundary_AmendTimer_di" bpmnElement="Boundary_AmendTimer">
-        <dc:Bounds x="527" y="292" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="322" y="292" width="88" height="28" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Boundary_StockTaken_di" bpmnElement="Boundary_StockTaken">
         <dc:Bounds x="912" y="1022" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -563,10 +487,6 @@
       <bpmndi:BPMNEdge id="Flow_01_di" bpmnElement="Flow_01">
         <di:waypoint x="378" y="850" />
         <di:waypoint x="405" y="850" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_40_di" bpmnElement="Flow_40">
-        <di:waypoint x="502" y="850" />
-        <di:waypoint x="455" y="850" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_19_di" bpmnElement="Flow_19">
         <di:waypoint x="430" y="875" />
@@ -683,13 +603,6 @@
           <dc:Bounds x="1808" y="692" width="45" height="15" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_35_di" bpmnElement="Flow_35">
-        <di:waypoint x="1775" y="640" />
-        <di:waypoint x="1718" y="640" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1719" y="646" width="55" height="15" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_14_di" bpmnElement="Flow_14">
         <di:waypoint x="1825" y="640" />
         <di:waypoint x="1915" y="640" />
@@ -732,39 +645,42 @@
         <dc:Bounds x="40" y="1230" width="2290" height="60" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_1b57nd5_di" bpmnElement="Participant_Customer" isHorizontal="true">
+        <dc:Bounds x="40" y="130" width="2290" height="60" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="M04_di" bpmnElement="M04">
-        <di:waypoint x="240" y="160" />
+        <di:waypoint x="240" y="190" />
         <di:waypoint x="240" y="260" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="248" y="212" width="35" height="15" />
+          <dc:Bounds x="248" y="224" width="35" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="O01_di" bpmnElement="O01">
         <di:waypoint x="585" y="310" />
-        <di:waypoint x="585" y="200" />
+        <di:waypoint x="585" y="190" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="490" y="212" width="90" height="28" />
+          <dc:Bounds x="490" y="205" width="90" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="O02_di" bpmnElement="O02">
-        <di:waypoint x="610" y="200" />
+        <di:waypoint x="610" y="190" />
         <di:waypoint x="610" y="310" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="618" y="212" width="82" height="15" />
+          <dc:Bounds x="618" y="204" width="82" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Msg_OrderSummary_di" bpmnElement="Msg_OrderSummary">
         <di:waypoint x="1785" y="310" />
-        <di:waypoint x="1785" y="160" />
+        <di:waypoint x="1785" y="190" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1702" y="212" width="83" height="15" />
+          <dc:Bounds x="1702" y="230" width="83" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Msg_CustomerDecision_di" bpmnElement="Msg_CustomerDecision">
-        <di:waypoint x="1815" y="160" />
+        <di:waypoint x="1815" y="190" />
         <di:waypoint x="1815" y="310" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1823" y="212" width="54" height="28" />
+          <dc:Bounds x="1823" y="229" width="54" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Msg_StockCheckRequest_di" bpmnElement="Msg_StockCheckRequest">
@@ -812,4 +728,3 @@
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
-

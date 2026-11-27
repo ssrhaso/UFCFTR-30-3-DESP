@@ -131,7 +131,7 @@ Each service task has 3 job retries. A worker throws a BPMN error only where the
 
 | Job type | Task | Rule |
 |---|---|---|
-| `submit-payment` | Send payment request | Send `paymentMethod` and `orderTotal` to the sandbox or mock, with `orderId` as the idempotency key. Record the attempt (NFR08). The answer arrives later as a message. If the service cannot be reached, throw `PAYMENT_SERVICE_UNAVAILABLE` |
+| `submit-payment` | Send payment request | Send `paymentMethod` and `orderTotal` to the sandbox or mock, with `orderId` as the idempotency key. Record the attempt (NFR08). The answer arrives later as a message. If the service cannot be reached, throw `PAYMENT_SERVICE_UNAVAILABLE`. The mock payment service gives its result from `paymentMethod`: `pm_card_visa` publishes `payment-confirmed` with `paymentReference`, `pm_card_chargeDeclined` publishes `payment-declined`, `pm_simulate_unavailable` makes the worker throw `PAYMENT_SERVICE_UNAVAILABLE`, and `pm_simulate_no_answer` accepts the request and sends no message. Both messages use `orderId` as the correlation key |
 | `refund-payment` | Refund payment | Compensation handler. If the service took a payment, request a refund (O07) and record the result (O08) |
 | `confirm-order` | Confirm order | Mark the order as paid. Send the order confirmation (M07) |
 | `update-stock` | Update stock | Turn the reservation into a sale. On failure, throw `STOCK_UPDATE_FAILED` |
@@ -193,13 +193,13 @@ The documentation field of each element gives the same IDs (NFR09). The rows U7 
 | `bpmnlint:recommended` and `camunda-compat/camunda-cloud-8-6`, with the Zeebe schema loaded, as in the Web Modeler | 0 warnings. 1 report: `no-implicit-end` on the boundary event "Refund". This is a limit of the rule: it looks for the association only at the top level of the process, but the association is correctly inside "Take payment" |
 | Import with bpmn-js 17.11 | No import warnings |
 | Both forms with form-js 1.10 (schema version 16, Camunda 8.6) | Both render with no errors |
-| Deployment to the Camunda 8 cluster | To do in 6.1 |
+| Deployment to the Camunda 8 cluster | Deployed with both forms to UWE Frenchay 2026 (dev, Camunda 8.9) on 20 Nov 2026 (6.1). Runs P1 to P8 in the Test mode of the Web Modeler, with the service tasks and the messages completed by hand until the workers exist: see [test-runs.md](../../task1-workers/test-runs.md) |
 
 ## 13. How to run it in Camunda
 
 1. After the merge into `main`, merge `main` into `camunda-sync`. Then sync the Camunda project.
 2. Open `process-payment.bpmn` in the Web Modeler. Make sure that the problems panel shows no errors.
-3. Deploy the diagram with both forms.
-4. Start an instance with the variables of section 6. Set `customerId` to the Tasklist user who plays the customer.
+3. Deploy each form first: open `payment-details` and `retry-or-cancel` and click Deploy. Then deploy the diagram with "Only this resource". A diagram deployment does not include its linked forms.
+4. Start an instance with the variables of section 6. Set `customerId` to the Tasklist user who plays the customer. Set `reservationExpiresAt` to a time in the future, or the event sub-process "Handle reservation expiry" starts at once.
 5. Complete "Give payment details" in Tasklist. Choose the declined method to show the decline path.
 6. The 6.1 workers complete the service tasks and publish the payment messages. Follow the instance in Operate.

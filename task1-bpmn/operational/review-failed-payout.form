@@ -1,4 +1,12 @@
 {
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "ffa1f04"
+  },
+  "schemaVersion": 16,
+  "id": "review-failed-payout",
   "components": [
     {
       "id": "Field_intro",
@@ -51,9 +59,5 @@
       }
     }
   ],
-  "type": "default",
-  "id": "review-failed-payout",
-  "executionPlatform": "Camunda Cloud",
-  "executionPlatformVersion": "8.6.0",
-  "schemaVersion": 16
+  "type": "default"
 }

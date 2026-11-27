@@ -1,22 +1,42 @@
 {
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "4c2418b"
+  },
+  "schemaVersion": 19,
+  "id": "form-review-order",
   "components": [
     {
-      "id": "Field_intro",
+      "text": "### Review your order",
+      "id": "Field_intro_heading",
       "type": "text",
       "layout": {
-        "row": "Row_intro"
-      },
-      "text": "## Review your order\n\nYour items are reserved until **{{if reservationExpiresAt = null then \"the time limit\" else substring(reservationExpiresAt, 12, 5) + \" UTC\"}}**. Confirm the order before then, or the reservation ends and the items go back into stock."
+        "row": "Row_intro_header",
+        "col": 16
+      }
     },
     {
-      "id": "Table_orderLines",
+      "text": "Your items are reserved until **{{if reservationExpiresAt = null then \"the time limit\" else substring(reservationExpiresAt, 12, 5) + \" UTC\"}}**. Confirm the order before then, or the reservation ends and the items go back into stock.",
+      "id": "Field_intro_paragraph",
+      "type": "text",
+      "layout": {
+        "row": "Row_intro_text",
+        "col": 16
+      }
+    },
+    {
       "type": "table",
       "label": "Your order",
-      "layout": {
-        "row": "Row_lines"
-      },
-      "rowCount": 10,
       "dataSource": "=for l in orderLines return {productName: l.productName, producerName: l.producerName, quantity: l.quantity, price: string(floor(l.lineTotal)) + \".\" + substring(string(floor(l.lineTotal * 100 + 0.5) - floor(l.lineTotal) * 100 + 100), 2)}",
+      "layout": {
+        "row": "Row_table",
+        "col": 16
+      },
+      "key": "table_orderLines",
+      "rowCount": 10,
+      "id": "Table_orderLines",
       "columns": [
         {
           "label": "Product",
@@ -37,54 +57,75 @@
       ]
     },
     {
+      "type": "table",
+      "layout": {
+        "row": "Row_01sotba",
+        "columns": null
+      },
+      "label": "Delivery or Collection",
+      "dataSource": "=for a in arrangements return {producerName: a.producerName, method: a.method, earliestDate: substring(a.earliestDate, 9, 2) + \"/\" + substring(a.earliestDate, 6, 2) + \" \" + substring(a.earliestDate, 12, 5) + \" UTC\"}",
+      "rowCount": 10,
+      "id": "Field_0dou5yl",
+      "columns": [
+        {
+          "key": "producerName",
+          "label": "Producer"
+        },
+        {
+          "label": "Method",
+          "key": "method"
+        },
+        {
+          "label": "Earliest Date",
+          "key": "earliestDate"
+        }
+      ]
+    },
+    {
+      "text": "### Total: £{{string(floor(orderTotal)) + \".\" + substring(string(floor(orderTotal * 100 + 0.5) - floor(orderTotal) * 100 + 100), 2)}}",
       "id": "Field_total",
       "type": "text",
       "layout": {
-        "row": "Row_total"
-      },
-      "text": "### Total: £{{string(floor(orderTotal)) + \".\" + substring(string(floor(orderTotal * 100 + 0.5) - floor(orderTotal) * 100 + 100), 2)}}"
-    },
-    {
-      "id": "Field_foodMiles",
-      "type": "text",
-      "layout": {
-        "row": "Row_foodMiles"
-      },
-      "text": "Food miles for this order: **{{foodMiles}}**",
-      "conditional": {
-        "hide": "=foodMiles = null"
+        "row": "Row_total",
+        "col": 16
       }
     },
     {
-      "id": "Field_reviewDecision",
-      "type": "radio",
-      "key": "reviewDecision",
-      "label": "What do you want to do?",
+      "text": "Food miles for this order: **{{foodMiles}}**",
+      "id": "Field_foodMiles",
+      "type": "text",
+      "conditional": {
+        "hide": "=foodMiles = null"
+      },
       "layout": {
-        "row": "Row_decision"
-      },
-      "validate": {
-        "required": true
-      },
+        "row": "Row_food_miles",
+        "col": 16
+      }
+    },
+    {
+      "label": "What do you want to do?",
       "values": [
         {
           "label": "Confirm the order and go to payment",
           "value": "confirm"
         },
         {
-          "label": "Add more items",
-          "value": "addItems"
-        },
-        {
           "label": "Cancel the order",
           "value": "cancel"
         }
-      ]
+      ],
+      "id": "Field_reviewDecision",
+      "key": "reviewDecision",
+      "type": "radio",
+      "validate": {
+        "required": true
+      },
+      "layout": {
+        "row": "Row_decision",
+        "col": 16
+      }
     }
   ],
-  "type": "default",
-  "id": "form-review-order",
-  "executionPlatform": "Camunda Cloud",
-  "executionPlatformVersion": "8.6.0",
-  "schemaVersion": 16
+  "generated": true,
+  "type": "default"
 }
